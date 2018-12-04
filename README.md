@@ -1,1 +1,1 @@
-AnalyticsDashboard-Freelancer
+Analytics Dashboard - A Freelancer Project

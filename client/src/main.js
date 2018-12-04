@@ -8,9 +8,11 @@ import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 import App from './App'
 import router from './router'
+import axios from 'axios'
 
 // todo
 // cssVars()
+axios.defaults.baseURL = 'http://localhost:8080/server/'
 
 Vue.use(BootstrapVue)
 

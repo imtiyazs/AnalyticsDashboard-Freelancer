@@ -1,0 +1,26 @@
+{
+  "name": "analytics-server",
+  "version": "1.0.0",
+  "description": "A Freelancer project",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imtiyazs/AnalyticsDashboard-Freelancer.git"
+  },
+  "author": "Imtiyaz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/imtiyazs/AnalyticsDashboard-Freelancer/issues"
+  },
+  "homepage": "https://github.com/imtiyazs/AnalyticsDashboard-Freelancer#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cookie-session": "^2.0.0-beta.3",
+    "express": "^4.16.4",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0"
+  }
+}

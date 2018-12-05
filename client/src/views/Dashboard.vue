@@ -1,5 +1,5 @@
 <template>
-  <div class="animated fadeIn">
+  <div v-if="userLogged" class="animated fadeIn">
     <b-row>
       <b-col sm="6" lg="3">
         <b-card no-body class="bg-primary">
@@ -596,6 +596,7 @@ export default {
   },
   data: function() {
     return {
+      userLogged: false,
       selected: "Month",
       tableItems: [
         {
@@ -702,25 +703,22 @@ export default {
       }
       return $variant;
     },
-    getUserData: function() {
-      let self = this;
-      axios
-        .get("/o/user")
-        .then(response => {
-          console.log(response);
-          self.$set(this, "user", response.data.user);
-        })
-        .catch(errors => {
-          console.log(errors);
-          router.push("/");
-        });
-    },
     flag(value) {
       return "flag-icon flag-icon-" + value;
     }
   },
   mounted() {
-    this.getUserData();
+    /** Check User Logged In */
+    let self = this;
+    axios
+      .get("/o/user")
+      .then(response => {
+        self.$set(this, "user", response.data.user);
+        this.userLogged = true;
+      })
+      .catch(errors => {
+        router.push("/login");
+      });
   }
 };
 </script>

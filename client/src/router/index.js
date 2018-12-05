@@ -53,6 +53,10 @@ const Page404 = () => import('@/views/pages/Page404')
 const Page500 = () => import('@/views/pages/Page500')
 const Login = () => import('@/views/pages/Login')
 const Register = () => import('@/views/pages/Register')
+const GenerateReports = () => import('@/views/pages/GenerateReport')
+const DownloadReports = () => import('@/views/pages/DownloadReports')
+const ReportAnalysis = () => import('@/views/pages/ReportAnalysis')
+const ReportHistory = () => import('@/views/pages/ReportHistory')
 
 // Users
 const Users = () => import('@/views/users/Users')
@@ -63,28 +67,49 @@ Vue.use(Router)
 export default new Router({
   mode: 'hash', // https://router.vuejs.org/api/#mode
   linkActiveClass: 'open active',
-  scrollBehavior: () => ({ y: 0 }),
-  routes: [
-    {
+  scrollBehavior: () => ({
+    y: 0
+  }),
+  routes: [{
       path: '/',
-      redirect: '/pages/login',
+      redirect: '/dashboard',
       name: 'Home',
       component: DefaultContainer,
-      children: [
-        {
+      children: [{
           path: 'dashboard',
           name: 'Dashboard',
           component: Dashboard
+        },
+        {
+          path: '/generatereports',
+          name: 'Generate Reports',
+          component: GenerateReports
+        },
+        {
+          path: '/downloadreports',
+          name: 'Download Reports',
+          component: DownloadReports
+        },
+        {
+          path: '/reportanalysis',
+          name: 'Report Analysis',
+          component: ReportAnalysis
+        },
+        {
+          path: '/reporthistory',
+          name: 'Report History',
+          component: ReportHistory
         },
         {
           path: 'theme',
           redirect: '/theme/colors',
           name: 'Theme',
           component: {
-            render (c) { return c('router-view') }
+            render(c) {
+              return c('router-view')
+            }
           },
-          children: [
-            {
+          children: [{
               path: 'colors',
               name: 'Colors',
               component: Colors
@@ -108,18 +133,23 @@ export default new Router({
         },
         {
           path: 'users',
-          meta: { label: 'Users'},
-          component: {
-            render (c) { return c('router-view') }
+          meta: {
+            label: 'Users'
           },
-          children: [
-            {
+          component: {
+            render(c) {
+              return c('router-view')
+            }
+          },
+          children: [{
               path: '',
               component: Users,
             },
             {
               path: ':id',
-              meta: { label: 'User Details'},
+              meta: {
+                label: 'User Details'
+              },
               name: 'User',
               component: User,
             },
@@ -130,10 +160,11 @@ export default new Router({
           redirect: '/base/cards',
           name: 'Base',
           component: {
-            render (c) { return c('router-view') }
+            render(c) {
+              return c('router-view')
+            }
           },
-          children: [
-            {
+          children: [{
               path: 'cards',
               name: 'Cards',
               component: Cards
@@ -220,10 +251,11 @@ export default new Router({
           redirect: '/buttons/standard-buttons',
           name: 'Buttons',
           component: {
-            render (c) { return c('router-view') }
+            render(c) {
+              return c('router-view')
+            }
           },
-          children: [
-            {
+          children: [{
               path: 'standard-buttons',
               name: 'Standard Buttons',
               component: StandardButtons
@@ -250,10 +282,11 @@ export default new Router({
           redirect: '/icons/font-awesome',
           name: 'Icons',
           component: {
-            render (c) { return c('router-view') }
+            render(c) {
+              return c('router-view')
+            }
           },
-          children: [
-            {
+          children: [{
               path: 'coreui-icons',
               name: 'CoreUI Icons',
               component: CoreUIIcons
@@ -280,10 +313,11 @@ export default new Router({
           redirect: '/notifications/alerts',
           name: 'Notifications',
           component: {
-            render (c) { return c('router-view') }
+            render(c) {
+              return c('router-view')
+            }
           },
-          children: [
-            {
+          children: [{
               path: 'alerts',
               name: 'Alerts',
               component: Alerts
@@ -303,34 +337,24 @@ export default new Router({
       ]
     },
     {
-      path: '/pages',
-      redirect: '/pages/404',
-      name: 'Pages',
-      component: {
-        render (c) { return c('router-view') }
-      },
-      children: [
-        {
-          path: '404',
-          name: 'Page404',
-          component: Page404
-        },
-        {
-          path: '500',
-          name: 'Page500',
-          component: Page500
-        },
-        {
-          path: 'login',
-          name: 'Login',
-          component: Login
-        },
-        {
-          path: 'register',
-          name: 'Register',
-          component: Register
-        }
-      ]
+      path: '404',
+      name: 'Page404',
+      component: Page404
+    },
+    {
+      path: '500',
+      name: 'Page500',
+      component: Page500
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: Register
     }
   ]
 })

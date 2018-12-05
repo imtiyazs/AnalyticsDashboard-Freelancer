@@ -88,7 +88,7 @@ export default {
           router.push("/dashboard");
         })
         .catch(errors => {
-          alert("Invalid Credentials");
+          alert("Invalid Credentials: "+ errors);
         });
     }
   }

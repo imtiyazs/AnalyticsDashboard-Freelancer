@@ -705,7 +705,7 @@ export default {
     getUserData: function() {
       let self = this;
       axios
-        .get("/api/user")
+        .get("/o/user")
         .then(response => {
           console.log(response);
           self.$set(this, "user", response.data.user);

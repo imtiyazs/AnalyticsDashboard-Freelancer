@@ -6,7 +6,7 @@
           <b-card-group>
             <b-card no-body class="p-4">
               <b-card-body>
-                <b-form v-on:submit="login">
+                <b-form>
                   <h1>Login</h1>
                   <p class="text-muted">Sign In to your account</p>
                   <b-input-group class="mb-3">
@@ -39,7 +39,7 @@
                   </b-input-group>
                   <b-row>
                     <b-col cols="6">
-                      <b-button type="submit" variant="primary" class="px-4">Login</b-button>
+                      <b-button type="button" variant="primary" @click="login()" class="px-4">Login</b-button>
                     </b-col>
                     <b-col cols="6" class="text-right">
                       <b-button variant="link" class="px-0">Forgot password?</b-button>
@@ -67,30 +67,28 @@
 <script>
 import router from "../../router";
 import axios from "axios";
+
 export default {
   name: "Login",
   data() {
     return {
-      email: "",
-      password: ""
+      email: null,
+      password: null
     };
   },
   methods: {
-    login: e => {
-      e.preventDefault();
-      alert(this.email)
-      let data = {
-        email: "this.email",
-        password: "this.password"
-      };
+    login() {
       axios
-        .post("/api/login", data)
+        .post("/o/login", {
+          email: this.email,
+          password: this.password
+        })
         .then(response => {
-          console.log("Logged in");
+          console.log(response)
           router.push("/dashboard");
         })
         .catch(errors => {
-          console.log("Cannot log in");
+          alert("Invalid Credentials");
         });
     }
   }

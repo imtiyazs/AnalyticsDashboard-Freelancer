@@ -3,6 +3,7 @@
     <div v-if="displayDropZone">
      <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"
      v-on:vdropzone-complete="startLoader"
+     v-on:vdropzone-file-added="validateFile"
      ></vue-dropzone>
     </div>
     <div v-if="!displayDropZone" style="position:fixed;top:50%;left:50%">
@@ -38,8 +39,9 @@ export default {
       displayDropZone :true,
       dropzoneOptions: {
           url: 'https://httpbin.org/post',
+          acceptedFiles:'.sav,.pdf,.csv,.xlxs',
           thumbnailWidth: 150,
-          maxFilesize: 0.5,
+          maxFilesize: 1,
           headers: { "My-Awesome-Header": "header value" }
       }
     };
@@ -48,6 +50,28 @@ export default {
     startLoader(){
       //alert("Complete")
       this.displayDropZone = false
+    },
+    validateFile(file, xhr, formData){
+      //alert(file.name)
+      //console.log(this.dropzoneOptions.acceptedFiles)
+      let acceptedfilelist = this.dropzoneOptions.acceptedFiles 
+      let allow = false
+      // console.log(acceptedfilelist.split(","))
+      // console.log(file.name.split(".")[1])
+      acceptedfilelist.split(",").forEach(function(fileExtension) {
+        //if (fileExtension == file.name.split(".")[1]){
+        if (file.name.includes(fileExtension)){
+          // console.log(fileExtension)
+          // console.log("Allowed")
+          allow = true
+          //console.log(allow)
+        }
+      });
+      if (!allow) {
+        this.$refs.myVueDropzone.removeFile(file)
+        alert("This operation is not allowed")
+      }
+      
     }
   },
   mounted() {

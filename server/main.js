@@ -7,6 +7,15 @@
  * 2. Start Server
  */
 
-const server = require('./modules/server')
+const server = require('./modules/server'),
+    database = require('./database/database'),
+    logger = require('./common/logger').logger
 
-server.StartApplicationServer()
+database.ConnectDatabaseServer()
+    .then(() => {
+        logger.info('Database Server Connected Successfully')
+        server.StartApplicationServer()
+    })
+    .catch(err => {
+        logger.error('ConnectDatabaseServer: ' + err)
+    })

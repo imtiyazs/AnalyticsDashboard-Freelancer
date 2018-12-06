@@ -6,22 +6,9 @@ const express = require('express'),
     middleware = require('../helpers/middleware'),
     constants = require('../common/constant'),
     logger = require('../common/logger').logger,
-    LocalStrategy = require('passport-local').Strategy
-
-/** DUMMY DATA */
-let users = [{
-        id: 1,
-        name: "Jude",
-        email: "user@email.com",
-        password: "password"
-    },
-    {
-        id: 2,
-        name: "Emma",
-        email: "emma@email.com",
-        password: "password2"
-    }
-]
+    loginRegister = require('./login-register'),
+    LocalStrategy = require('passport-local'),
+    database = require('../database/database')
 
 /** Start express server */
 exports.StartApplicationServer = () => {
@@ -62,6 +49,18 @@ exports.StartApplicationServer = () => {
         })(req, res, next)
     })
 
+    /** Register User API */
+    app.post(constants.RegisterRoute, (req, res) => {
+        logger.info(constants.RegisterRoute)
+        loginRegister.RegisterNewUser(req.body)
+            .then(() => {
+                res.status(200).send('User Registration Successful')
+            })
+            .catch(err => {
+                res.status(417).send('User Registration Failed: ' + err)
+            })
+    })
+
     /** Logout API */
     app.get(constants.LogoutRoute, function (req, res) {
         logger.info(constants.LogoutRoute)
@@ -88,9 +87,9 @@ function InitializeServerConfigurations() {
 
     // Set Browser Cookies
     app.use(cookieSession({
-        name: 'analytics-dashboard-session',
-        keys: ['iamniceanalyserthatlovestoanalyzepieceofshit'],
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        name: constants.CookieName,
+        keys: [constants.CookieKey],
+        maxAge: constants.UserTTL
     }))
 
     app.use(passport.initialize());
@@ -100,36 +99,48 @@ function InitializeServerConfigurations() {
     /** Initiate passport authentication strategy */
     passport.use(
         new LocalStrategy({
-                usernameField: "email",
-                passwordField: "password"
-            },
+            usernameField: "username",
+            passwordField: "password"
+        }, (username, password, done) => {
+            loginRegister.UserLogin(username, password)
+                .then(user => {
+                    if (user) {
+                        done(null, user)
+                    } else {
+                        done(null, false, {
+                            message: 'Incorrect username or password'
+                        })
+                    }
 
-            (username, password, done) => {
-                let user = users.find((user) => {
-                    return user.email === username && user.password === password
+                    return user
                 })
-
-                if (user) {
-                    done(null, user)
-                } else {
+                .catch(err => {
                     done(null, false, {
-                        message: 'Incorrect username or password'
+                        message: err
                     })
-                }
-            }
-        )
+                })
+        })
     )
 
     passport.serializeUser((user, done) => {
-        done(null, user.id)
+        user.forEach(user => {
+            done(null, user._id)
+        })
     })
 
     passport.deserializeUser((id, done) => {
-        let user = users.find((user) => {
-            return user.id === id
+        database.FindInCollection({
+            _id: id
+        }, constants.UsersCollection, (data) => {
+            data.forEach(user => {
+                if (user._id === id) {
+                    done(null, user)
+                }
+            })
+
+            done(null, false)
         })
 
-        done(null, user)
     })
 
     app.listen(constants.ServerPort, () => {

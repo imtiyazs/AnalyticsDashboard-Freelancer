@@ -20,7 +20,8 @@ exports.RegisterNewUser = (RequestBody) => {
                         username: RequestBody.username,
                         password: RequestBody.password,
                         email: RequestBody.email,
-                        role: 'normal'
+                        role: 'normal',
+                        lastlogin: new Date().toISOString()
                     }], constants.UsersCollection, (results) => {
                         resolve(results)
                     })
@@ -49,12 +50,14 @@ exports.UserLogin = (username, password) => {
 
             data.forEach(user => {
                 if (username === user.username && password === user.password) {
-                    return resolve({
-                        id: user._id,
-                        username: user.username,
-                        email: user.email,
-                        role: user.role
-                    })
+                    database.UpdateDocument({
+                        username: username
+                    }, {
+                        $set: {
+                            lastlogin: new Date().toISOString()
+                        }
+                    }, constants.UsersCollection, (data) => {})
+                    return resolve(user)
                 }
             })
 

@@ -70,18 +70,22 @@ exports.StartApplicationServer = () => {
         return res.status(200).send('Logout successful');
     });
 
+    /** Dashboard statistics route */
+    app.post(constants.DashboardRoute, (req, res) => {
+        logger.info(constants.DashboardRoute)
+
+    })
+
     /** User API to check user is logged */
-    app.get(constants.UserRoute, middleware.authMiddleware, (req, res) => {
+    app.post(constants.UserRoute, middleware.authMiddleware, (req, res) => {
         logger.info(constants.UserRoute)
         database.FindByObjectID(req.session.passport.user, constants.UsersCollection, (data) => {
             if (data == null) {
                 return res.status(417).send('Session Expired')
             }
 
-            if (String(data.id).toLowerCase() === String(req.session.passport.user).toLowerCase()) {
-                return res.status(200).send({
-                    user: data
-                })
+            if (String(data._id).toLowerCase() === String(req.session.passport.user).toLowerCase()) {
+                return res.status(200).send(data)
             } else {
                 return res.status(417).send('Session Expired')
             }
@@ -151,7 +155,7 @@ function InitializeServerConfigurations() {
     )
 
     passport.serializeUser((user, done) => {
-        done(null, user.id)
+        done(null, user._id)
     })
 
     passport.deserializeUser((id, done) => {

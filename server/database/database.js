@@ -36,12 +36,7 @@ exports.FindByObjectID = (id, collectionName, callback) => {
         } else {
             data.forEach(user => {
                 if (String(id).toLowerCase() === String(user._id).toLowerCase()) {
-                    callback({
-                        id: user._id,
-                        username: user.username,
-                        email: user.email,
-                        role: user.role
-                    })
+                    callback(user)
                 }
             })
         }

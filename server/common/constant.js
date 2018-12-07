@@ -23,5 +23,6 @@ module.exports = constants = {
     LoginRoute: '/o/login',
     LogoutRoute: '/o/logout',
     RegisterRoute: '/o/register',
-    UserRoute: '/o/user'
+    UserRoute: '/o/user',
+    DashboardRoute: '/o/getdashboardstats'
 }

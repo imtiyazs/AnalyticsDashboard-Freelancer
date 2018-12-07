@@ -28,6 +28,7 @@ module.exports = constants = {
     UsersCollection: 'Users',
     ReportsCollection: 'Reports',
     SessionsCollection: 'Sessions',
+    UploadsCollection: 'Uploads',
 
     /** Session and API Configuration */
     CookieName: 'analytics-dashboard-session',

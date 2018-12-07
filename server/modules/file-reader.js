@@ -1,5 +1,6 @@
 const constants = require('../common/constant'),
     logger = require('../common/logger').logger,
+    database = require('../database/database'),
     path = require('path')
 
 exports.UploadAndReadFile = (req, res) => {
@@ -7,8 +8,8 @@ exports.UploadAndReadFile = (req, res) => {
 
         /** Extract all required data from Headers and Multer Middleware */
         let fileType = path.extname(String(req.file.originalname)),
-            filename = String(req.file.originalname),
-            userid = String(req.headers.id),
+            filename = String(req.file.originalname).replace(/\s/g, ''),
+            userid = String(req.headers.id).replace(/\s/g, ''),
             fileBuffer = req.file.buffer
 
         /**Create Require directory structure and return folder path */
@@ -24,6 +25,9 @@ exports.UploadAndReadFile = (req, res) => {
                         logger.error('Write source file: ' + error)
                         return reject(error)
                     }
+
+                    /** Add To Uploads Collection in DB */
+                    LogUploadsToDatabase(userid, fileType, filePath)
 
                     /** Perform file operation based on filetypes */
                     switch (fileType) {
@@ -110,5 +114,111 @@ function FileHandler(id, fileType) {
             }
             resolve(filePath)
         })
+    })
+}
+
+function LogUploadsToDatabase(userId, fileType, filePath) {
+    database.FindInCollection({
+        id: userId
+    }, constants.UploadsCollection, (data) => {
+        let DBQuery = null
+        if (data == null || data.length == 0) {
+            // Add new document
+            /** Query selector */
+            switch (fileType) {
+                case '.sav':
+                    DBQuery = [{
+                        id: userId,
+                        lastupload: new Date().toISOString(),
+                        uploads: {
+                            sav: [filePath],
+                            xls: [],
+                            json: []
+                        }
+                    }]
+                    break
+
+                case '.xls':
+                    DBQuery = [{
+                        id: userId,
+                        lastupload: new Date().toISOString(),
+                        uploads: {
+                            sav: [],
+                            xls: [filePath],
+                            json: []
+                        }
+                    }]
+                    break
+
+                case '.json':
+                    DBQuery = [{
+                        id: userId,
+                        lastupload: new Date().toISOString(),
+                        uploads: {
+                            sav: [],
+                            xls: [],
+                            json: [filePath]
+                        }
+                    }]
+                    break
+            }
+
+            database.InsertManyDocuments(DBQuery, constants.UploadsCollection, (err) => {
+                if (err == null) {
+                    logger.error('LogUploadsToDatabase: Cannot Insert Document')
+                }
+            })
+
+        } else {
+            // Update current document
+            /** Query selector */
+            switch (fileType) {
+                case '.sav':
+                    DBQuery = {
+                        $push: {
+                            'uploads.sav': filePath
+                        }
+                    }
+                    break
+
+                case '.xls':
+                    DBQuery = {
+                        $push: {
+                            'uploads.xls': filePath
+                        }
+                    }
+                    break
+
+                case '.json':
+                    DBQuery = {
+                        $push: {
+                            'uploads.json': filePath
+                        }
+                    }
+                    break
+            }
+
+            /** Update Timestamp */
+            database.UpdateDocument({
+                id: userId
+            }, {
+                $set: {
+                    lastupload: new Date().toISOString()
+                }
+            }, constants.UploadsCollection, (err) => {
+                if (err == null) {
+                    logger.error('LogUploadsToDatabase: Cannot Update Document')
+                }
+            })
+
+            /** Add File To Array */
+            database.UpdateDocument({
+                id: userId
+            }, DBQuery, constants.UploadsCollection, (err) => {
+                if (err == null) {
+                    logger.error('LogUploadsToDatabase: Cannot Update Document')
+                }
+            })
+        }
     })
 }

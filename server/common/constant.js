@@ -1,8 +1,24 @@
+let SAVFileReaderFile = null
+
+/** Platform based executable path */
+switch (process.platform) {
+    case 'win32':
+        SAVFileReaderFile = '..\\savReader\\main.py'
+        break
+    default:
+        SAVFileReaderFile = '../savReader/main.py'
+}
+
 module.exports = constants = {
 
     /** Server Configuration */
     ServerPort: 9449,
     AppLogFile: './server.log',
+    AppUploadsDir: 'Uploads',
+    AppSavFilesDir: 'SAV',
+    AppJSONFilesDir: 'JSON',
+    AppOTHERFilesDir: 'OTHER',
+    SAVFileReaderFile: SAVFileReaderFile,
 
     /** Database */
     DBServerAddress: 'localhost',
@@ -24,5 +40,6 @@ module.exports = constants = {
     LogoutRoute: '/o/logout',
     RegisterRoute: '/o/register',
     UserRoute: '/o/user',
-    DashboardRoute: '/o/getdashboardstats'
+    DashboardRoute: '/o/getdashboardstats',
+    FilesUploadRoute: '/o/uploadfiles'
 }

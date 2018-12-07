@@ -1,7 +1,7 @@
 const database = require('../database/database'),
     constants = require('../common/constant'),
-    logger = require('../common/logger').logger
-// bcrypt = require('bcrypt')
+    logger = require('../common/logger').logger,
+    bcrypt = require('bcrypt')
 
 exports.RegisterNewUser = (RequestBody) => {
     return new Promise((resolve, reject) => {
@@ -14,22 +14,21 @@ exports.RegisterNewUser = (RequestBody) => {
 
             try {
                 if (data.length === 0) {
-                    //TODO: Enable bcrypt somewhere else since bcrypt isnt getting installed on my PC
-                    // bcrypt.hash(RequestBody.password, constants.BcryptSaltRounds)
-                    //     .then(hashedPassword => {
-                    database.InsertManyDocuments([{
-                        username: RequestBody.username,
-                        password: RequestBody.password,
-                        email: RequestBody.email,
-                        role: 'normal',
-                        lastlogin: new Date().toISOString()
-                    }], constants.UsersCollection, (results) => {
-                        resolve(results)
-                    })
-                    // })
-                    // .catch(err => {
-                    //     reject('Error in Registration: ' + err)
-                    // })
+                    bcrypt.hash(RequestBody.password, constants.BcryptSaltRounds)
+                        .then(hashedPassword => {
+                            database.InsertManyDocuments([{
+                                username: RequestBody.username,
+                                password: hashedPassword,
+                                email: RequestBody.email,
+                                role: 'normal',
+                                lastlogin: new Date().toISOString()
+                            }], constants.UsersCollection, (results) => {
+                                resolve(results)
+                            })
+                        })
+                        .catch(err => {
+                            reject('Error in Registration: ' + err)
+                        })
                 } else {
                     reject('User with username "' + RequestBody.username + '" already exists.')
                 }
@@ -50,7 +49,13 @@ exports.UserLogin = (username, password) => {
             }
 
             data.forEach(user => {
-                if (username === user.username && password === user.password) {
+                if (username === user.username) {
+
+                    let passCheck = bcrypt.compareSync(password, user.password)
+                    if (!passCheck) {
+                        return reject('Incorrect Password')
+                    }
+
                     try {
                         database.UpdateDocument({
                             username: username
@@ -59,9 +64,12 @@ exports.UserLogin = (username, password) => {
                                 lastlogin: new Date().toISOString()
                             }
                         }, constants.UsersCollection, (data) => {})
+
                     } catch (err) {
                         logger.error('UserLogin: ' + err)
+                        return reject('Error While Login')
                     }
+
                     return resolve(user)
                 }
             })

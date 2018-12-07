@@ -8,9 +8,12 @@ const express = require('express'),
     logger = require('../common/logger').logger,
     loginRegister = require('./login-register'),
     LocalStrategy = require('passport-local'),
-    session = require('express-session'),
-    MongoStore = require('connect-mongo')(session),
-    database = require('../database/database')
+    fileReader = require('./file-reader'),
+    database = require('../database/database'),
+    multer = require('multer'),
+    upload = multer({
+        storage: multer.memoryStorage()
+    })
 
 /** Start express server */
 exports.StartApplicationServer = () => {
@@ -70,6 +73,18 @@ exports.StartApplicationServer = () => {
         return res.status(200).send('Logout successful');
     });
 
+    /** Read and extract uploaded files */
+    app.post(constants.FilesUploadRoute, upload.single('file'), (req, res) => {
+        logger.info(constants.FilesUploadRoute)
+        fileReader.UploadAndReadFile(req, res)
+            .then(JSONfiledata => {
+                return res.status(200).send(JSONfiledata)
+            })
+            .catch(err => {
+                return res.status(417).send(err)
+            })
+    })
+
     /** Dashboard statistics route */
     app.post(constants.DashboardRoute, (req, res) => {
         logger.info(constants.DashboardRoute)
@@ -96,7 +111,10 @@ exports.StartApplicationServer = () => {
 function InitializeServerConfigurations() {
 
     // Attach body parser to read data from ajax calls
-    app.use(bodyParser.json())
+    app.use(bodyParser.urlencoded({
+        extended: true
+    }));
+    app.use(bodyParser.json());
 
     // Set Browser Cookies
     app.use(cookieSession({

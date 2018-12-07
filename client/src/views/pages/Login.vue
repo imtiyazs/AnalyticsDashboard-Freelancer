@@ -20,7 +20,7 @@
                       class="form-control"
                       placeholder="Username"
                       autocomplete="username email"
-                      v-model="email"
+                      v-model="username"
                     />
                   </b-input-group>
                   <b-input-group class="mb-4">
@@ -72,7 +72,7 @@ export default {
   name: "Login",
   data() {
     return {
-      email: null,
+      username: null,
       password: null
     };
   },
@@ -80,7 +80,7 @@ export default {
     login() {
       axios
         .post("/o/login", {
-          email: this.email,
+          username: this.username,
           password: this.password
         })
         .then(response => {

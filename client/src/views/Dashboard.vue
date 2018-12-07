@@ -717,6 +717,7 @@ export default {
         this.userLogged = true;
       })
       .catch(errors => {
+        alert(errors);
         router.push("/login");
       });
   }

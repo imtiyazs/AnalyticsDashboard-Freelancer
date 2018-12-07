@@ -8,6 +8,8 @@ const express = require('express'),
     logger = require('../common/logger').logger,
     loginRegister = require('./login-register'),
     LocalStrategy = require('passport-local'),
+    session = require('express-session'),
+    MongoStore = require('connect-mongo')(session),
     database = require('../database/database')
 
 /** Start express server */
@@ -43,7 +45,7 @@ exports.StartApplicationServer = () => {
 
                 return res.status(200).send({
                     message: 'User Logged In Successfully',
-                    user: info
+                    user: user
                 })
             })
         })(req, res, next)
@@ -71,11 +73,18 @@ exports.StartApplicationServer = () => {
     /** User API to check user is logged */
     app.get(constants.UserRoute, middleware.authMiddleware, (req, res) => {
         logger.info(constants.UserRoute)
-        let user = users.find(user => {
-            return user.id === req.session.passport.user
-        })
-        res.status(200).send({
-            user: user
+        database.FindByObjectID(req.session.passport.user, constants.UsersCollection, (data) => {
+            if (data == null) {
+                return res.status(417).send('Session Expired')
+            }
+
+            if (String(data.id).toLowerCase() === String(req.session.passport.user).toLowerCase()) {
+                return res.status(200).send({
+                    user: data
+                })
+            } else {
+                return res.status(417).send('Session Expired')
+            }
         })
     })
 }
@@ -92,9 +101,28 @@ function InitializeServerConfigurations() {
         maxAge: constants.UserTTL
     }))
 
-    app.use(passport.initialize());
+    // app.use(session({
+    //     secret: constants.CookieKey,
+    //     saveUninitialized: true,
+    //     resave: true,
+    //     // using store session on MongoDB using express-session + connect
+    //     store: new MongoStore({
+    //         url: 'mongodb://' + constants.DBServerAddress + ':' + constants.DBServerPort,
+    //         collection: constants.SessionsCollection
+    //     })
+    // }))
 
-    app.use(passport.session());
+    app.use(passport.initialize())
+
+    app.use(passport.session())
+
+    app.use((req, res, next) => {
+        res.header('Access-Control-Allow-Origin', 'http://localhost:9449')
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, X-AUTHENTICATION, X-IP, Content-Type, Accept')
+        res.header('Access-Control-Allow-Credentials', true)
+        res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+        next()
+    })
 
     /** Initiate passport authentication strategy */
     passport.use(
@@ -123,24 +151,13 @@ function InitializeServerConfigurations() {
     )
 
     passport.serializeUser((user, done) => {
-        user.forEach(user => {
-            done(null, user._id)
-        })
+        done(null, user.id)
     })
 
     passport.deserializeUser((id, done) => {
-        database.FindInCollection({
-            _id: id
-        }, constants.UsersCollection, (data) => {
-            data.forEach(user => {
-                if (user._id === id) {
-                    done(null, user)
-                }
-            })
-
-            done(null, false)
+        database.FindByObjectID(id, constants.UsersCollection, (validatedUserData) => {
+            done(null, validatedUserData)
         })
-
     })
 
     app.listen(constants.ServerPort, () => {

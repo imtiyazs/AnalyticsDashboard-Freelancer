@@ -1,4 +1,5 @@
 const MongoClient = require('mongodb').MongoClient,
+    mongo = require('mongodb'),
     constants = require('../common/constant'),
     logger = require('../common/logger').logger
 
@@ -20,6 +21,30 @@ exports.ConnectDatabaseServer = () => {
             DBInstance = client.db(dbName)
             resolve()
         });
+    })
+}
+
+exports.FindByObjectID = (id, collectionName, callback) => {
+    let collection = DBInstance.collection(collectionName),
+        o_id = new mongo.ObjectID(id)
+    collection.find({
+        _id: o_id
+    }).toArray(function (err, data) {
+        if (err) {
+            logger.error('FindByObjectID: ' + err)
+            callback(null)
+        } else {
+            data.forEach(user => {
+                if (String(id).toLowerCase() === String(user._id).toLowerCase()) {
+                    callback({
+                        id: user._id,
+                        username: user.username,
+                        email: user.email,
+                        role: user.role
+                    })
+                }
+            })
+        }
     })
 }
 

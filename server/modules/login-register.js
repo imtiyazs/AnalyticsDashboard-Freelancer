@@ -49,7 +49,12 @@ exports.UserLogin = (username, password) => {
 
             data.forEach(user => {
                 if (username === user.username && password === user.password) {
-                    return resolve(data)
+                    return resolve({
+                        id: user._id,
+                        username: user.username,
+                        email: user.email,
+                        role: user.role
+                    })
                 }
             })
 

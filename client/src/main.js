@@ -9,12 +9,15 @@ import BootstrapVue from 'bootstrap-vue'
 import App from './App'
 import router from './router'
 import axios from 'axios'
+import Toaster from 'v-toaster'
+import 'v-toaster/dist/v-toaster.css'
 
 // todo
 // cssVars()
 axios.defaults.baseURL = 'http://localhost:8080/server/'
 
 Vue.use(BootstrapVue)
+Vue.use(Toaster, {timeout: 3000})
 
 /* eslint-disable no-new */
 new Vue({

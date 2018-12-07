@@ -22,7 +22,7 @@ export default {
     /** Check User Logged In */
     let self = this;
     axios
-      .get("/o/user")
+      .post("/o/user")
       .then(response => {
         self.$set(this, "user", response.data.user);
         this.userLogged = true;

@@ -1,5 +1,6 @@
 const database = require('../database/database'),
-    constants = require('../common/constant')
+    constants = require('../common/constant'),
+    logger = require('../common/logger').logger
 // bcrypt = require('bcrypt')
 
 exports.RegisterNewUser = (RequestBody) => {
@@ -50,13 +51,17 @@ exports.UserLogin = (username, password) => {
 
             data.forEach(user => {
                 if (username === user.username && password === user.password) {
-                    database.UpdateDocument({
-                        username: username
-                    }, {
-                        $set: {
-                            lastlogin: new Date().toISOString()
-                        }
-                    }, constants.UsersCollection, (data) => {})
+                    try {
+                        database.UpdateDocument({
+                            username: username
+                        }, {
+                            $set: {
+                                lastlogin: new Date().toISOString()
+                            }
+                        }, constants.UsersCollection, (data) => {})
+                    } catch (err) {
+                        logger.error('UserLogin: ' + err)
+                    }
                     return resolve(user)
                 }
             })

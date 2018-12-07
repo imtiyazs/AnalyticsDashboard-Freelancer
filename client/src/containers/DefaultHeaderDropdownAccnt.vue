@@ -10,10 +10,7 @@
       <b-dropdown-item>
         <i class="fa fa-user"/> Profile
       </b-dropdown-item>
-      <b-dropdown-item>
-        <i class="fa fa-wrench"/> Settings
-      </b-dropdown-item>
-      <b-dropdown-item>
+      <b-dropdown-item @click="logout">
         <i class="fa fa-lock"/> Logout
       </b-dropdown-item>
     </template>
@@ -22,6 +19,9 @@
 
 <script>
 import { HeaderDropdown as AppHeaderDropdown } from "@coreui/vue";
+import axios from "axios";
+import router from "../router";
+
 export default {
   name: "DefaultHeaderDropdownAccnt",
   components: {
@@ -29,6 +29,18 @@ export default {
   },
   data: () => {
     return { itemsCount: 42 };
+  },
+  methods: {
+    logout() {
+      axios
+        .get("/o/logout")
+        .then(response => {
+          router.push("/login");
+        })
+        .catch(errors => {
+          router.push("/login");
+        });
+    }
   }
 };
 </script>

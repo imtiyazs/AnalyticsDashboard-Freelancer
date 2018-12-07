@@ -32,12 +32,6 @@ export default {
           name: 'Profile',
           url: '#',
           icon: 'icon-emotsmile'
-        },
-        {
-          name: 'Logout',
-          url: '#',
-          icon: 'icon-logout',
-          variant: 'danger'
         }
       ]
     }

@@ -56,10 +56,10 @@ exports.StartApplicationServer = () => {
         logger.info(constants.RegisterRoute)
         loginRegister.RegisterNewUser(req.body)
             .then(() => {
-                res.status(200).send('User Registration Successful')
+                res.status(200).send('Registration Successful!')
             })
             .catch(err => {
-                res.status(417).send('User Registration Failed: ' + err)
+                res.status(417).send(err)
             })
     })
 

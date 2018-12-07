@@ -56,7 +56,9 @@
                 v-on:vdropzone-file-added="validateFile"
               ></vue-dropzone>
             </b-col>
-            <b-col sm="12" lg="6"></b-col>
+            <b-col sm="12" lg="6">
+              <h5>Generate Report</h5>
+            </b-col>
           </b-row>
         </b-card>
       </b-col>
@@ -600,6 +602,7 @@ export default {
 
       acceptedfilelist.split(",").forEach(function(fileExtension) {
         if (file.name.includes(fileExtension)) {
+          console.log(file)
           allow = true;
         }
       });

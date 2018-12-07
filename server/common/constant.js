@@ -5,7 +5,7 @@ module.exports = constants = {
     AppLogFile: './server.log',
 
     /** Database */
-    DBServerAddress: '10.2.10.160',
+    DBServerAddress: 'localhost',
     DBServerPort: 27017,
     BcryptSaltRounds: 12,
     DBName: 'AnalyticsDashboard',

@@ -60,11 +60,12 @@ exports.FindInCollection = (QueryToMatch, collectionName, callback) => {
 }
 
 /**
- * @param {*} UpdateQuery: ex: { a: 2 }, { $set: { b: 1 }}
+ * @param {*} FindQuery ex: { a: 2 }
+ * @param {*} UpdateQuery: ex:  { $set: { b: 1 }}
  */
-exports.UpdateDocument = (UpdateQuery, collectionName, callback) => {
+exports.UpdateDocument = (FindQuery, UpdateQuery, collectionName, callback) => {
     const collection = DBInstance.collection(collectionName);
-    collection.updateOne(UpdateQuery, function (err, result) {
+    collection.updateOne(FindQuery, UpdateQuery, function (err, result) {
         if (err) {
             logger.error('UpdateDocument Error: ' + err)
             callback(null)

@@ -53,7 +53,7 @@
                 <div>
                   <h2>Sign up</h2>
                   <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                  <b-button variant="primary" class="active mt-3">Register Now!</b-button>
+                  <b-button variant="primary" @click="register" class="active mt-3">Register Now!</b-button>
                 </div>
               </b-card-body>
             </b-card>
@@ -84,12 +84,15 @@ export default {
           password: this.password
         })
         .then(response => {
-          console.log(response)
+          console.log(response);
           router.push("/dashboard");
         })
         .catch(errors => {
-          alert("Invalid Credentials: "+ errors);
+          alert("Invalid Credentials: " + errors);
         });
+    },
+    register() {
+      router.push("/register");
     }
   }
 };

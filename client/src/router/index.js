@@ -6,6 +6,7 @@ const DefaultContainer = () => import('@/containers/DefaultContainer')
 
 // Views
 const Dashboard = () => import('@/views/Dashboard')
+const Profile = () => import('@/views/Profile')
 
 const Colors = () => import('@/views/theme/Colors')
 const Typography = () => import('@/views/theme/Typography')
@@ -99,6 +100,11 @@ export default new Router({
           path: '/reporthistory',
           name: 'Report History',
           component: ReportHistory
+        },
+        {
+          path: '/profile',
+          name: 'Profile',
+          component: Profile
         },
         {
           path: 'theme',

@@ -1,6 +1,7 @@
 <template>
   <div class="wrapper">
     <div v-if="displayDropZone">
+      
      <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"
      v-on:vdropzone-complete="startLoader"
      v-on:vdropzone-file-added="validateFile"
@@ -38,11 +39,11 @@ export default {
     return {
       displayDropZone :true,
       dropzoneOptions: {
-          url: 'https://httpbin.org/post',
+          url: 'http://localhost:9449/o/uploadfiles',
           acceptedFiles:'.sav,.pdf,.csv,.xlxs',
           thumbnailWidth: 150,
           maxFilesize: 1,
-          headers: { "My-Awesome-Header": "header value" }
+          headers: { 'id': '5c0aa01ec37d373a111a2835' }
       }
     };
   },

@@ -5,6 +5,9 @@
      <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"
      v-on:vdropzone-complete="startLoader"
      v-on:vdropzone-file-added="validateFile"
+     v-on:vdropzone-sending="addFormData"
+     v-on:vdropzone-success="uploadStatus"
+     v-on:vdropzone-error="uploadStatusFailed"
      ></vue-dropzone>
     </div>
     <div v-if="!displayDropZone" style="position:fixed;top:50%;left:50%">
@@ -39,7 +42,7 @@ export default {
     return {
       displayDropZone :true,
       dropzoneOptions: {
-          url: 'http://localhost:9449/o/uploadfiles',
+          url: '/o/uploadfiles',
           acceptedFiles:'.sav,.pdf,.csv,.xlxs',
           thumbnailWidth: 150,
           maxFilesize: 1,
@@ -48,6 +51,31 @@ export default {
     };
   },
   methods: {
+    addFormData(file, xhr, formData){
+      formData.append('file', file)
+
+      axios
+        .post("/o/uploadfiles", {
+          "files":file
+        },
+        {headers : { 'id': '5c0aa01ec37d373a111a2835' }})
+        .then(response => {
+          console.log(response);
+          router.push("/dashboard");
+        })
+        .catch(errors => {
+          alert("Invalid Credentials: " + errors);
+        });
+    },
+    uploadStatus(file, response){
+      console.log(response)
+      console.log(file)
+    },
+    uploadStatusFailed(file, message, xhr){
+      console.log(file)
+      console.log(message)
+      console.log(xhr)
+    },
     startLoader(){
       //alert("Complete")
       this.displayDropZone = false

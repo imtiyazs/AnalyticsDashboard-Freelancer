@@ -30,7 +30,7 @@ export default {
       icon: 'icon-user',
       children: [{
           name: 'Profile',
-          url: '#',
+          url: '/profile',
           icon: 'icon-emotsmile'
         }
       ]

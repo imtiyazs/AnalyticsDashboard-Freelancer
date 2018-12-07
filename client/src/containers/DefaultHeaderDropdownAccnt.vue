@@ -7,7 +7,7 @@
       <b-dropdown-header tag="div" class="text-center">
         <strong>Account</strong>
       </b-dropdown-header>
-      <b-dropdown-item>
+      <b-dropdown-item @click="profile">
         <i class="fa fa-user"/> Profile
       </b-dropdown-item>
       <b-dropdown-item @click="logout">
@@ -31,6 +31,9 @@ export default {
     return { itemsCount: 42 };
   },
   methods: {
+    profile() {
+      router.push('/profile')
+    },
     logout() {
       axios
         .get("/o/logout")

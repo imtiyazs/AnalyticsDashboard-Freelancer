@@ -44,6 +44,40 @@ exports.FindByObjectID = (id, collectionName, callback) => {
 }
 
 /**
+ * @param {*} DocumentCount: Number of documents to fetch. Integer Value
+ * @param {*} collectionName: Collection Name
+ */
+exports.GetLatestDocuments = (DocumentCount, collectionName, callback) => {
+    let collection = DBInstance.collection(collectionName)
+    collection.find().limit(DocumentCount).sort({
+        $natural: -1
+    }).toArray(function (err, docs) {
+        if (err) {
+            logger.error()
+            callback(null)
+        } else {
+            callback(docs)
+        }
+    })
+}
+
+/**
+ * @param {*} QueryToMatch: Parameter to match. Ex: { a: 3 }
+ * @param {*} collectionName: Collection Name
+ */
+exports.FindOneInCollection = (QueryToMatch, collectionName, callback) => {
+    let collection = DBInstance.collection(collectionName)
+    collection.findOne(QueryToMatch, (err, docs) => {
+        if (err) {
+            logger.error()
+            callback(null)
+        } else {
+            callback(docs)
+        }
+    })
+}
+
+/**
  * @param {*} QueryToMatch: Parameter to match. Ex: { a: 3 }
  * @param {*} collectionName: Collection Name
  */

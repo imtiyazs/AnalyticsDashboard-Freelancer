@@ -25,6 +25,7 @@ module.exports = constants = {
     DBServerPort: 27017,
     BcryptSaltRounds: 12,
     DBName: 'AnalyticsDashboard',
+    AnnouncementCollection: 'Announcements',
     UsersCollection: 'Users',
     ReportsCollection: 'Reports',
     SessionsCollection: 'Sessions',

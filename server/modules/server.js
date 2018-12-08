@@ -10,6 +10,7 @@ const express = require('express'),
     LocalStrategy = require('passport-local'),
     fileReader = require('./file-reader'),
     database = require('../database/database'),
+    dashboard = require('./dashboard'),
     multer = require('multer'),
     upload = multer({
         storage: multer.memoryStorage()
@@ -88,7 +89,13 @@ exports.StartApplicationServer = () => {
     /** Dashboard statistics route */
     app.post(constants.DashboardRoute, (req, res) => {
         logger.info(constants.DashboardRoute)
-
+        dashboard.GetDashboardStatistics(req)
+            .then(JSONfiledata => {
+                return res.status(200).send(JSONfiledata)
+            })
+            .catch(err => {
+                return res.status(417).send(err)
+            })
     })
 
     /** User API to check user is logged */

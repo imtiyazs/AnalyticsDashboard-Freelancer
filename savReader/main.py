@@ -1,6 +1,6 @@
 import pandas as pd
 import savReaderWriter as s
-import codecs, sys, json
+import codecs, sys, json, re
 
 # Check for commandline args
 if len (sys.argv) != 3 :
@@ -23,7 +23,7 @@ data = {}
 # For each in headers
 for i, each in enumerate(headerInBytes):
     # Decode header to text and set as JSON key. Select first column of dataframe and convert to NPArray
-    data[each.decode("utf-8") ] = df.iloc[:,i].values.tolist()
+    data[each.decode("utf-8") ] = df.iloc[:,i].values.astype(str).tolist()
 
 # Save to destination
 json.dump(data, codecs.open(destinationFile, 'w', encoding='utf-8'), sort_keys=True, indent=4)

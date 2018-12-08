@@ -44,7 +44,7 @@ exports.GetDashboardStatistics = (req) => {
         /** Get Announcements */
         const GetAnnouncements = () => {
             return new Promise(resolve => {
-                database.GetLatestDocuments(2, constants.AnnouncementCollection, (data) => {
+                database.GetLatestDocuments(5, constants.AnnouncementCollection, (data) => {
                     resolve(data)
                 })
             })

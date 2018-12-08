@@ -11,7 +11,7 @@
               <b-dropdown-item>Generate New Report</b-dropdown-item>
               <b-dropdown-item>Download Report</b-dropdown-item>
             </b-dropdown>
-            <h4 class="mb-0">133</h4>
+            <h4 class="mb-0">{{this.dashboardData.totalFilesUploaded}}</h4>
             <p>Files Uploaded</p>
           </b-card-body>
           <card-line3-chart-example
@@ -25,7 +25,7 @@
       <b-col sm="6" lg="3">
         <b-card no-body class="bg-danger">
           <b-card-body class="pb-0">
-            <h4 class="mb-0">145</h4>
+            <h4 class="mb-0">{{this.dashboardData.totalReportsGenerated}}</h4>
             <p>Reports Generated</p>
           </b-card-body>
           <card-bar-chart-example
@@ -37,8 +37,15 @@
         </b-card>
       </b-col>
       <b-col sm="6" lg="6">
-        <b-card header="Dashboard Updates" no-body class="bg-primary">
-          <b-card-body></b-card-body>
+        <b-card header="Announcements" no-body class="bg-primary">
+          <b-card-body style="min-height: 105px; max-height: 105px; overflow-y: auto;">
+            <ul id="announcements-ul">
+              <li
+                v-for="announcement in this.dashboardData.announcementsArray"
+                v-bind:key="announcement"
+              >{{ announcement.message }}</li>
+            </ul>
+          </b-card-body>
         </b-card>
       </b-col>
     </b-row>
@@ -581,6 +588,12 @@ export default {
         lastlogin: "",
         role: ""
       },
+      dashboardData: {
+        totalFilesUploaded: null,
+        totalReportsGenerated: null,
+        announcementsArray: null,
+        lastReportSummary: null
+      },
       dropzoneOptions: {
         url: "https://httpbin.org/post",
         acceptedFiles: ".sav,.pdf,.csv,.xlxs,.xls",
@@ -602,7 +615,7 @@ export default {
 
       acceptedfilelist.split(",").forEach(function(fileExtension) {
         if (file.name.includes(fileExtension)) {
-          console.log(file)
+          console.log(file);
           allow = true;
         }
       });
@@ -641,9 +654,27 @@ export default {
         this.userProfileData.email = response.data.email;
         this.userProfileData.role = response.data.role;
         this.userProfileData.lastlogin = response.data.lastlogin;
+
+        axios
+          .post("/o/getdashboardstats", {
+            username: this.userProfileData.username
+          })
+          .then(response => {
+            this.dashboardData.totalFilesUploaded =
+              response.data.totalFileUploads;
+            this.dashboardData.totalReportsGenerated =
+              response.data.totalReportUploads;
+            this.dashboardData.announcementsArray = response.data.announcements;
+            this.dashboardData.lastReportSummary =
+              response.data.lastReportSummary;
+          })
+          .catch(errors => {
+            this.$toaster.error("Session Expired. Please Login Again.");
+            router.push("/login");
+          });
       })
       .catch(errors => {
-        alert(errors);
+        this.$toaster.error("Session Expired. Please Login Again.");
         router.push("/login");
       });
   }

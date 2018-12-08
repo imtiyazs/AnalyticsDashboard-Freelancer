@@ -84,11 +84,10 @@ export default {
           password: this.password
         })
         .then(response => {
-          console.log(response);
           router.push("/dashboard");
         })
         .catch(errors => {
-          alert("Invalid Credentials: " + errors);
+          this.$toaster.error("Incorrect Username/Password. Try Again.");
         });
     },
     register() {

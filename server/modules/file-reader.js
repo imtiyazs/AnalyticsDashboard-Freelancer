@@ -64,7 +64,7 @@ function ReadSAVFiles(id, fileName, sourceFilePath) {
         require('fs-extra').ensureDir(DestinationFilePath, 0o2775, (err) => {
             if (err) {
                 logger.error('ReadSAVFiles: ' + err)
-                return reject()
+                return reject('ReadSAVFiles: ' + err)
             }
 
             let DestFilePath = path.join(DestinationFilePath, JSONFileName)
@@ -73,21 +73,21 @@ function ReadSAVFiles(id, fileName, sourceFilePath) {
             require('child_process').exec(constants.SAVFileReaderFile + ' ' + sourceFilePath + ' ' + DestFilePath, (err) => {
                 if (err) {
                     logger.error('ReadSAVFiles: ' + err)
-                    return reject()
+                    return reject('ReadSAVFiles: ' + err)
                 }
 
                 /** Read and return data from JSON file */
                 require('fs-extra').readFile(DestFilePath, (error, fileBuffer) => {
                     if (error) {
                         logger.error('ReadSAVFiles: ' + err)
-                        return reject()
+                        return reject('ReadSAVFiles: ' + err)
                     }
 
                     try {
                         resolve(JSON.parse(fileBuffer))
                     } catch (err) {
                         logger.error('ReadSAVFiles: ' + err)
-                        return reject()
+                        return reject('ReadSAVFiles: ' + err)
                     }
                 })
             })
@@ -110,7 +110,7 @@ function FileHandler(id, fileType) {
         require('fs-extra').ensureDir(filePath, 0o2775, (err) => {
             if (err) {
                 logger.error('FileHandler: ' + err)
-                reject()
+                reject('FileHandler: ' + err)
             }
             resolve(filePath)
         })

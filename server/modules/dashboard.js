@@ -5,7 +5,7 @@ const constants = require('../common/constant'),
 exports.GetDashboardStatistics = (req) => {
     return new Promise((resolve) => {
 
-        let userId = req.body.userId
+        let username = req.body.username
 
         let ResponseData = {
             announcements: null,
@@ -18,7 +18,7 @@ exports.GetDashboardStatistics = (req) => {
         const GetReportsdata = () => {
             return new Promise(resolve => {
                 database.FindOneInCollection({
-                    id: userId
+                    username: username
                 }, constants.ReportsCollection, (data) => {
                     resolve(data)
                 })
@@ -29,7 +29,7 @@ exports.GetDashboardStatistics = (req) => {
         const GetFileUploads = () => {
             return new Promise(resolve => {
                 database.FindOneInCollection({
-                    id: userId
+                    username: username
                 }, constants.UploadsCollection, (data) => {
                     try {
                         resolve(data.uploads.sav.length + data.uploads.xls.length)

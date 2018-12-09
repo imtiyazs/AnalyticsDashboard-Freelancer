@@ -5,11 +5,6 @@ export default {
       icon: 'icon-speedometer'
     },
     {
-      name: 'Generate Report',
-      url: '/generatereports',
-      icon: 'icon-graph'
-    },
-    {
       name: 'Report Analysis',
       url: '/reportanalysis',
       icon: 'icon-pie-chart'

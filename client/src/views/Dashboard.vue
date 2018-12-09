@@ -52,7 +52,7 @@
 
     <b-row>
       <b-col md="12">
-        <b-card header="Quick Report Generator">
+        <b-card header="Quick Report Analysis">
           <b-row>
             <b-col sm="12" lg="6">
               <vue-dropzone

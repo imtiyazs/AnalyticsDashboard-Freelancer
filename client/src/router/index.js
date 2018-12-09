@@ -54,7 +54,6 @@ const Page404 = () => import('@/views/pages/Page404')
 const Page500 = () => import('@/views/pages/Page500')
 const Login = () => import('@/views/pages/Login')
 const Register = () => import('@/views/pages/Register')
-const GenerateReports = () => import('@/views/pages/GenerateReport')
 const DownloadReports = () => import('@/views/pages/DownloadReports')
 const ReportAnalysis = () => import('@/views/pages/ReportAnalysis')
 const ReportHistory = () => import('@/views/pages/ReportHistory')
@@ -80,11 +79,6 @@ export default new Router({
           path: 'dashboard',
           name: 'Dashboard',
           component: Dashboard
-        },
-        {
-          path: '/generatereports',
-          name: 'Generate Reports',
-          component: GenerateReports
         },
         {
           path: '/downloadreports',

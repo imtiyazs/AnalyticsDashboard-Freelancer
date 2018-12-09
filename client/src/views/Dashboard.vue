@@ -37,8 +37,8 @@
         </b-card>
       </b-col>
       <b-col sm="6" lg="6">
-        <b-card header="Announcements" no-body class="bg-primary">
-          <b-card-body style="min-height: 105px; max-height: 105px; overflow-y: auto;">
+        <b-card header="Announcements" no-body class="bg-primary" style="height: 85%;">
+          <b-card-body style="overflow-y: auto;">
             <ul id="announcements-ul">
               <li
                 v-for="announcement in this.dashboardData.announcementsArray"
@@ -52,7 +52,7 @@
 
     <b-row>
       <b-col md="12">
-        <b-card header="Quick Analysis">
+        <b-card header="Quick Report Generator">
           <b-row>
             <b-col sm="12" lg="6">
               <vue-dropzone

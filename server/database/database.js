@@ -8,19 +8,25 @@ let DBInstance = null
 // Use connect method to connect to the server
 exports.ConnectDatabaseServer = () => {
     return new Promise((resolve, reject) => {
-        const url = 'mongodb://' + constants.DBServerAddress + ':' + constants.DBServerPort;
-        const dbName = constants.DBName
+        try {
+            const url = 'mongodb://' + constants.DBServerAddress + ':' + constants.DBServerPort;
+            const dbName = constants.DBName
 
-        MongoClient.connect(url, {
-            useNewUrlParser: true
-        }, function (err, client) {
-            if (err) {
-                reject()
-            }
+            MongoClient.connect(url, {
+                useNewUrlParser: true
+            }, function (err, client) {
+                if (err) {
+                    logger.error('ConnectDatabaseServer: ' + err)
+                    reject()
+                }
 
-            DBInstance = client.db(dbName)
-            resolve()
-        });
+                DBInstance = client.db(dbName)
+                resolve()
+            });
+        } catch (err) {
+            logger.error('ConnectDatabaseServer: ' + err)
+            reject()
+        }
     })
 }
 

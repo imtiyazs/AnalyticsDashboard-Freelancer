@@ -7,7 +7,7 @@ exports.UploadAndReadFile = (req, res) => {
     return new Promise((resolve, reject) => {
 
         /** Extract all required data from Headers and Multer Middleware */
-        let fileType = path.extname(String(req.file.originalname)),
+        let fileType = path.extname(String(req.file.originalname)).toLowerCase(),
             filename = String(req.file.originalname).replace(/\s/g, ''),
             username = String(req.headers.username).replace(/\s/g, ''),
             fileBuffer = req.file.buffer
@@ -41,6 +41,15 @@ exports.UploadAndReadFile = (req, res) => {
                                     logger.error('ReadSAVFiles: ' + error)
                                     return reject(error)
                                 })
+                            break
+
+                        case '.xls':
+                            break
+
+                        case '.xlsx':
+                            break
+
+                        case '.csv':
                             break
                     }
                 })
@@ -105,6 +114,14 @@ function FileHandler(username, fileType) {
             case '.sav':
                 filePath = path.join(constants.AppUploadsDir, constants.AppSavFilesDir, username)
                 break
+
+            case '.xls':
+                filePath = path.join(constants.AppUploadsDir, constants.AppXLSFilesDir, username)
+                break
+
+            case '.xlsx':
+                filePath = path.join(constants.AppUploadsDir, constants.AppXLSFilesDir, username)
+                break
         }
 
         require('fs-extra').ensureDir(filePath, 0o2775, (err) => {
@@ -150,6 +167,18 @@ function LogUploadsToDatabase(userId, fileType, filePath) {
                     }]
                     break
 
+                case '.xlsx':
+                    DBQuery = [{
+                        username: userId,
+                        lastupload: new Date().toISOString(),
+                        uploads: {
+                            sav: [],
+                            xls: [filePath],
+                            json: []
+                        }
+                    }]
+                    break
+
                 case '.json':
                     DBQuery = [{
                         username: userId,
@@ -161,6 +190,18 @@ function LogUploadsToDatabase(userId, fileType, filePath) {
                         }
                     }]
                     break
+
+                default:
+                    DBQuery = [{
+                        username: userId,
+                        lastupload: new Date().toISOString(),
+                        uploads: {
+                            sav: [],
+                            xls: [],
+                            json: [],
+                            other: [filePath]
+                        }
+                    }]
             }
 
             database.InsertManyDocuments(DBQuery, constants.UploadsCollection, (err) => {
@@ -189,6 +230,14 @@ function LogUploadsToDatabase(userId, fileType, filePath) {
                     }
                     break
 
+                case '.xlsx':
+                    DBQuery = {
+                        $push: {
+                            'uploads.xlsx': filePath
+                        }
+                    }
+                    break
+
                 case '.json':
                     DBQuery = {
                         $push: {
@@ -196,6 +245,13 @@ function LogUploadsToDatabase(userId, fileType, filePath) {
                         }
                     }
                     break
+
+                default:
+                    DBQuery = {
+                        $push: {
+                            'uploads.other': filePath
+                        }
+                    }
             }
 
             /** Update Timestamp */

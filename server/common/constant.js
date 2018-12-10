@@ -16,6 +16,7 @@ module.exports = constants = {
     AppLogFile: './server.log',
     AppUploadsDir: 'Uploads',
     AppSavFilesDir: 'SAV',
+    AppXLSFilesDir: 'XLS',
     AppJSONFilesDir: 'JSON',
     AppOTHERFilesDir: 'OTHER',
     SAVFileReaderFile: SAVFileReaderFile,

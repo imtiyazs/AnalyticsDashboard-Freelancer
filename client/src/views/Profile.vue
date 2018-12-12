@@ -1,65 +1,362 @@
 <template>
-    <div>
-        <div class="card">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAOVBMVEXk5ueutLepsLPo6uursbXJzc/p6+yvtbji5OWorrK2u77Z3N24vcDO0dPg4uPAxcfMz9HDx8rU19hwHDZQAAAFQklEQVR4nO2d25qrIAyFhUA9oVbf/2G31rYzbe0egaQEm/9q5q7rCyQxwrIoBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEE4IABQ9O3ULUzt5d8DMauZrFO61ubC/Idy41QdRSX050Yb9YLWje3zFwnQbcpbMbrpiqw1AljzVt5N5JixRrDvw/dLY52rRpjUDn1rHLsMJULh9D59F41Nn5tGmHbG767xnJdEGD0CuKJdVhIbzwheoqiq1D97N5W/vFVjm0kY+4AArug8JIYLzERiFSFwkZj69/9NjL5FIvd0A02kQqV4r1MYotbogmFdF2HyLvSvaMtYYoUgUKmab7YBhyFQqZJrEKFDCeG8Fdmu0+gsc4NpyYARTaHimU+rGk0gz9YGBjyBSjUMg9gjhpBlEDF34QLDnYgrUNV9akFPQIes0IzMgojwTPEMM4U9Ujvzg55Sa3oALPIinRlYBZFgkSpzSq3qAfRFyu0hyneGvwdjU6v6BYz4AnkV/VNJodAwUgioPekNzaitwa+GC4ZRRaRINLyGGZZCIKeaT5NKOSVTrCniM3ymihQ9Gy+FNOVwJrWwO1QKTWphd4BGoCj8IMdfpcfPNFTVgs8w6gsqfvzb+034dG3H77y/4OkJ973TXSGjJ+DjTzG+YBKF+v73BqNUSpRqOE2EkQ5DPcJrqk/yZobTIv2Ct2vHf0NKsEx5LdJZ4fnoJxXQT5twamhWsIs+q3K/gptrGJ76+oKTe6iPUBxDiDvLYLgLL6DtRHbH9q6gnd5jWAuvoDU2XAViVQyeaWYF5cYFpxHbKxj5lGUp/AGiZ1J8Xji9I1Igv477hZhrwNyGM29oY246T7w34Qq0wQk1D4FF+EKtc7irfiXENUJl5Bqx1MUA54/UP9oP7y6c9f3mTaBqfBx4yuwceIpLGPfGMb8ArgCMe5ywlB4ydcIqFrOo8U83MzPkuEB/gKJr6v840pU23/jdAOjtpu3eLG9s83cVvABQTWNTL8aQ68LUdV0O3QFME38Dp1PRTt3Z2nM3tRWcDqXuK4ANUv8mFOBqPXu2w+CaplxpGueG0c6rtZ9Xa7ZK59/eT9Y1SuvFenajEM4ZR5vSjV1b5bYr57C03VDW7wvhg9TFftfZbEx3L57Bjd7Vrj2gdQ4FBKC1TodPhecmYJj4NjmzvLH0j91rLF1XMRQJp3bY/bD0F6ZmZ6AMlVW4R4ZM7SY2exJgcvGL8xWtLIvVOj8elSS3gNWSeIbk88Udj7hxaJdUIxS7DLsjNTZtKoMM2GdIjqIxSRw9RmnxGt3nZznQkuWXbY3jZ2sHFP5T+0iM+uR7qROGTak32n2qz/FzzEfV+JkPDKD4zIZKHD4h0N8xHxGjqAsHVGHvPvHQtN9QgJhTCFgSKe9hQEdyC88TU9IJTLoFf0PU4QS8m6eC5jMR4NLvwTsUElkJpDh6A6mrxDPYEplFcAH3Yx9UpglRGMRzmhT3JzHAEzhxKPQboJ2XpvEMRMAgNXDxR7fJwHlgZJllbmCcCk/5wLsDjK3IOIIK4/oJlUESGtHrtGVaKH6IXKeM8+iNOGcC9O8BUBBlTQCs8+iVmO97cu1Hn4gIImQhMCKIWezChWBvvgwS6UpwOg2/ofVpAq/v0xh4kRDa2GSyC1Vwd0pjhkhDUOuW0SIN/Ngelf0xCaYLUMh2OrNJyMQml3K/EvBhoay2YZDfC5mDNQ0Bbq40pqt0+Btl5pVoQlIN7yHiK/41P69UqgJ8iWyts6L2Fbh924wz/goFQRAEQRAEQRAEQRCET/IP1+RU5rUCFhYAAAAASUVORK5CYII=">
-          
-            <h1>{{username}}</h1>
-            <p class="title">{{emailId}}</p>
-            <p>No of reports generated - {{countOfReportsGenerated}}</p>
-            <!-- <p>Harvard University</p>
-            <a href="#"><i class="fa fa-dribbble"></i></a> 
-            <a href="#"><i class="fa fa-twitter"></i></a> 
-            <a href="#"><i class="fa fa-linkedin"></i></a> 
-            <a href="#"><i class="fa fa-facebook"></i></a> 
-            <p><button>Contact</button></p> -->
+  <div class="row">
+    <div class="col-3">
+      <div class="card-group" style="height: 100%;">
+        <div class="card" style="width: 18rem;">
+          <img class="card-img-top" style="height:200px" src="img/avatars/1.jpg">
+          <div class="card-body">
+            <h5 class="card-title">{{ CapitalizeFirstLetter(userProfileData.username) }}</h5>
+            <p class="card-text" style="font-size: 11px;">Last Login: {{userProfileData.lastlogin}}</p>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              User Priviledge:
+              <strong>{{ CapitalizeFirstLetter(userProfileData.role)}}</strong>
+            </li>
+            <li class="list-group-item">
+              Total File Uploads:
+              <strong>10</strong>
+            </li>
+            <li class="list-group-item">
+              Total Reports:
+              <strong>10</strong>
+            </li>
+          </ul>
+          <div class="card-body"></div>
         </div>
+      </div>
     </div>
+    <div class="col-9">
+      <div class="card text-center" style="height:100%">
+        <div class="card-header">
+          <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item" @click="ToggleSection('section1')">
+              <a id="section1-nav" class="nav-link active">Edit Profile</a>
+            </li>
+            <li class="nav-item" @click="ToggleSection('section2')">
+              <a id="section2-nav" class="nav-link">Change Password</a>
+            </li>
+            <li class="nav-item" @click="ToggleSection('section3')">
+              <a id="section3-nav" class="nav-link">Account Settings</a>
+            </li>
+          </ul>
+        </div>
+        <div class="card-body" v-if="section1" id="section1">
+          <form class="mt-4" v-on:submit="UpdateProfile">
+            <div class="form-row">
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="first-name-inp">First Name</span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  aria-label="Default"
+                  aria-describedby="first-name-inp"
+                  v-model="userProfileData.firstName"
+                >
+              </div>
+
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="last-name-inp">Last Name</span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  aria-label="Default"
+                  aria-describedby="last-name-inp"
+                  v-model="userProfileData.lastName"
+                >
+              </div>
+
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="email-inp">Email ID</span>
+                </div>
+                <input
+                  type="email"
+                  class="form-control"
+                  aria-label="Default"
+                  aria-describedby="email-inp"
+                  v-model="userProfileData.email"
+                >
+              </div>
+
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="mobile-inp">Mobile / Phone no.</span>
+                </div>
+                <input
+                  type="number"
+                  class="form-control"
+                  aria-label="Default"
+                  aria-describedby="mobile-inp"
+                  v-model="userProfileData.mobile"
+                >
+              </div>
+
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="address-1-inp">Address Line 1</span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  aria-label="Default"
+                  aria-describedby="address-1-inp"
+                  v-model="userProfileData.address1"
+                >
+              </div>
+
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="address-2-inp">Address Line 2</span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  aria-label="Default"
+                  aria-describedby="address-2-inp"
+                  v-model="userProfileData.address2"
+                >
+              </div>
+
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="city-inp">City</span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  aria-label="Default"
+                  aria-describedby="city-inp"
+                  v-model="userProfileData.city"
+                >
+              </div>
+
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="state-inp">State</span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  aria-label="Default"
+                  aria-describedby="state-inp"
+                  v-model="userProfileData.state"
+                >
+              </div>
+
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="country-inp">Country</span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  aria-label="Default"
+                  aria-describedby="country-inp"
+                  v-model="userProfileData.country"
+                >
+              </div>
+
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="zip-inp">Zip Code</span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  aria-label="Default"
+                  aria-describedby="zip-inp"
+                  v-model="userProfileData.zip"
+                >
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary float-left mt-3">Update Profile</button>
+          </form>
+        </div>
+        <div class="card-body" v-if="section2" id="section2">
+          <form v-on:submit="ChangePassword">
+            <div class="row mt-4">
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="oldpass-1-inp">Old Password</span>
+                </div>
+                <input
+                  type="password"
+                  class="form-control"
+                  aria-label="Default"
+                  aria-describedby="address-1-inp"
+                  v-model="userPassChange.oldPass"
+                >
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="newpass-1-inp">New Password</span>
+                </div>
+                <input
+                  type="password"
+                  class="form-control"
+                  aria-label="Default"
+                  aria-describedby="address-1-inp"
+                  v-model="userPassChange.newpass"
+                >
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="confirmpass-1-inp">Repeat Password</span>
+                </div>
+                <input
+                  type="password"
+                  class="form-control"
+                  aria-label="Default"
+                  aria-describedby="address-1-inp"
+                  v-model="userPassChange.confirmPass"
+                >
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary float-left mt-3">Change Password</button>
+          </form>
+        </div>
+        <div class="card-body" v-if="section3" id="section3">
+          <button
+            type="button"
+            @click="DeleteAccount"
+            class="btn btn-danger float-left mt-3"
+          >Deactivate Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
+import axios from "axios";
+import router from "../router";
+
 export default {
-    name:"Profile",
-    data(){
-        return{
-            username:'Jon Snow',
-            emailId : 'jonsnow@gmail.com',
-            countOfReportsGenerated:5
-        }
+  name: "Profile",
+  data() {
+    return {
+      section1: true,
+      section2: false,
+      section3: false,
+      userPassChange: {
+        oldPass: "",
+        newPass: "",
+        confirmPass: ""
+      },
+      userProfileData: {
+        username: "",
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        address1: "",
+        address2: "",
+        city: "",
+        state: "",
+        country: "",
+        zip: "",
+        role: "",
+        lastlogin: ""
+      }
+    };
+  },
+  methods: {
+    UpdateProfile: function(e) {
+      e.preventDefault();
+      axios
+        .post("/o/updateprofile", JSON.stringify(this.userProfileData))
+        .then(response => {
+          this.$toaster.success(response.data);
+        })
+        .catch(error => {
+          this.$toaster.error("Error updating profile information");
+        });
+    },
+
+    ChangePassword: function(e) {
+      e.preventDefault();
+
+      if (this.userPassChange.newPass === this.userPassChange.confirmPass) {
+        axios
+          .post("/o/changeuserpassword", JSON.stringify(this.userPassChange))
+          .then(response => {
+            this.$toaster.success(response.data);
+          })
+          .catch(error => {
+            this.$toaster.error("Error changing password");
+          });
+      } else {
+        this.$toaster.error("New Passwords do not match");
+      }
+    },
+
+    DeleteAccount() {
+      alert("Delete Passwrod?");
+    },
+
+    CapitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    },
+    ToggleSection(id) {
+      switch (id) {
+        case "section1":
+          this.section1 = true;
+          this.section2 = false;
+          this.section3 = false;
+          document.getElementById("section1-nav").classList.add("active");
+          document.getElementById("section2-nav").classList.remove("active");
+          document.getElementById("section3-nav").classList.remove("active");
+          break;
+
+        case "section2":
+          this.section1 = false;
+          this.section2 = true;
+          this.section3 = false;
+          document.getElementById("section1-nav").classList.remove("active");
+          document.getElementById("section2-nav").classList.add("active");
+          document.getElementById("section3-nav").classList.remove("active");
+          break;
+
+        case "section3":
+          this.section1 = false;
+          this.section2 = false;
+          this.section3 = true;
+          document.getElementById("section1-nav").classList.remove("active");
+          document.getElementById("section2-nav").classList.remove("active");
+          document.getElementById("section3-nav").classList.add("active");
+          break;
+      }
     }
-}
+  },
+  mounted() {
+    axios
+      .post("/o/user")
+      .then(response => {
+        this.$set(this, "user", response.data);
+        this.userLogged = true;
+        this.userProfileData.username = response.data.username;
+        this.userProfileData.email = response.data.email;
+        this.userProfileData.role = response.data.role;
+
+        var b = response.data.lastlogin.split(/\D+/);
+        this.userProfileData.lastlogin = new Date(
+          Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6])
+        );
+      })
+      .catch(errors => {
+        this.$toaster.error("Session Expired. Please Login Again.");
+        router.push("/login");
+      });
+  }
+};
 </script>
 <style scoped>
-.card {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    max-width: 300px;
-    margin: auto;
-    text-align: center;
-}
-
-.title {
-    color: grey;
-    font-size: 18px;
-}
-
-button {
-    border: none;
-    outline: 0;
-    display: inline-block;
-    padding: 8px;
-    color: white;
-    background-color: #000;
-    text-align: center;
-    cursor: pointer;
-    width: 100%;
-    font-size: 18px;
-}
-
-a {
-    text-decoration: none;
-    font-size: 22px;
-    color: black;
-}
-
-button:hover, a:hover {
-    opacity: 0.7;
-}   
 </style>

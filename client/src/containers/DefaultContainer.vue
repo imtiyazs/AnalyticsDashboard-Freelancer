@@ -19,7 +19,8 @@
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
         <div class="small text-muted" style="text-align: right">Last Login: 2018-12-07T07:34:13.049Z
-          <br><strong>IMTIYAZ</strong>
+          <br>
+          <strong>IMTIYAZ</strong>
         </div>
 
         <!-- <b-nav-item class="d-md-down-none">
@@ -42,6 +43,7 @@
         <SidebarHeader/>
         <SidebarForm/>
         <SidebarNav :navItems="nav"></SidebarNav>
+        <SidebarNav v-if="isAdmin" :navItems="adminnav"></SidebarNav>
         <SidebarFooter/>
         <SidebarMinimizer/>
       </AppSidebar>
@@ -72,6 +74,7 @@
 
 <script>
 import nav from "@/_nav";
+import adminnav from "@/_admin-nav";
 import {
   Header as AppHeader,
   SidebarToggler,
@@ -109,8 +112,24 @@ export default {
   },
   data() {
     return {
-      nav: nav.items
+      nav: nav.items,
+      adminnav: adminnav.items,
+      isAdmin: false
     };
+  },
+  mounted() {
+    axios
+      .post("/o/user")
+      .then(response => {
+        this.$set(this, "user", response.data);
+        alert(response.data.role)
+        if(response.data.role == 'superadmin') {
+          this.isAdmin = true
+        };
+      })
+      .catch(errors => {
+        console.log(errors)
+      });
   },
   computed: {
     name() {

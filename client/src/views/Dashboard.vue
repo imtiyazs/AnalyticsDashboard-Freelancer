@@ -51,23 +51,19 @@
     </b-row>
 
     <b-row>
-      <b-col md="12">
+      <b-col md="6" style="height:100%">
         <b-card header="Quick Report Analysis">
-          <b-row>
-            <b-col sm="12" lg="6">
-              <vue-dropzone
-                ref="myVueDropzone"
-                id="dropzone"
-                :options="dropzoneOptions"
-                v-on:vdropzone-complete="startLoader"
-                v-on:vdropzone-file-added="validateFile"
-              ></vue-dropzone>
-            </b-col>
-            <b-col sm="12" lg="6">
-              <h5>Generate Report</h5>
-            </b-col>
-          </b-row>
+          <vue-dropzone
+            ref="myVueDropzone"
+            id="dropzone"
+            :options="dropzoneOptions"
+            v-on:vdropzone-complete="startLoader"
+            v-on:vdropzone-file-added="validateFile"
+          ></vue-dropzone>
         </b-card>
+      </b-col>
+      <b-col md="6" style="height:100%">
+        <b-card header="Report Downloads"></b-card>
       </b-col>
     </b-row>
 
@@ -680,11 +676,3 @@ export default {
   }
 };
 </script>
-
-<style>
-/* IE fix */
-#card-chart-01,
-#card-chart-02 {
-  width: 100% !important;
-}
-</style>

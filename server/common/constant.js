@@ -31,6 +31,9 @@ module.exports = constants = {
     ReportsCollection: 'Reports',
     SessionsCollection: 'Sessions',
     UploadsCollection: 'Uploads',
+    DefaultRootUser: 'admin',
+    DefaultRootPassword: 'admin',
+    WelcomeMessage: 'Welcome To Analytics Reports Dashboard!',
 
     /** Session and API Configuration */
     CookieName: 'analytics-dashboard-session',

@@ -1,7 +1,8 @@
 const MongoClient = require('mongodb').MongoClient,
     mongo = require('mongodb'),
     constants = require('../common/constant'),
-    logger = require('../common/logger').logger
+    logger = require('../common/logger').logger,
+    defaultSchema = require('./default')
 
 let DBInstance = null
 
@@ -17,15 +18,17 @@ exports.ConnectDatabaseServer = () => {
             }, function (err, client) {
                 if (err) {
                     logger.error('ConnectDatabaseServer: ' + err)
-                    reject()
+                    return reject()
                 }
 
                 DBInstance = client.db(dbName)
-                resolve()
+                defaultSchema.GenerateDefaultDBSchema()
+
+                return resolve()
             });
         } catch (err) {
             logger.error('ConnectDatabaseServer: ' + err)
-            reject()
+            return reject()
         }
     })
 }

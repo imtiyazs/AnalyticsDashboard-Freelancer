@@ -8,9 +8,9 @@ exports.GetDashboardStatistics = (req) => {
         let username = req.body.username
 
         let ResponseData = {
-            announcements: null,
-            totalReportUploads: null,
-            totalFileUploads: null,
+            announcements: 0,
+            totalReportUploads: 0,
+            totalFileUploads: 0,
             lastReportSummary: null
         }
 
@@ -35,7 +35,7 @@ exports.GetDashboardStatistics = (req) => {
                         resolve(data.uploads.sav.length + data.uploads.xls.length)
                     } catch (err) {
                         logger.error('GetFileUploads: ' + err)
-                        resolve(null)
+                        resolve(0)
                     }
                 })
             })

@@ -18,9 +18,13 @@
         <!-- <b-nav-item class="px-3">Reports History</b-nav-item> -->
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
-        <div class="small text-muted" style="text-align: right">Last Login: 2018-12-07T07:34:13.049Z
+        <div class="small text-muted" style="text-align: right">
+          Last Login: {{userProfileInfo.lastLogin}}
           <br>
-          <strong>IMTIYAZ</strong>
+          <strong
+            v-if="userProfileInfo.firstName!==''"
+          >{{CapitalizeFirstLetter(userProfileInfo.firstName)}} {{CapitalizeFirstLetter(userProfileInfo.lastName)}} -  </strong>
+          <strong>{{ CapitalizeFirstLetter(userProfileInfo.username)}}</strong>
         </div>
 
         <!-- <b-nav-item class="d-md-down-none">
@@ -91,6 +95,8 @@ import {
 } from "@coreui/vue";
 import DefaultAside from "./DefaultAside";
 import DefaultHeaderDropdownAccnt from "./DefaultHeaderDropdownAccnt";
+import axios from "axios";
+import router from "../router";
 
 export default {
   name: "DefaultContainer",
@@ -114,21 +120,36 @@ export default {
     return {
       nav: nav.items,
       adminnav: adminnav.items,
-      isAdmin: false
+      isAdmin: false,
+      userProfileInfo: {
+        username: "",
+        firstName: "",
+        lastName: "",
+        lastLogin: ""
+      }
     };
+  },
+  methods: {
+    CapitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
   },
   mounted() {
     axios
       .post("/o/user")
       .then(response => {
         this.$set(this, "user", response.data);
-        alert(response.data.role)
-        if(response.data.role == 'superadmin') {
-          this.isAdmin = true
-        };
+        if (response.data.role == "superadmin") {
+          this.isAdmin = true;
+        }
+
+        this.userProfileInfo.username = response.data.username;
+        this.userProfileInfo.firstName = response.data.firstName;
+        this.userProfileInfo.lastName = response.data.lastName;
+        this.userProfileInfo.lastLogin = response.data.lastlogin;
       })
       .catch(errors => {
-        console.log(errors)
+        this.$toaster.error(errors.response.data);
       });
   },
   computed: {

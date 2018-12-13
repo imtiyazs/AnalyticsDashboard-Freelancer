@@ -25,8 +25,8 @@ export default {
     } 
     
    }
-  console.log(this.theLabels)
-  console.log(this.theData)
+  //console.log(this.theLabels)
+  //console.log(this.theData)
    this.renderMyChart()
   },
   methods:{
@@ -36,7 +36,7 @@ export default {
         labels: this.theLabels,
         datasets: [
           {
-            label: 'GitHub Commits',
+            // label: 'GitHub Commits',
             backgroundColor: '#f87979',
             data: this.theData
           }

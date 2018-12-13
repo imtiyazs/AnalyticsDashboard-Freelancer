@@ -31,6 +31,7 @@ module.exports = constants = {
     ReportsCollection: 'Reports',
     SessionsCollection: 'Sessions',
     UploadsCollection: 'Uploads',
+    TrashCollection: 'Trash',
     DefaultRootUser: 'admin',
     DefaultRootPassword: 'admin',
     WelcomeMessage: 'Welcome To Analytics Reports Dashboard!',
@@ -47,5 +48,6 @@ module.exports = constants = {
     RegisterRoute: '/o/register',
     UserRoute: '/o/user',
     DashboardRoute: '/o/getdashboardstats',
-    FilesUploadRoute: '/o/uploadfiles'
+    FilesUploadRoute: '/o/uploadfiles',
+    ProfileRoute: '/o/profile'
 }

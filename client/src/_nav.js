@@ -24,11 +24,10 @@ export default {
       url: '#',
       icon: 'icon-user',
       children: [{
-          name: 'Profile',
-          url: '/profile',
-          icon: 'icon-emotsmile'
-        }
-      ]
+        name: 'Profile',
+        url: '/profile',
+        icon: 'icon-emotsmile'
+      }]
     }
   ]
 }

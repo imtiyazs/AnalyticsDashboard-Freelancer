@@ -15,11 +15,11 @@
             </li>
             <li class="list-group-item">
               Total File Uploads:
-              <strong>10</strong>
+              <strong>{{dashboardData.totalFilesUploaded}}</strong>
             </li>
             <li class="list-group-item">
               Total Reports:
-              <strong>10</strong>
+              <strong>{{dashboardData.totalReportsGenerated}}</strong>
             </li>
           </ul>
           <div class="card-body"></div>
@@ -92,7 +92,7 @@
                   class="form-control"
                   aria-label="Default"
                   aria-describedby="mobile-inp"
-                  v-model="userProfileData.mobile"
+                  v-model="userProfileData.phone"
                 >
               </div>
 
@@ -178,6 +178,10 @@
           </form>
         </div>
         <div class="card-body" v-if="section2" id="section2">
+          <b-alert show variant="warning">
+            <h4 class="alert-heading text-left">Change Password</h4>
+            <p class="text-left">Note: Please make sure you type passwords correctly.</p>
+          </b-alert>
           <form v-on:submit="ChangePassword">
             <div class="row mt-4">
               <div class="input-group mb-3 col-md-6">
@@ -203,7 +207,7 @@
                   class="form-control"
                   aria-label="Default"
                   aria-describedby="address-1-inp"
-                  v-model="userPassChange.newpass"
+                  v-model="userPassChange.newPass"
                 >
               </div>
             </div>
@@ -225,11 +229,32 @@
           </form>
         </div>
         <div class="card-body" v-if="section3" id="section3">
-          <button
-            type="button"
-            @click="DeleteAccount"
-            class="btn btn-danger float-left mt-3"
-          >Deactivate Account</button>
+          <b-alert show variant="danger">
+            <h4 class="alert-heading text-left">Account Deletion Alert</h4>
+            <p class="text-left">
+              Note: Please note all the user data i.e. files and reports will be deleted from the server after
+              account deactivation. In case of reactivation, the account may restore the reports from server.
+            </p>
+            <hr>
+            <p class="mb-0 text-left">Please enter the account password to proceed</p>
+          </b-alert>
+          <form v-on:submit="DeleteAccount">
+            <div class="row">
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Account Password</span>
+                </div>
+                <input
+                  type="password"
+                  class="form-control"
+                  aria-label="Default"
+                  v-model="deletionPassword"
+                  required
+                >
+              </div>
+            </div>
+            <button type="submit" class="btn btn-danger float-left mt-3">Deactivate Account</button>
+          </form>
         </div>
       </div>
     </div>
@@ -246,6 +271,7 @@ export default {
       section1: true,
       section2: false,
       section3: false,
+      deletionPassword: "",
       userPassChange: {
         oldPass: "",
         newPass: "",
@@ -265,19 +291,40 @@ export default {
         zip: "",
         role: "",
         lastlogin: ""
+      },
+      dashboardData: {
+        totalFilesUploaded: null,
+        totalReportsGenerated: null,
+        announcementsArray: null,
+        lastReportSummary: null
       }
     };
   },
   methods: {
     UpdateProfile: function(e) {
       e.preventDefault();
+      /** Update Profile API */
       axios
-        .post("/o/updateprofile", JSON.stringify(this.userProfileData))
+        .post("/o/profile", {
+          operation: 0,
+          userId: this.userProfileData.username,
+          profileData: this.userProfileData
+        })
         .then(response => {
-          this.$toaster.success(response.data);
+          this.$toaster.success(response.data.message);
+          this.userProfileData.firstName = response.data.profileData.firstName;
+          this.userProfileData.lastName = response.data.profileData.lastName;
+          this.userProfileData.email = response.data.profileData.email;
+          this.userProfileData.phone = response.data.profileData.phone;
+          this.userProfileData.address1 = response.data.profileData.address1;
+          this.userProfileData.address2 = response.data.profileData.address2;
+          this.userProfileData.city = response.data.profileData.city;
+          this.userProfileData.state = response.data.profileData.state;
+          this.userProfileData.country = response.data.profileData.country;
+          this.userProfileData.zip = response.data.profileData.zip;
         })
         .catch(error => {
-          this.$toaster.error("Error updating profile information");
+          this.$toaster.error(error.response.data);
         });
     },
 
@@ -286,20 +333,41 @@ export default {
 
       if (this.userPassChange.newPass === this.userPassChange.confirmPass) {
         axios
-          .post("/o/changeuserpassword", JSON.stringify(this.userPassChange))
+          .post("/o/profile", {
+            operation: 1,
+            userId: this.userProfileData.username,
+            passObj: this.userPassChange
+          })
           .then(response => {
+            this.userPassChange.oldPass = "";
+            this.userPassChange.newPass = "";
+            this.userPassChange.confirmPass = "";
             this.$toaster.success(response.data);
           })
           .catch(error => {
-            this.$toaster.error("Error changing password");
+            this.$toaster.error(error.response.data);
           });
       } else {
         this.$toaster.error("New Passwords do not match");
       }
     },
 
-    DeleteAccount() {
-      alert("Delete Passwrod?");
+    DeleteAccount: function(e) {
+      e.preventDefault();
+      axios
+        .post("/o/profile", {
+          operation: 2,
+          userId: this.userProfileData.username,
+          password: this.deletionPassword
+        })
+        .then(response => {
+          this.$toaster.success(response.data);
+          router.push("/login");
+        })
+        .catch(error => {
+          this.$toaster.error(error.response.data);
+          router.push("/login");
+        });
     },
 
     CapitalizeFirstLetter(string) {
@@ -337,6 +405,24 @@ export default {
     }
   },
   mounted() {
+    /** Get File Upload Data from Dashboard API */
+    axios
+      .post("/o/getdashboardstats", {
+        username: this.userProfileData.username
+      })
+      .then(response => {
+        this.dashboardData.totalFilesUploaded = response.data.totalFileUploads;
+        this.dashboardData.totalReportsGenerated =
+          response.data.totalReportUploads;
+        this.dashboardData.announcementsArray = response.data.announcements;
+        this.dashboardData.lastReportSummary = response.data.lastReportSummary;
+      })
+      .catch(error => {
+        this.$toaster.error(error.response.data);
+        router.push("/login");
+      });
+
+    /** Get User data from database */
     axios
       .post("/o/user")
       .then(response => {
@@ -345,14 +431,24 @@ export default {
         this.userProfileData.username = response.data.username;
         this.userProfileData.email = response.data.email;
         this.userProfileData.role = response.data.role;
+        this.userProfileData.firstName = response.data.firstName;
+        this.userProfileData.lastName = response.data.lastName;
+        this.userProfileData.email = response.data.email;
+        this.userProfileData.phone = response.data.phone;
+        this.userProfileData.address1 = response.data.address1;
+        this.userProfileData.address2 = response.data.address2;
+        this.userProfileData.city = response.data.city;
+        this.userProfileData.state = response.data.state;
+        this.userProfileData.country = response.data.country;
+        this.userProfileData.zip = response.data.zip;
 
         var b = response.data.lastlogin.split(/\D+/);
         this.userProfileData.lastlogin = new Date(
           Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6])
         );
       })
-      .catch(errors => {
-        this.$toaster.error("Session Expired. Please Login Again.");
+      .catch(error => {
+        this.$toaster.error(error.response.data);
         router.push("/login");
       });
   }

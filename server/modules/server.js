@@ -12,6 +12,7 @@ const express = require('express'),
     database = require('../database/database'),
     dashboard = require('./dashboard'),
     multer = require('multer'),
+    userMgmt = require('./user-management'),
     upload = multer({
         storage: multer.memoryStorage()
     })
@@ -53,6 +54,18 @@ exports.StartApplicationServer = () => {
                 })
             })
         })(req, res, next)
+    })
+
+    /** Profile API */
+    app.post(constants.ProfileRoute, (req, res) => {
+        logger.info(constants.ProfileRoute)
+        userMgmt.UserProfileOperation(req.body)
+            .then(data => {
+                return res.status(200).send(data)
+            })
+            .catch(err => {
+                return res.status(417).send(err)
+            })
     })
 
     /** Register User API */

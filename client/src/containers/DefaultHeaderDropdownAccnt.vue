@@ -32,12 +32,13 @@ export default {
   },
   methods: {
     profile() {
-      router.push('/profile')
+      router.push("/profile");
     },
     logout() {
       axios
         .get("/o/logout")
         .then(response => {
+          this.$toaster.success("Logged Out Successfully");
           router.push("/login");
         })
         .catch(errors => {

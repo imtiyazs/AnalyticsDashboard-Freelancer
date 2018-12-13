@@ -15,7 +15,16 @@ exports.GenerateDefaultDBSchema = () => {
                 password: hashRootPassword,
                 email: "root@system.com",
                 role: "superadmin",
-                lastlogin: new Date().toISOString()
+                lastlogin: new Date().toISOString(),
+                firstName: "",
+                lastName: "",
+                phone: "",
+                address1: "",
+                address2: "",
+                city: "",
+                state: "",
+                country: "",
+                zip: ""
             }], constants.UsersCollection, () => {
 
             })

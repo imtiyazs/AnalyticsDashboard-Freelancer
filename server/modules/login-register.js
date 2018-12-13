@@ -21,6 +21,15 @@ exports.RegisterNewUser = (RequestBody) => {
                                 password: hashedPassword,
                                 email: RequestBody.email,
                                 role: 'normal',
+                                firstName: "",
+                                lastName: "",
+                                phone: "",
+                                address1: "",
+                                address2: "",
+                                city: "",
+                                state: "",
+                                country: "",
+                                zip: "",
                                 lastlogin: new Date().toISOString()
                             }], constants.UsersCollection, (results) => {
                                 resolve(results)

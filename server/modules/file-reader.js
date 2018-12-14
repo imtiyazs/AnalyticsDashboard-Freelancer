@@ -1,7 +1,8 @@
 const constants = require('../common/constant'),
     logger = require('../common/logger').logger,
     database = require('../database/database'),
-    path = require('path')
+    path = require('path'),
+    csv = require('fast-csv')
 
 exports.UploadAndReadFile = (req, res) => {
     return new Promise((resolve, reject) => {
@@ -9,6 +10,7 @@ exports.UploadAndReadFile = (req, res) => {
         /** Extract all required data from Headers and Multer Middleware */
         let fileType = path.extname(String(req.file.originalname)).toLowerCase(),
             filename = String(req.file.originalname).replace(/\s/g, ''),
+            reportname = String(req.body.reportname).replace(/\s/g, ''),
             username = String(req.headers.username).replace(/\s/g, ''),
             fileBuffer = req.file.buffer
 
@@ -26,30 +28,105 @@ exports.UploadAndReadFile = (req, res) => {
                         return reject(error)
                     }
 
-                    /** Add To Uploads Collection in DB */
-                    LogUploadsToDatabase(username, fileType, filePath)
-
                     /** Perform file operation based on filetypes */
                     switch (fileType) {
                         case '.sav':
                             /** Read SAV Files and return the file data */
-                            ReadSAVFiles(username, filename, filePath)
+                            ReadFileWithPythonScript(username, filename, filePath)
                                 .then(JSONData => {
-                                    return resolve(JSONData)
+
+                                    let DBDataObject = {
+                                        reportName: reportname,
+                                        fileName: filename,
+                                        filePath: filePath,
+                                        fileType: fileType,
+                                        uploadedAt: new Date().toISOString(),
+                                        dataValues: JSONData
+                                    }
+
+                                    /** Add To Uploads Collection in DB */
+                                    LogUploadsToDatabase(username, DBDataObject)
+
+                                    return resolve(DBDataObject)
                                 })
                                 .catch(error => {
-                                    logger.error('ReadSAVFiles: ' + error)
+                                    logger.error('ReadFileWithPythonScript: ' + error)
                                     return reject(error)
                                 })
                             break
 
                         case '.xls':
+                            /** Read EXCEL Files and return the file data */
+                            ReadFileWithPythonScript(username, filename, filePath)
+                                .then(JSONData => {
+
+                                    let DBDataObject = {
+                                        reportName: reportname,
+                                        fileName: filename,
+                                        filePath: filePath,
+                                        fileType: fileType,
+                                        uploadedAt: new Date().toISOString(),
+                                        dataValues: JSONData
+                                    }
+
+                                    /** Add To Uploads Collection in DB */
+                                    LogUploadsToDatabase(username, DBDataObject)
+
+                                    return resolve(DBDataObject)
+                                })
+                                .catch(error => {
+                                    logger.error('ReadFileWithPythonScript: ' + error)
+                                    return reject(error)
+                                })
                             break
 
                         case '.xlsx':
+                            /** Read EXCEL Files and return the file data */
+                            ReadFileWithPythonScript(username, filename, filePath)
+                                .then(JSONData => {
+
+                                    let DBDataObject = {
+                                        reportName: reportname,
+                                        fileName: filename,
+                                        filePath: filePath,
+                                        fileType: fileType,
+                                        uploadedAt: new Date().toISOString(),
+                                        dataValues: JSONData
+                                    }
+
+                                    /** Add To Uploads Collection in DB */
+                                    LogUploadsToDatabase(username, DBDataObject)
+
+                                    return resolve(DBDataObject)
+                                })
+                                .catch(error => {
+                                    logger.error('ReadFileWithPythonScript: ' + error)
+                                    return reject(error)
+                                })
                             break
 
                         case '.csv':
+                            ReadCSVFiles(filePath)
+                                .then(JSONData => {
+
+                                    let DBDataObject = {
+                                        reportName: reportname,
+                                        fileName: filename,
+                                        filePath: filePath,
+                                        fileType: fileType,
+                                        uploadedAt: new Date().toISOString(),
+                                        dataValues: JSONData
+                                    }
+
+                                    /** Add To Uploads Collection in DB */
+                                    LogUploadsToDatabase(username, DBDataObject)
+
+                                    return resolve(DBDataObject)
+                                })
+                                .catch(error => {
+                                    logger.error('ReadCSVFiles: ' + error)
+                                    return reject(error)
+                                })
                             break
                     }
                 })
@@ -61,8 +138,35 @@ exports.UploadAndReadFile = (req, res) => {
     })
 }
 
+/** Read CSV Files */
+function ReadCSVFiles(sourceFilePath) {
+    return new Promise((resolve, reject) => {
+        let array = []
+        csv
+            .fromPath(sourceFilePath, {
+                headers: true,
+                ignoreEmpty: true,
+                discardUnmappedColumns: true
+            })
+            .on("data", function (data) {
+                array.push(data)
+            })
+            .on("end", function () {
+                let dataObj = {}
+                Object.keys(array[0]).map((key) => {
+                    dataObj[key] = array.map((x) => x[key]);
+                })
+                return resolve(dataObj)
+            })
+            .on('error', function (err) {
+                logger.error('ReadCSVFiles: ' + err)
+                return reject('Invalid CSV File')
+            })
+    })
+}
+
 /** Read sav or SPSS files */
-function ReadSAVFiles(username, fileName, sourceFilePath) {
+function ReadFileWithPythonScript(username, fileName, sourceFilePath) {
     return new Promise((resolve, reject) => {
 
         /** Construct destination file path of JSON to be created */
@@ -72,8 +176,8 @@ function ReadSAVFiles(username, fileName, sourceFilePath) {
         /** Check and create directories with permissions */
         require('fs-extra').ensureDir(DestinationFilePath, 0o2775, (err) => {
             if (err) {
-                logger.error('ReadSAVFiles: ' + err)
-                return reject('ReadSAVFiles: ' + err)
+                logger.error('ReadFileWithPythonScript: ' + err)
+                return reject('ReadFileWithPythonScript: ' + err)
             }
 
             let DestFilePath = path.join(DestinationFilePath, JSONFileName)
@@ -81,22 +185,22 @@ function ReadSAVFiles(username, fileName, sourceFilePath) {
             /** Execute python program of reading SAV files and generate JSON file on above destination path */
             require('child_process').exec(constants.SAVFileReaderFile + ' ' + sourceFilePath + ' ' + DestFilePath, (err) => {
                 if (err) {
-                    logger.error('ReadSAVFiles: ' + err)
-                    return reject('ReadSAVFiles: ' + err)
+                    logger.error('ReadFileWithPythonScript: ' + err)
+                    return reject('ReadFileWithPythonScript: ' + err)
                 }
 
                 /** Read and return data from JSON file */
                 require('fs-extra').readFile(DestFilePath, (error, fileBuffer) => {
                     if (error) {
-                        logger.error('ReadSAVFiles: ' + err)
-                        return reject('ReadSAVFiles: ' + err)
+                        logger.error('ReadFileWithPythonScript: ' + err)
+                        return reject('ReadFileWithPythonScript: ' + err)
                     }
 
                     try {
                         resolve(JSON.parse(fileBuffer))
                     } catch (err) {
-                        logger.error('ReadSAVFiles: ' + err)
-                        return reject('ReadSAVFiles: ' + err)
+                        logger.error('ReadFileWithPythonScript: ' + err)
+                        return reject('ReadFileWithPythonScript: ' + err)
                     }
                 })
             })
@@ -122,6 +226,10 @@ function FileHandler(username, fileType) {
             case '.xlsx':
                 filePath = path.join(constants.AppUploadsDir, constants.AppXLSFilesDir, username)
                 break
+
+            case '.csv':
+                filePath = path.join(constants.AppUploadsDir, constants.AppCSVFilesDir, username)
+                break
         }
 
         require('fs-extra').ensureDir(filePath, 0o2775, (err) => {
@@ -134,7 +242,7 @@ function FileHandler(username, fileType) {
     })
 }
 
-function LogUploadsToDatabase(userId, fileType, filePath) {
+function LogUploadsToDatabase(userId, fileDataObj) {
     database.FindInCollection({
         username: userId
     }, constants.UploadsCollection, (data) => {
@@ -142,15 +250,16 @@ function LogUploadsToDatabase(userId, fileType, filePath) {
         if (data == null || data.length == 0) {
             // Add new document
             /** Query selector */
-            switch (fileType) {
+            switch (fileDataObj.fileType) {
                 case '.sav':
                     DBQuery = [{
                         username: userId,
                         lastupload: new Date().toISOString(),
                         uploads: {
-                            sav: [filePath],
+                            sav: [fileDataObj],
                             xls: [],
-                            json: []
+                            json: [],
+                            csv: []
                         }
                     }]
                     break
@@ -161,8 +270,9 @@ function LogUploadsToDatabase(userId, fileType, filePath) {
                         lastupload: new Date().toISOString(),
                         uploads: {
                             sav: [],
-                            xls: [filePath],
-                            json: []
+                            xls: [fileDataObj],
+                            json: [],
+                            csv: []
                         }
                     }]
                     break
@@ -173,8 +283,9 @@ function LogUploadsToDatabase(userId, fileType, filePath) {
                         lastupload: new Date().toISOString(),
                         uploads: {
                             sav: [],
-                            xls: [filePath],
-                            json: []
+                            xls: [fileDataObj],
+                            json: [],
+                            csv: []
                         }
                     }]
                     break
@@ -186,7 +297,21 @@ function LogUploadsToDatabase(userId, fileType, filePath) {
                         uploads: {
                             sav: [],
                             xls: [],
-                            json: [filePath]
+                            json: [fileDataObj],
+                            csv: []
+                        }
+                    }]
+                    break
+
+                case '.csv':
+                    DBQuery = [{
+                        username: userId,
+                        lastupload: new Date().toISOString(),
+                        uploads: {
+                            sav: [],
+                            xls: [],
+                            json: [],
+                            csv: [fileDataObj]
                         }
                     }]
                     break
@@ -199,7 +324,8 @@ function LogUploadsToDatabase(userId, fileType, filePath) {
                             sav: [],
                             xls: [],
                             json: [],
-                            other: [filePath]
+                            csv: [],
+                            other: [fileDataObj]
                         }
                     }]
             }
@@ -213,11 +339,11 @@ function LogUploadsToDatabase(userId, fileType, filePath) {
         } else {
             // Update current document
             /** Query selector */
-            switch (fileType) {
+            switch (fileDataObj.fileType) {
                 case '.sav':
                     DBQuery = {
                         $push: {
-                            'uploads.sav': filePath
+                            'uploads.sav': fileDataObj.filePath
                         }
                     }
                     break
@@ -225,7 +351,7 @@ function LogUploadsToDatabase(userId, fileType, filePath) {
                 case '.xls':
                     DBQuery = {
                         $push: {
-                            'uploads.xls': filePath
+                            'uploads.xls': fileDataObj.filePath
                         }
                     }
                     break
@@ -233,7 +359,7 @@ function LogUploadsToDatabase(userId, fileType, filePath) {
                 case '.xlsx':
                     DBQuery = {
                         $push: {
-                            'uploads.xlsx': filePath
+                            'uploads.xls': fileDataObj.filePath
                         }
                     }
                     break
@@ -241,7 +367,15 @@ function LogUploadsToDatabase(userId, fileType, filePath) {
                 case '.json':
                     DBQuery = {
                         $push: {
-                            'uploads.json': filePath
+                            'uploads.json': fileDataObj.filePath
+                        }
+                    }
+                    break
+
+                case '.csv':
+                    DBQuery = {
+                        $push: {
+                            'uploads.csv': fileDataObj.filePath
                         }
                     }
                     break
@@ -249,7 +383,7 @@ function LogUploadsToDatabase(userId, fileType, filePath) {
                 default:
                     DBQuery = {
                         $push: {
-                            'uploads.other': filePath
+                            'uploads.other': fileDataObj.filePath
                         }
                     }
             }

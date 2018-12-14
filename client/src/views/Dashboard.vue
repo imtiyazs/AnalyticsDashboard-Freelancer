@@ -38,7 +38,7 @@
       </b-col>
       <b-col sm="6" lg="6">
         <b-card header="Announcements" no-body class="bg-primary" style="height: 85%;">
-          <b-card-body style="overflow-y: auto;">
+          <b-card-body style="overflow-y: auto;z-index: 110;">
             <ul id="announcements-ul">
               <li
                 v-for="announcement in this.dashboardData.announcementsArray"
@@ -46,6 +46,12 @@
               >{{ announcement.message }}</li>
             </ul>
           </b-card-body>
+          <card-line1-chart-example
+            chartId="card-chart-01"
+            class="chart-wrapper px-3"
+            style=" height: 70px; position: absolute; top: 70px;opacity:0.8"
+            :height="70"
+          />
         </b-card>
       </b-col>
     </b-row>

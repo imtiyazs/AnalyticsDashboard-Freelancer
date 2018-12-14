@@ -1,25 +1,25 @@
 <script>
-import { Line } from 'vue-chartjs'
-import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips'
-import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities'
+import { Line } from "vue-chartjs";
+import { CustomTooltips } from "@coreui/coreui-plugin-chartjs-custom-tooltips";
+import { getStyle } from "@coreui/coreui/dist/js/coreui-utilities";
 
 export default {
   extends: Line,
-  props: ['height', 'width'],
-  mounted () {
-    const brandInfo = getStyle('--light-blue') || '#63c2de'
+  props: ["height", "width"],
+  mounted() {
+    const brandInfo = getStyle("--light-blue") || "#63c2de";
     const datasets2 = [
       {
-        label: 'My First dataset',
+        label: "",
         backgroundColor: brandInfo,
-        borderColor: 'rgba(255,255,255,.55)',
+        borderColor: "rgba(255,255,255,.55)",
         data: [1, 18, 9, 17, 34, 22, 11]
       }
-    ]
+    ];
 
     this.renderChart(
       {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        labels: ["", "", "", "", "", "", ""],
         datasets: datasets2
       },
       {
@@ -35,12 +35,12 @@ export default {
           xAxes: [
             {
               gridLines: {
-                color: 'transparent',
-                zeroLineColor: 'transparent'
+                color: "transparent",
+                zeroLineColor: "transparent"
               },
               ticks: {
                 fontSize: 2,
-                fontColor: 'transparent'
+                fontColor: "transparent"
               }
             }
           ],
@@ -67,7 +67,7 @@ export default {
           }
         }
       }
-    )
+    );
   }
-}
+};
 </script>

@@ -18,6 +18,7 @@ module.exports = constants = {
     AppSavFilesDir: 'SAV',
     AppXLSFilesDir: 'XLS',
     AppJSONFilesDir: 'JSON',
+    AppCSVFilesDir: 'CSV',
     AppOTHERFilesDir: 'OTHER',
     SAVFileReaderFile: SAVFileReaderFile,
 
@@ -49,5 +50,6 @@ module.exports = constants = {
     UserRoute: '/o/user',
     DashboardRoute: '/o/getdashboardstats',
     FilesUploadRoute: '/o/uploadfiles',
-    ProfileRoute: '/o/profile'
+    ProfileRoute: '/o/profile',
+    UploadReports: '/o/uploadreport'
 }

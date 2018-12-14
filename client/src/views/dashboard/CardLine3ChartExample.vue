@@ -1,22 +1,22 @@
 <script>
-import { Line } from 'vue-chartjs'
-import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips'
+import { Line } from "vue-chartjs";
+import { CustomTooltips } from "@coreui/coreui-plugin-chartjs-custom-tooltips";
 
 export default {
   extends: Line,
-  props: ['height', 'width'],
-  mounted () {
+  props: ["height", "width"],
+  mounted() {
     const datasets3 = [
       {
-        label: 'My First dataset',
-        backgroundColor: 'rgba(255,255,255,.2)',
-        borderColor: 'rgba(255,255,255,.55)',
+        label: "",
+        backgroundColor: "rgba(255,255,255,.2)",
+        borderColor: "rgba(255,255,255,.55)",
         data: [78, 81, 80, 45, 34, 12, 40]
       }
-    ]
+    ];
     this.renderChart(
       {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        labels: ["", "", "", "", "", "", ""],
         datasets: datasets3
       },
       {
@@ -29,12 +29,16 @@ export default {
           display: false
         },
         scales: {
-          xAxes: [{
-            display: false
-          }],
-          yAxes: [{
-            display: false
-          }]
+          xAxes: [
+            {
+              display: false
+            }
+          ],
+          yAxes: [
+            {
+              display: false
+            }
+          ]
         },
         elements: {
           line: {
@@ -47,7 +51,7 @@ export default {
           }
         }
       }
-    )
+    );
   }
-}
+};
 </script>

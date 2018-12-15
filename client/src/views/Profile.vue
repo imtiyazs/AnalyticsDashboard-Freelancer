@@ -268,6 +268,7 @@ export default {
   name: "Profile",
   data() {
     return {
+      user:{},
       section1: true,
       section2: false,
       section3: false,
@@ -426,7 +427,8 @@ export default {
     axios
       .post("/o/user")
       .then(response => {
-        this.$set(this, "user", response.data);
+        //this.$set(this, "user", response.data);
+        this.user =  response.data
         this.userLogged = true;
         this.userProfileData.username = response.data.username;
         this.userProfileData.email = response.data.email;

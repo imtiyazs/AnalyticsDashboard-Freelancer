@@ -118,6 +118,7 @@ export default {
   },
   data() {
     return {
+      user:{},
       nav: nav.items,
       adminnav: adminnav.items,
       isAdmin: false,
@@ -141,7 +142,8 @@ export default {
     axios
       .post("/o/user")
       .then(response => {
-        this.$set(this, "user", response.data);
+        //this.$set(this, "user", response.data);
+        this.user = response.data
         if (response.data.role == "superadmin") {
           this.isAdmin = true;
         }

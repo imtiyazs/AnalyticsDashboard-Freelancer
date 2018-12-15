@@ -75,7 +75,7 @@
           
           <b-card-group columns class="card-columns">
             <!-- 1 -->
-            <b-form-checkbox :value="{data:returnFrequency(value), 'typeOfGraph':'BarGraph' , 'columnName':key}" >
+            <b-form-checkbox :value="{data:value, 'typeOfGraph':'BarGraph' , 'columnName':key}" >
               <b-card :header="key">
                 <div class="chart-wrapper">
                   <BarCharts :datasetBar="returnFrequency(value)" chartId="chart-bar-01"/>
@@ -83,7 +83,7 @@
               </b-card>
             </b-form-checkbox>
               <!-- 2 -->
-            <b-form-checkbox :value="{data:returnFrequency(value), 'typeOfGraph':'PieGraph', 'columnName':key}" >
+            <b-form-checkbox :value="{data:value, 'typeOfGraph':'PieGraph', 'columnName':key}" >
               <b-card :header="key">
                 <div class="chart-wrapper">
                   <PieCharts :datasetPie="returnFrequency(value)" chartId="chart-pie-01"/>
@@ -132,14 +132,14 @@
           <div v-if="singleGraph.typeOfGraph ==='BarGraph'">
             <b-card :header="singleGraph.columnName">
               <div class="chart-wrapper">
-                <BarCharts :datasetBar="singleGraph.data" chartId="chart-bar-01"/>
+                <BarCharts :datasetBar="returnFrequency(singleGraph.data)" chartId="chart-bar-01"/>
               </div>
             </b-card>
           </div>
           <div v-if="singleGraph.typeOfGraph ==='PieGraph'">
             <b-card :header="singleGraph.columnName">
               <div class="chart-wrapper">
-                <PieCharts :datasetPie="singleGraph.data" chartId="chart-pie-01"/>
+                <PieCharts :datasetPie="returnFrequency(singleGraph.data)" chartId="chart-pie-01"/>
               </div>
             </b-card>
           </div>
@@ -150,25 +150,24 @@
 </template>
 
 <script>
-//import vue2Dropzone from "vue2-dropzone";
-//import "vue2-dropzone/dist/vue2Dropzone.min.css";
+
 import { RotateSquare5 } from "vue-loading-spinner";
 import router from "../../router";
 import axios from "axios";
-//import BarChart from "@/views/pages/ChartComponent/BarChart"
+
 import BarCharts from '@/views/pages/ChartComponent/BarCharts'
 import PieCharts from  '@/views/pages/ChartComponent/PieCharts'
 
 export default {
   name: "ReportAnalysis",
   components: {
-    // vueDropzone: vue2Dropzone,
     RotateSquare5,
     BarCharts,
     PieCharts
   },
   data() {
     return {
+      user:{},
       nameOfReport: '',
       fileObject: null,
       fileName:'',
@@ -195,9 +194,7 @@ export default {
     UploadDataFilesToServer: function(e) {
       e.preventDefault();
       this.firstStepDisplayForm = false;
-      // Show Loader
       this.secondStepShowLoader = true;
-      // FormData to Post to server
       let formData = new FormData();
       formData.append("reportname", this.nameOfReport);
       formData.append("file", this.fileObject);
@@ -208,7 +205,6 @@ export default {
             "Content-Type": "application/x-www-form-urlencoded"
           }
         })
-        // On receiving file data in JSON
         .then(response => {
           console.log(response);
           this.fileName = response.data.fileName
@@ -301,7 +297,7 @@ export default {
       //axios to record dashboard into mongo
       let dashboardDetails = {
         "reportName" : this.nameOfReport,
-        "fileName" : "toBeChanges.asap",
+        "fileName" : this.fileName,
         "userName" : "add using store",
         "analyticsDashboardName": this.analyticsDashboardName,
         "reportData":this.JSONObject,
@@ -321,7 +317,7 @@ export default {
         // On receiving file data in JSON
         .then(response => {
           console.log(response.data);
-          this.dashboardGeneratedData.fileName = "toBeChanges.asap"
+          this.dashboardGeneratedData.fileName = this.fileName
           this.dashboardGeneratedData.reportName = this.nameOfReport
           this.dashboardGeneratedData.dashboardData = this.dashboardData
 
@@ -341,24 +337,10 @@ export default {
     axios
       .post("/o/user")
       .then(response => {
-        this.$set(this, "user", response.data);
+        //this.$set(this, "user", response.data);
+        this.user = response.data
         this.userLogged = true;
-        //console.log(response.data)
-        // this.userProfileData.username = response.data.username;
-        // this.userProfileData.email = response.data.email;
-        // this.userProfileData.role = response.data.role;
-        // this.userProfileData.firstName = response.data.firstName;
-        // this.userProfileData.lastName = response.data.lastName;
-        // this.userProfileData.email = response.data.email;
-        // this.userProfileData.phone = response.data.phone;
-        // this.userProfileData.address1 = response.data.address1;
-        // this.userProfileData.address2 = response.data.address2;
-        // this.userProfileData.city = response.data.city;
-        // this.userProfileData.state = response.data.state;
-        // this.userProfileData.country = response.data.country;
-        // this.userProfileData.zip = response.data.zip;
         
-        // Replaced
         this.userProfileData = response.data
         
         var b = response.data.lastlogin.split(/\D+/);

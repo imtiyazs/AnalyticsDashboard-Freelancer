@@ -1,14 +1,14 @@
 <template>
-  <div class="app flex-row align-items-center">
+  <div class="app flex-row align-items-center body">
     <div class="container">
       <b-row class="justify-content-center">
-        <b-col md="8">
+        <b-col md="4">
           <b-card-group>
             <b-card no-body class="p-4">
               <b-card-body>
                 <b-form v-on:submit="login">
-                  <h1>Login</h1>
-                  <p class="text-muted">Sign In to your account</p>
+                  <h1 class="text-center">Login</h1>
+                  <p class="text-muted text-center">Sign In to your account</p>
                   <b-input-group class="mb-3">
                     <b-input-group-prepend>
                       <b-input-group-text>
@@ -21,6 +21,7 @@
                       placeholder="Username"
                       autocomplete="username email"
                       v-model="username"
+                      required
                     />
                   </b-input-group>
                   <b-input-group class="mb-4">
@@ -35,26 +36,44 @@
                       placeholder="Password"
                       autocomplete="current-password"
                       v-model="password"
+                      required
                     />
                   </b-input-group>
                   <b-row>
-                    <b-col cols="6">
-                      <b-button type="submit" variant="primary" class="px-4">Login</b-button>
+                    <b-col cols="12">
+                      <b-button type="submit" variant="primary" class="px-4" block>Login</b-button>
                     </b-col>
-                    <b-col cols="6" class="text-right">
-                      <b-button variant="link" class="px-0">Forgot password?</b-button>
+                  </b-row>
+                  <b-row class="mt-2">
+                    <b-col cols="6">
+                      <b-button
+                        variant="link"
+                        class="px-0"
+                        @click="register"
+                        style="font-size: 12px;"
+                      >Create New Account</b-button>
+                    </b-col>
+                     <b-col cols="6">
+                      <b-button
+                        variant="link"
+                        class="px-0"
+                        style="font-size: 12px;"
+                      >Forgot password?</b-button>
                     </b-col>
                   </b-row>
                 </b-form>
-              </b-card-body>
-            </b-card>
-            <b-card no-body class="text-white bg-primary py-5 d-md-down-none" style="width:44%">
-              <b-card-body class="text-center">
-                <div>
-                  <h2>Sign up</h2>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                  <b-button variant="primary" @click="register" class="active mt-3">Register Now!</b-button>
-                </div>
+                <!-- <b-row>
+                  <b-col cols="6">
+                    <b-button block class="btn btn-facebook" disabled>
+                      <span>facebook</span>
+                    </b-button>
+                  </b-col>
+                  <b-col cols="6">
+                    <b-button block class="btn btn-twitter" type="button" disabled>
+                      <span>twitter</span>
+                    </b-button>
+                  </b-col>
+                </b-row>-->
               </b-card-body>
             </b-card>
           </b-card-group>
@@ -97,3 +116,31 @@ export default {
   }
 };
 </script>
+
+<style>
+@font-face {
+  font-family: Poppins-Regular;
+  src: url("../../../public/fonts/poppins/Poppins-Regular.ttf");
+}
+
+@font-face {
+  font-family: Poppins-Medium;
+  src: url("../../../public/fonts/poppins/Poppins-Medium.ttf");
+}
+
+@font-face {
+  font-family: Poppins-Bold;
+  src: url("../../../public/fonts/poppins/Poppins-Bold.ttf");
+}
+
+@font-face {
+  font-family: Poppins-SemiBold;
+  src: url("../../../public/fonts/poppins/Poppins-SemiBold.ttf");
+}
+
+.body {
+  background-image: url("../../../public/img/bg-01.jpg");
+  background-size: cover;
+  font-family: Poppins-Regular, sans-serif;
+}
+</style>

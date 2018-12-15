@@ -51,5 +51,5 @@ module.exports = constants = {
     DashboardRoute: '/o/getdashboardstats',
     FilesUploadRoute: '/o/uploadfiles',
     ProfileRoute: '/o/profile',
-    UploadReports: '/o/uploadreport'
+    ReportUploadRoute: '/o/uploadreport'
 }

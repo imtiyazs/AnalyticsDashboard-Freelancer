@@ -145,17 +145,14 @@ function InitializeServerConfigurations() {
 
     // Attach body parser to read data from ajax calls
     app.use(bodyParser.urlencoded({
-        json: {
-            limit: '50mb',
-            extended: true
-        },
-        urlencoded: {
-            limit: '50mb',
-            extended: true
-        },
+        limit: '50mb',
         extended: true
     }));
-    app.use(bodyParser.json());
+
+    app.use(bodyParser.json({
+        limit: '50mb',
+        extended: true
+    }));
 
     // Set Browser Cookies
     app.use(cookieSession({

@@ -464,7 +464,7 @@ export default {
         reportName: this.nameOfReport,
         fileName: "toBeChanges",
         userName: this.userProfileData.username,
-        analyticsDashboardName: this.analyticsDashboardName,
+        analyticsDataName: this.analyticsDashboardName,
         reportData: this.JSONObject,
         analyticsData: this.dashboardData
       };

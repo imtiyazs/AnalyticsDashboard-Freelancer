@@ -23,7 +23,6 @@ exports.ConnectDatabaseServer = () => {
 
                 DBInstance = client.db(dbName)
                 defaultSchema.GenerateDefaultDBSchema()
-
                 return resolve()
             });
         } catch (err) {
@@ -116,6 +115,20 @@ exports.UpdateDocument = (FindQuery, UpdateQuery, collectionName, callback) => {
             callback(result)
         }
     });
+}
+
+/**
+ * @param {*} JSONObject: Ex: { a: 1 } */
+exports.InsertOneDocument = (JSONObject, collectionName, callback) => {
+    const collection = DBInstance.collection(collectionName)
+    collection.insertOne(JSONObject, function (err, result) {
+        if (err) {
+            logger.error('InsertOneDocument Error: ' + err)
+            callback(null)
+        } else {
+            callback(result)
+        }
+    })
 }
 
 /**

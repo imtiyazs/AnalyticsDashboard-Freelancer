@@ -57,6 +57,7 @@ const Register = () => import('@/views/pages/Register')
 const DownloadReports = () => import('@/views/pages/DownloadReports')
 const ReportAnalysis = () => import('@/views/pages/ReportAnalysis')
 const ReportHistory = () => import('@/views/pages/ReportHistory')
+const ServerInformation = () => import('@/views/pages/ServerInformation')
 
 // Users
 const Users = () => import('@/views/users/Users')
@@ -99,6 +100,11 @@ export default new Router({
           path: '/profile',
           name: 'Profile',
           component: Profile
+        },
+        {
+          path: '/server',
+          name: 'Server Information',
+          component: ServerInformation
         },
         {
           path: 'theme',

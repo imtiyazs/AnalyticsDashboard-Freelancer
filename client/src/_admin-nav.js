@@ -10,7 +10,7 @@ export default {
     }, 
     {
       name: 'Server Information',
-      url: '/admin/server',
+      url: '/server',
       icon: 'icon-wrench'
     }]
   }]

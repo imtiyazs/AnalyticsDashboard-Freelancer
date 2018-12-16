@@ -60,7 +60,7 @@
                       </div>-->
                       <!-- </form> -->
                     </tab-content>
-                    <tab-content title="Select Data Graphs"></tab-content>
+                    <tab-content title="Select Data Columns"></tab-content>
                     <tab-content title="Generate Visual Report"></tab-content>
                   </form-wizard>
                 </div>
@@ -93,7 +93,7 @@
                 startIndex="1"
               >
                 <tab-content title="Upload Report File"></tab-content>
-                <tab-content title="Select Data Graphs">
+                <tab-content title="Select Data Columns">
                   <!-- Report File Name -->
                   <span>
                     Report Name:
@@ -168,7 +168,10 @@
                   </b-form-checkbox-group>
                 </tab-content>
                 <tab-content title="Generate Visual Report"></tab-content>
-                <template slot="footer"></template>
+                <template slot="footer" slot-scope="props">
+                  <div class="wizard-footer-left"></div>
+                  <div class="wizard-footer-right"></div>
+                </template>
               </form-wizard>
             </div>
           </div>
@@ -176,15 +179,18 @@
       </b-card-group>
 
       <br>
-      <!-- Model -->
-      <b-button @click="showModal">Open Modal</b-button>
-      <b-modal ref="myModalRef" hide-footer title="Your dashboard is almost ready...!">
+      <!-- MODAL -->
+      <b-button hidden @click="showModal">Open Modal</b-button>
+      <b-modal ref="myModalRef" hide-footer title="Your report is almost ready...!">
+        <label
+          class="text-muted"
+        >Enter the name of data report. The data report will be further available for download with the mentioned name.</label>
         <div class="d-block text-center">
           <b-form-input
             id="analyticsDashboardName"
             type="text"
             v-model="analyticsDashboardName"
-            placeholder="Enter the name of the Dashboard"
+            placeholder="Name Of Data Report"
           ></b-form-input>
         </div>
         <b-btn
@@ -192,10 +198,9 @@
           class="mt-3"
           variant="outline-primary"
           @click="generateDashboard"
-        >Generate Analytics Dashboard</b-btn>
-        <b-btn class="mt-3" variant="outline-danger" @click="hideModal">Close Me</b-btn>
+        >Generate Data Report</b-btn>
       </b-modal>
-      <!-- Model -->
+
       <b-button
         variant="primary"
         style="position:fixed; bottom: 5%; right:62px;"
@@ -204,7 +209,6 @@
       >
         <i class="fa fa-bar-chart-o"></i> Generate Visual Report
       </b-button>
-      {{dashboardData}}
     </div>
     <div v-if="fourthStepShowLoader" class="animated fadeIn col-4">
       <b-card-group>
@@ -215,7 +219,7 @@
       </b-card-group>
     </div>
     <div v-if="fifthStepDisplayDashboard">
-      <!-- <b-card-group>
+      <b-card-group>
         <b-card header="Upload Report File">
           <div class="card">
             <div class="card-body">
@@ -224,40 +228,80 @@
                 subtitle="Visualize Report Analysis In 3 Steps"
                 finishButtonText="Generate Report Visualization"
                 nextButtonText="Generate Report Analysis"
-                validateOnBack="true"
-                startIndex="1"
+                startIndex="2"
               >
                 <tab-content title="Upload Report File"></tab-content>
-                <tab-content title="Select Data Graphs">My second tab content</tab-content>
-                <tab-content title="Generate Visual Report">Yuhuuu! This seems pretty damn simple</tab-content>
+                <tab-content title="Select Data Columns"></tab-content>
+                <tab-content title="Generate Visual Report">
+                  <!-- Report File Name -->
+                  <div style="padding-left: 20px">
+                    <span>
+                      Report Name:
+                      <span
+                        style="font-size: 20px;font-weight: 500;"
+                      >{{CapitalizeFirstLetter(nameOfReport)}}</span>
+                    </span>
+                    <br>
+                    <span class="mb-5">
+                      Analytic Report Name:
+                      <span
+                        style="font-size: 20px;font-weight: 500;"
+                      >{{CapitalizeFirstLetter(analyticsDashboardName)}}</span>
+                    </span>
+                  </div>
+                  <b-button
+                    variant="primary"
+                    style="position: absolute;right: 6%;bottom: 81%;"
+                    @click="showModal"
+                  >
+                    <i class="fa fa-download"></i> Download Report PDF
+                  </b-button>
+                  <div class="card-body">
+                    <div class="row">
+                      <div
+                        v-for="(singleGraph,index) in dashboardGeneratedData.dashboardData"
+                        :key="index"
+                        class="col-4"
+                      >
+                        <div v-if="singleGraph.typeOfGraph ==='BarGraph'">
+                          <b-card
+                            :header="CapitalizeFirstLetter(singleGraph.columnName)"
+                            style="font-weight:500"
+                          >
+                            <div class="chart-wrapper">
+                              <BarCharts
+                                :datasetBar="returnFrequency(singleGraph.data)"
+                                chartId="chart-bar-01"
+                              />
+                            </div>
+                          </b-card>
+                        </div>
+                        <div v-if="singleGraph.typeOfGraph ==='PieGraph'">
+                          <b-card
+                            :header="CapitalizeFirstLetter(singleGraph.columnName)"
+                            style="font-weight:500"
+                          >
+                            <div class="chart-wrapper">
+                              <PieCharts
+                                :datasetPie="returnFrequency(singleGraph.data)"
+                                chartId="chart-pie-01"
+                              />
+                            </div>
+                          </b-card>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </tab-content>
+                <template slot="footer" slot-scope="props">
+                  <div class="wizard-footer-left"></div>
+                  <div class="wizard-footer-right"></div>
+                </template>
               </form-wizard>
             </div>
           </div>
         </b-card>
-      </b-card-group>-->
-      <center>
-        <h3>{{nameOfReport}}</h3>
-        - {{analyticsDashboardName}}
-      </center>
-      <div v-for="(singleGraph,index) in dashboardGeneratedData.dashboardData" :key="index">
-        <!-- {{singleGraph}} -->
-        <b-card-group columns class="card-columns">
-          <div v-if="singleGraph.typeOfGraph ==='BarGraph'">
-            <b-card :header="singleGraph.columnName">
-              <div class="chart-wrapper">
-                <BarCharts :datasetBar="returnFrequency(singleGraph.data)" chartId="chart-bar-01"/>
-              </div>
-            </b-card>
-          </div>
-          <div v-if="singleGraph.typeOfGraph ==='PieGraph'">
-            <b-card :header="singleGraph.columnName">
-              <div class="chart-wrapper">
-                <PieCharts :datasetPie="returnFrequency(singleGraph.data)" chartId="chart-pie-01"/>
-              </div>
-            </b-card>
-          </div>
-        </b-card-group>
-      </div>
+      </b-card-group>
     </div>
   </div>
 </template>

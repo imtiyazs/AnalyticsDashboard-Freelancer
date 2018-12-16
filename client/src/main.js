@@ -17,7 +17,9 @@ import 'v-toaster/dist/v-toaster.css'
 axios.defaults.baseURL = 'http://localhost:8080/server/'
 
 Vue.use(BootstrapVue)
-Vue.use(Toaster, {timeout: 3000})
+Vue.use(Toaster, {
+  timeout: 3000
+})
 
 /* eslint-disable no-new */
 new Vue({

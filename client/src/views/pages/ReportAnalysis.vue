@@ -129,7 +129,7 @@
                                   <div class="col-6">
                                     <b-form-checkbox
                                       type="checkbox"
-                                      :value="{data:returnFrequency(value), 'typeOfGraph':'BarGraph' , 'columnName':key}"
+                                      :value="{data:value, 'typeOfGraph':'BarGraph' , 'columnName':key}"
                                       class="bar-chart-check"
                                     ></b-form-checkbox>
                                     <b-card header="Bar Chart">
@@ -146,7 +146,7 @@
                                   <div class="col-6">
                                     <b-form-checkbox
                                       type="checkbox"
-                                      :value="{data:returnFrequency(value), 'typeOfGraph':'PieGraph', 'columnName':key}"
+                                      :value="{data:value, 'typeOfGraph':'PieGraph', 'columnName':key}"
                                       class="bar-chart-check"
                                     ></b-form-checkbox>
                                     <b-card header="Pie Chart">
@@ -313,7 +313,7 @@ export default {
     /** Upload File to server for data extraction */
     UploadDataFilesToServer: function() {
       // e.preventDefault();
-      // this.firstStepDisplayForm = false;
+      this.firstStepDisplayForm = false;
       // Show Loader
       this.secondStepShowLoader = true;
       let formData = new FormData();

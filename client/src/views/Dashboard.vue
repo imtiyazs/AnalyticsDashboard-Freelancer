@@ -8,8 +8,8 @@
               <template slot="button-content">
                 <i class="icon-settings"></i>
               </template>
-              <b-dropdown-item>Generate New Report</b-dropdown-item>
-              <b-dropdown-item>Download Report</b-dropdown-item>
+              <b-dropdown-item @click="reDirectTo('/reportanalysis')">Generate New Report</b-dropdown-item>
+              <b-dropdown-item @click="reDirectTo('/downloadreports')">Download Report</b-dropdown-item>
             </b-dropdown>
             <h4 class="mb-0">{{this.dashboardData.totalFilesUploaded}}</h4>
             <p>Files Uploaded</p>
@@ -642,6 +642,9 @@ export default {
     },
     flag(value) {
       return "flag-icon flag-icon-" + value;
+    },
+    reDirectTo(mentionPath){
+      this.$router.push({path: mentionPath})
     }
   },
   mounted() {

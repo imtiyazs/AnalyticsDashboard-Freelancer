@@ -7,11 +7,6 @@ export default {
       name: 'User Management',
       url: '/admin/user-mgmt',
       icon: 'icon-user'
-    }, 
-    {
-      name: 'Server Information',
-      url: '/server',
-      icon: 'icon-wrench'
     }]
   }]
 }

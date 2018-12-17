@@ -125,6 +125,31 @@ exports.StartApplicationServer = () => {
             })
     })
 
+    /** User Management Route */
+    app.post(constants.UserMgmtRoute, (req, res) => {
+        logger.info(constants.UserMgmtRoute)
+        userMgmt.UserMgmtFunction(req.body)
+            .then(status => {
+                return res.status(200).send(status)
+            })
+            .catch(err => {
+                return res.status(417).send(err)
+            })
+    })
+
+
+    /** Get Users For admin route */
+    app.post(constants.GetUsersRoute, (req, res) => {
+        logger.info(constants.GetUsersRoute)
+        userMgmt.GetUserList(req.body)
+            .then(UserList => {
+                return res.status(200).send(UserList)
+            })
+            .catch(err => {
+                return res.status(417).send(err)
+            })
+    })
+
     /** Dashboard statistics route */
     app.post(constants.DashboardRoute, (req, res) => {
         logger.info(constants.DashboardRoute)

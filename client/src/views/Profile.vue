@@ -268,7 +268,7 @@ export default {
   name: "Profile",
   data() {
     return {
-      user:{},
+      user: {},
       section1: true,
       section2: false,
       section3: false,
@@ -356,16 +356,24 @@ export default {
     DeleteAccount: function(e) {
       e.preventDefault();
       axios
-        .post("/o/profile", {
-          operation: 2,
-          userId: this.userProfileData.username,
-          password: this.deletionPassword
-        })
+        .get("/o/logout")
         .then(response => {
-          this.$toaster.success(response.data);
-          router.push("/login");
+          axios
+            .post("/o/profile", {
+              operation: 2,
+              userId: this.userProfileData.username,
+              password: this.deletionPassword
+            })
+            .then(response => {
+              this.$toaster.success(response.data);
+              router.push("/login");
+            })
+            .catch(error => {
+              this.$toaster.error(error.response.data);
+              router.push("/login");
+            });
         })
-        .catch(error => {
+        .catch(errors => {
           this.$toaster.error(error.response.data);
           router.push("/login");
         });
@@ -428,7 +436,7 @@ export default {
       .post("/o/user")
       .then(response => {
         //this.$set(this, "user", response.data);
-        this.user =  response.data
+        this.user = response.data;
         this.userLogged = true;
         this.userProfileData.username = response.data.username;
         this.userProfileData.email = response.data.email;

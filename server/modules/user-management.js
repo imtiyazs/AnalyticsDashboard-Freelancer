@@ -3,6 +3,143 @@ const constants = require('../common/constant'),
     database = require('../database/database'),
     bcrypt = require('bcrypt')
 
+exports.UserMgmtFunction = (requestBody) => {
+    return new Promise((resolve, reject) => {
+
+        if (requestBody.auth !== 'superadmin') {
+            return reject('Unauthorized Access')
+        }
+
+        let targetUser = requestBody.username,
+            operation = requestBody.operation
+
+        switch (operation) {
+            // Change Role
+            case 1:
+                database.FindOneInCollection({
+                    username: targetUser
+                }, constants.UsersCollection, (data) => {
+                    if (data == null || data.length == 0) {
+                        return reject('User Not Found')
+                    }
+
+                    database.UpdateDocument({
+                        username: targetUser
+                    }, {
+                        $set: {
+                            role: requestBody.role
+                        }
+                    }, constants.UsersCollection, () => {
+                        return resolve('User Updated Successfully')
+                    })
+                })
+                break
+
+                // Reset Password to 123456
+            case 2:
+                database.FindOneInCollection({
+                    username: targetUser
+                }, constants.UsersCollection, (data) => {
+                    if (data == null || data.length == 0) {
+                        return reject('User Not Found')
+                    }
+
+                    bcrypt.hash('123456', constants.BcryptSaltRounds)
+                        .then(hashedPassword => {
+                            database.UpdateDocument({
+                                username: targetUser
+                            }, {
+                                $set: {
+                                    password: hashedPassword
+                                }
+                            }, constants.UsersCollection, () => {
+                                return resolve('Password Reset Successful')
+                            })
+                        })
+                        .catch(err => {
+                            logger.error('Error Reset Password: ' + err)
+                            reject('Error Resetting Password')
+                        })
+
+                })
+                break
+
+                // Block Unblock User
+            case 3:
+                database.FindOneInCollection({
+                    username: targetUser
+                }, constants.UsersCollection, (data) => {
+                    if (data == null || data.length == 0) {
+                        return reject('User Not Found')
+                    }
+
+                    database.UpdateDocument({
+                        username: targetUser
+                    }, {
+                        $set: {
+                            isBlocked: requestBody.isBlocked
+                        }
+                    }, constants.UsersCollection, () => {
+                        if (requestBody.isBlocked) {
+                            return resolve('User Account Suspended')
+                        } else {
+                            return resolve('User Account Unblocked Successfully')
+                        }
+                    })
+                })
+                break
+
+                // Delete User
+            case 4:
+
+                database.FindOneInCollection({
+                    username: targetUser
+                }, constants.UsersCollection, (data) => {
+                    if (data == null || data.length == 0) {
+                        return reject('User Not Found')
+                    }
+
+                    database.DeleteDocument({
+                        username: targetUser
+                    }, constants.UsersCollection, () => {
+                        return resolve('Account Deleted Successfully')
+                    })
+
+                })
+                break
+
+        }
+    })
+}
+
+exports.GetUserList = (requestBody) => {
+    return new Promise((resolve, reject) => {
+
+        if (requestBody.auth !== 'superadmin') {
+            return reject('Not Authorized For The Operation')
+        }
+
+        database.FindInCollection({}, constants.UsersCollection, (data) => {
+            if (data == null || data.length == 0) {
+                return reject(false)
+            }
+
+            let UserObjArray = []
+
+            data.forEach(element => {
+                let UserObj = {}
+                UserObj['username'] = element.username
+                UserObj['role'] = element.role
+                UserObj['isBlocked'] = element.isBlocked
+                UserObj['email'] = element.email
+                UserObjArray.push(UserObj)
+            });
+
+            resolve(UserObjArray)
+        })
+    })
+}
+
 exports.UserProfileOperation = (requestBody) => {
     return new Promise((resolve, reject) => {
 

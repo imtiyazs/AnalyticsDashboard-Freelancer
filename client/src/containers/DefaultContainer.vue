@@ -3,13 +3,19 @@
     <AppHeader fixed>
       <SidebarToggler class="d-lg-none" display="md" mobile/>
       <b-link class="navbar-brand" to="#">
-        <img class="navbar-brand-full" src="img/logo.png" width="89" height="25" alt="CoreUI Logo">
+        <img
+          class="navbar-brand-full"
+          src="img/logo.png"
+          width="140px"
+          height="40px"
+          alt="Analtics Logo"
+        >
         <img
           class="navbar-brand-minimized"
           src="img/logo-symbol.png"
           width="30"
           height="30"
-          alt="CoreUI Logo"
+          alt="Analtics Logo"
         >
       </b-link>
       <SidebarToggler class="d-md-down-none" display="lg"/>
@@ -19,11 +25,11 @@
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
         <div class="small text-muted" style="text-align: right">
-          Last Login: {{userProfileInfo.lastLogin}}
+          Last Login: {{ new Date(userProfileInfo.lastLogin).toDateString()}}
           <br>
           <strong
             v-if="userProfileInfo.firstName!==''"
-          >{{CapitalizeFirstLetter(userProfileInfo.firstName)}} {{CapitalizeFirstLetter(userProfileInfo.lastName)}} -  </strong>
+          >{{CapitalizeFirstLetter(userProfileInfo.firstName)}} {{CapitalizeFirstLetter(userProfileInfo.lastName)}} -</strong>
           <strong>{{ CapitalizeFirstLetter(userProfileInfo.username)}}</strong>
         </div>
 
@@ -39,7 +45,7 @@
         </b-nav-item>-->
         <DefaultHeaderDropdownAccnt/>
       </b-navbar-nav>
-      <AsideToggler class="d-none d-lg-block"/>
+      <!-- <AsideToggler class="d-none d-lg-block"/> -->
       <!--<AsideToggler class="d-lg-none" mobile />-->
     </AppHeader>
     <div class="app-body">
@@ -118,7 +124,7 @@ export default {
   },
   data() {
     return {
-      user:{},
+      user: {},
       nav: nav.items,
       adminnav: adminnav.items,
       isAdmin: false,
@@ -132,10 +138,10 @@ export default {
   },
   methods: {
     CapitalizeFirstLetter(string) {
-      if (string!== undefined){
+      if (string !== undefined) {
         return string.charAt(0).toUpperCase() + string.slice(1);
-      } 
-      return ""
+      }
+      return "";
     }
   },
   mounted() {
@@ -143,7 +149,7 @@ export default {
       .post("/o/user")
       .then(response => {
         //this.$set(this, "user", response.data);
-        this.user = response.data
+        this.user = response.data;
         if (response.data.role == "superadmin") {
           this.isAdmin = true;
         }

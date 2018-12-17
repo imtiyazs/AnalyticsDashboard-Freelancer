@@ -20,6 +20,7 @@ exports.RegisterNewUser = (RequestBody) => {
                                 username: RequestBody.username,
                                 password: hashedPassword,
                                 email: RequestBody.email,
+                                isBlocked: false,
                                 role: 'normal',
                                 firstName: "",
                                 lastName: "",
@@ -63,6 +64,10 @@ exports.UserLogin = (username, password) => {
                     let passCheck = bcrypt.compareSync(password, user.password)
                     if (!passCheck) {
                         return reject('Incorrect Password')
+                    }
+
+                    if (user.isBlocked) {
+                        return reject('Your Account Has Been Suspended')
                     }
 
                     try {

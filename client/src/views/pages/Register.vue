@@ -5,6 +5,9 @@
         <b-col md="6" sm="8">
           <b-card no-body class="mx-4">
             <b-card-body class="p-4">
+              <div class="loader">
+                <circle4 v-if="showLoader"></circle4>
+              </div>
               <b-form v-on:submit="Register">
                 <h1 class="text-center">Register</h1>
                 <p class="text-muted text-center">Create your account</p>
@@ -89,11 +92,16 @@
 <script>
 import axios from "axios";
 import router from "../../router";
+import { Circle4 } from "vue-loading-spinner";
 
 export default {
   name: "Register",
+  components: {
+    Circle4
+  },
   data() {
     return {
+      showLoader: false,
       username: "",
       email: "",
       password: "",
@@ -107,6 +115,8 @@ export default {
     Register: function(e) {
       e.preventDefault();
       if (this.password === this.repeatPassword) {
+        this.showLoader = true;
+
         let userData = {
           username: this.username,
           password: this.password,
@@ -120,14 +130,17 @@ export default {
               "Registration Successful. Redirecting to login..."
             );
             setTimeout(() => {
+              this.showLoader = false;
               router.push("/login");
-            }, 2000);
+            }, 1000);
           })
           .catch(err => {
             this.$toaster.error(err.response.data);
+            this.showLoader = false;
           });
       } else {
         this.$toaster.error("Passwords do not match! Try Again.");
+        this.showLoader = false;
       }
     }
   }
@@ -158,5 +171,13 @@ export default {
   background-image: url("../../../public/img/bg-01.jpg");
   background-size: cover;
   font-family: Poppins-Regular, sans-serif;
+}
+.loader {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 45%;
+  left: 45%;
+  z-index: 10;
 }
 </style>

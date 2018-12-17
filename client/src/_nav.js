@@ -15,11 +15,6 @@ export default {
       icon: 'icon-magnifier'
     },
     {
-      name: 'Download Reports',
-      url: '/downloadreports',
-      icon: 'icon-cloud-download'
-    },
-    {
       name: 'Account',
       url: '#',
       icon: 'icon-user',

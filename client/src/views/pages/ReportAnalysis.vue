@@ -239,13 +239,13 @@
                   </div>
                   <b-button
                     variant="primary"
-                    style="position: absolute;right: 6%;bottom: 63%;"
+                    style="position:fixed; bottom: 5%; right:62px;z-index: 10;"
                     @click="createPDF"
                   >
                     <i class="fa fa-download"></i> Download Report PDF
                   </b-button>
                   <div class="card-body">
-                    <div class="row">
+                    <div ref="printReport" class="row">
                       <div
                         v-for="(singleGraph,index) in dashboardGeneratedData.dashboardData"
                         :key="index"
@@ -304,6 +304,7 @@ import PieCharts from "@/views/pages/ChartComponent/PieCharts";
 import { FormWizard, TabContent } from "vue-form-wizard";
 import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 export default {
   name: "ReportAnalysis",
@@ -334,16 +335,34 @@ export default {
       analyticsDashboardName: "",
       dashboardGeneratedData: {},
       JSONObject: {},
-      userProfileData: {}
+      userProfileData: {},
+      output: null
     };
   },
   methods: {
     createPDF() {
-      let pdfName =
-        this.nameOfReport + "_" + this.analyticsDashboardName + ".pdf";
-      var doc = new jsPDF();
-      doc.text("Hello World", 10, 10);
-      doc.save(pdfName);
+      let self = this;
+
+      html2canvas(this.$refs.printReport).then(function(canvas) {
+        let pdfName =
+            self.CapitalizeFirstLetter(self.nameOfReport) + "_" + self.CapitalizeFirstLetter(self.analyticsDashboardName) + ".pdf",
+          pdfDate = new Date().toISOString();
+
+        var doc = new jsPDF("p", "mm", "a4");
+
+        doc.setFontSize(12);
+        doc.text("Report Name: " + self.CapitalizeFirstLetter(self.nameOfReport), 10, 20);
+        doc.text(
+          "Analytics Report Name: " + self.CapitalizeFirstLetter(self.analyticsDashboardName),
+          10,
+          30
+        );
+        doc.text("Creation Date: " + pdfDate, 10, 40);
+
+        doc.addImage(canvas.toDataURL("image/png"), "PNG", 10, 50, 190, 0);
+
+        doc.save(pdfName);
+      });
     },
     CapitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
@@ -383,6 +402,7 @@ export default {
           this.firstStepDisplayForm = false;
           this.secondStepShowLoader = false;
           this.thirdStepDisplayAnalysis = true;
+
           return true;
         })
         // On file reading error
@@ -400,57 +420,6 @@ export default {
       }
       return counts;
     },
-
-    /** Select Headers and analyze */
-    // ChooseHeadersAndProcess() {
-    //   alert("sss");
-    // },
-
-    // addFormData(file, xhr, formData) {
-    //   formData.append("file", file);
-
-    //   axios
-    //     .post(
-    //       "/o/uploadfiles",
-    //       {
-    //         files: file
-    //       },
-    //       { headers: { id: "5c0aa01ec37d373a111a2835" } }
-    //     )
-    //     .then(response => {
-    //       console.log(response);
-    //       router.push("/dashboard");
-    //     })
-    //     .catch(errors => {
-    //       alert("Invalid Credentials: " + errors);
-    //     });
-    // },
-    // uploadStatus(file, response) {
-    //   console.log(response);
-    //   console.log(file);
-    // },
-    // uploadStatusFailed(file, message, xhr) {
-    //   console.log(file);
-    //   console.log(message);
-    //   console.log(xhr);
-    // },
-    // startLoader() {
-    //   this.firstStepDisplayForm = false;
-    // },
-    // validateFile(file, xhr, formData) {
-
-    //   let acceptedfilelist = this.dropzoneOptions.acceptedFiles;
-    //   let allow = false;
-    //   acceptedfilelist.split(",").forEach(function(fileExtension) {
-    //     if (file.name.includes(fileExtension)) {
-    //       allow = true;
-    //     }
-    //   });
-    //   if (!allow) {
-    //     this.$refs.myVueDropzone.removeFile(file);
-    //     alert("This operation is not allowed");
-    //   }
-    // },
     handleFileUpload() {
       this.fileObject = this.$refs.file.files[0];
       this.uploadInputLabel = this.$refs.file.files[0].name;
@@ -476,6 +445,7 @@ export default {
 
       console.log("dashboardDetails :: ");
       console.log(dashboardDetails);
+
       this.thirdStepDisplayAnalysis = false;
       this.fourthStepShowLoader = true;
 

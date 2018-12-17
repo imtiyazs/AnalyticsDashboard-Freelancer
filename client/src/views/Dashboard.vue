@@ -44,8 +44,8 @@
           <b-card-body style="overflow-y: auto;z-index: 110;">
             <ul id="announcements-ul">
               <li
-                v-for="announcement in this.dashboardData.announcementsArray"
-                v-bind:key="announcement"
+                v-for="(announcement,index) in this.dashboardData.announcementsArray"
+                v-bind:key="index"
               >{{ announcement.message }}</li>
             </ul>
           </b-card-body>
@@ -621,6 +621,7 @@ export default {
   },
   data: function() {
     return {
+      user:{},
       userLogged: false,
       displayDropZone: true,
       showLoader: false,
@@ -701,7 +702,8 @@ export default {
     axios
       .post("/o/user")
       .then(response => {
-        self.$set(this, "user", response.data);
+        //self.$set(this, "user", response.data);
+        this.user = response.data;
         this.userLogged = true;
         this.userProfileData.username = response.data.username;
         this.userProfileData.email = response.data.email;

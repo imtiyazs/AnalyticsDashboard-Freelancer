@@ -10,10 +10,16 @@
                   <!-- {{usersHistory.reports}} -->
                   <b-table hover :items="usersHistory.reports" :fields="fields">
                     <template slot="analyticsDataName" slot-scope="data">
-                      <div @click="displayDashboard(data.value)">
+                      <div @click="displayDashboard(data.value)" style="cursor: pointer;">
                         <b>{{data.value}}</b>
                       </div>
                     </template>
+                    <template slot="creationDate" slot-scope="data">
+                        <div v-if="data.value!=undefined">
+                          {{(new Date(data.value)).toDateString()}}
+                        </div>
+                    </template>
+                    
                   </b-table>
                 </b-row>
               </b-container>
@@ -147,18 +153,14 @@ export default {
       return counts;
     },
     displayDashboard(DashboardName) {
-      //alert(DashboardName)
       this.dashboardDisplay.name = DashboardName;
       this.$refs.displayMyDashboard.show();
       this.dashboardDisplay.data = this.getDashboardDetails(DashboardName);
-      //console.log(this.dashboardDisplay)
     },
     getDashboardDetails(DashboardName) {
-      //listOfReports = this.usersHistory.reports
       let returnData = null;
       this.usersHistory.reports.forEach(element => {
         if (element.analyticsDataName === DashboardName) {
-          console.log(element);
           returnData = element;
         }
       });
@@ -180,7 +182,6 @@ export default {
           })
           .then(response => {
             self.usersHistory = response.data;
-            console.log(response.data)
           })
           .catch(errors => {
             this.$toaster.error('Cannot Fetch Report History')

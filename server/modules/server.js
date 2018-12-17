@@ -14,6 +14,7 @@ const express = require('express'),
     multer = require('multer'),
     userMgmt = require('./user-management'),
     reports = require('./report-writer'),
+    reportReader = require('./report-reader'),
     upload = multer({
         storage: multer.memoryStorage()
     })
@@ -87,6 +88,18 @@ exports.StartApplicationServer = () => {
         req.logout()
         return res.status(200).send('Logout successful');
     });
+
+    /** Get Report History of user */
+    app.post(constants.ReportHistoryRoute, (req, res) => {
+        logger.info(constants.ReportHistoryRoute)
+        reportReader.FetchUserReports(req.body)
+            .then((report) => {
+                return res.status(200).send(report)
+            })
+            .catch(() => {
+                return res.status(417).send(false)
+            })
+    })
 
     /** Update Final Reports to Database */
     app.post(constants.ReportUploadRoute, (req, res) => {

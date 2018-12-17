@@ -17,7 +17,6 @@
                       title="Upload Report File"
                       :before-change="UploadDataFilesToServer"
                     >
-                      <!-- <form v-on:submit="UploadDataFilesToServer"> -->
                       <div class="input-group mb-3">
                         <div class="input-group-prepend">
                           <span class="input-group-text">Report Name</span>
@@ -45,20 +44,9 @@
                             v-on:change="handleFileUpload"
                             :plain="true"
                           >
-                          <label class="custom-file-label">Choose Report File (.sav, .xls, .xlsx)</label>
+                          <label class="custom-file-label">{{uploadInputLabel}}</label>
                         </div>
                       </div>
-                      <!-- <div slot="footer" class="mt-5 float-right">
-                          <b-button
-                            :disabled="(nameOfReport=='' || nameOfReport== undefined) || (fileObject == null || fileObject == {})"
-                            id="submit-btn"
-                            type="submit"
-                            variant="primary"
-                          >
-                            <i class="fa fa-dot-circle-o"></i> Generate Report Analysis
-                          </b-button>
-                      </div>-->
-                      <!-- </form> -->
                     </tab-content>
                     <tab-content title="Select Data Columns"></tab-content>
                     <tab-content title="Generate Visual Report"></tab-content>
@@ -251,8 +239,8 @@
                   </div>
                   <b-button
                     variant="primary"
-                    style="position: absolute;right: 6%;bottom: 81%;"
-                    @click="showModal"
+                    style="position: absolute;right: 6%;bottom: 63%;"
+                    @click="createPDF"
                   >
                     <i class="fa fa-download"></i> Download Report PDF
                   </b-button>
@@ -315,6 +303,7 @@ import BarCharts from "@/views/pages/ChartComponent/BarCharts";
 import PieCharts from "@/views/pages/ChartComponent/PieCharts";
 import { FormWizard, TabContent } from "vue-form-wizard";
 import "vue-form-wizard/dist/vue-form-wizard.min.css";
+import jsPDF from "jspdf";
 
 export default {
   name: "ReportAnalysis",
@@ -327,6 +316,7 @@ export default {
   },
   data() {
     return {
+      uploadInputLabel: "Choose Report File (.sav, .xls, .xlsx)",
       nameOfReport: "",
       fileObject: null,
       fileName: "",
@@ -348,14 +338,29 @@ export default {
     };
   },
   methods: {
+    createPDF() {
+      console.log(this.$refs.canvas);
+      let pdfName =
+        this.nameOfReport + "_" + this.analyticsDashboardName + ".pdf";
+      var doc = new jsPDF();
+      doc.text("Hello World", 10, 10);
+      doc.save(pdfName);
+    },
     CapitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     },
-    selectGraph: function(e) {
-      alert("clicl");
-    },
     /** Upload File to server for data extraction */
     UploadDataFilesToServer: function() {
+      if (this.nameOfReport == "") {
+        this.$toaster.error("Please Enter Report Name");
+        return;
+      }
+
+      if (this.fileObject == {} || this.fileObject == null) {
+        this.$toaster.error("Please Upload A Report File");
+        return;
+      }
+
       // e.preventDefault();
       this.firstStepDisplayForm = false;
       // Show Loader
@@ -449,6 +454,7 @@ export default {
     // },
     handleFileUpload() {
       this.fileObject = this.$refs.file.files[0];
+      this.uploadInputLabel = this.$refs.file.files[0].name;
     },
     showModal() {
       this.$refs.myModalRef.show();
@@ -500,20 +506,6 @@ export default {
         //this.$set(this, "user", response.data);
         this.user = response.data;
         this.userLogged = true;
-        //console.log(response.data)
-        // this.userProfileData.username = response.data.username;
-        // this.userProfileData.email = response.data.email;
-        // this.userProfileData.role = response.data.role;
-        // this.userProfileData.firstName = response.data.firstName;
-        // this.userProfileData.lastName = response.data.lastName;
-        // this.userProfileData.email = response.data.email;
-        // this.userProfileData.phone = response.data.phone;
-        // this.userProfileData.address1 = response.data.address1;
-        // this.userProfileData.address2 = response.data.address2;
-        // this.userProfileData.city = response.data.city;
-        // this.userProfileData.state = response.data.state;
-        // this.userProfileData.country = response.data.country;
-        // this.userProfileData.zip = response.data.zip;
 
         // Replaced
         this.userProfileData = response.data;

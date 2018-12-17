@@ -16,8 +16,9 @@ exports.CheckAndWriteReports = (requestBody) => {
             username: username
         }, constants.ReportsCollection, (data) => {
             if (data == null || data.length == 0) {
+
                 //  Write new user document
-                database.InsertManyDocuments([{
+                let JSONObj = {
                     username: username,
                     reports: [{
                         fileName: filename,
@@ -26,7 +27,9 @@ exports.CheckAndWriteReports = (requestBody) => {
                         analyticsDataName: analyticsDataName,
                         analyticsData: analyticsData
                     }]
-                }], constants.ReportsCollection, () => {
+                }
+
+                database.InsertOneDocument(JSONObj, constants.ReportsCollection, () => {
                     return resolve(true)
                 })
             } else {

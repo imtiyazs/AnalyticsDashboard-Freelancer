@@ -12,7 +12,7 @@
                 <i class="icon-settings"></i>
               </template>
               <b-dropdown-item @click="reDirectTo('/reportanalysis')">Generate New Report</b-dropdown-item>
-              <b-dropdown-item @click="reDirectTo('/downloadreports')">Download Report</b-dropdown-item>
+              <!-- <b-dropdown-item @click="reDirectTo('/downloadreports')">Download Report</b-dropdown-item> -->
             </b-dropdown>
             <h4 class="mb-0">{{this.dashboardData.totalFilesUploaded}}</h4>
             <p>Files Uploaded</p>
@@ -97,7 +97,7 @@
                         <label class="custom-file-label">{{uploadInputLabel}}</label>
                       </div>
                     </div>
-                    <b-button type="button" variant="primary" class="float-right">
+                    <b-button type="button" variant="primary" class="float-right" @click="generateQuickAnalysis">
                       <i class="icon-pie-chart"></i> Generate Report Analysis
                     </b-button>
                   </div>
@@ -108,335 +108,161 @@
         </b-card>
       </b-col>
       <b-col md="6" style="height:100%">
-        <b-card header="Report Downloads"></b-card>
+        <b-card header="Latest Generated Report">
+          <b-container >
+            <b-row>
+              <b-col cols="2"><b>#</b></b-col>
+              <b-col><b>Report Name</b></b-col>
+              <b-col><b>Dashboard Name</b></b-col>
+            </b-row>
+            <b-row v-for="(singleDashboard, index) in latestDashboard" :key="index" class="p-10">
+              <b-col cols="2">{{index+1}}</b-col>
+              <b-col>{{singleDashboard.reportName}}</b-col>
+              <b-col>{{singleDashboard.analyticsDataName}}</b-col>
+            </b-row>
+        </b-container>
+        </b-card>
       </b-col>
     </b-row>
 
     <b-row>
       <b-col md="12">
-        <b-card header="Last Report Summary">
-          <b-row>
-            <b-col sm="12" lg="6">
-              <b-card>
-                <b-row>
-                  <b-col sm="5">
-                    <h5 id="traffic" class="card-title mb-0">Report Visualizer</h5>
-                    <div class="small text-muted">Report Name</div>
-                    <div class="small text-muted">Generated: 10/10/2050</div>
-                  </b-col>
-                  <b-col sm="7" class="d-none d-md-block">
-                    <b-button type="button" variant="primary" class="float-right">
-                      <i class="icon-cloud-download"></i>
-                    </b-button>
-                    <b-button-toolbar class="float-right" aria-label="Toolbar with buttons group">
-                      <b-form-radio-group
-                        class="mr-3"
-                        id="radiosBtn"
-                        buttons
-                        button-variant="outline-secondary"
-                        name="radiosBtn"
-                      >
-                        <b-form-radio class="mx-0" value="Day">Day</b-form-radio>
-                        <b-form-radio class="mx-0" value="Month">Month</b-form-radio>
-                        <b-form-radio class="mx-0" value="Year">Year</b-form-radio>
-                      </b-form-radio-group>
-                    </b-button-toolbar>
-                  </b-col>
-                </b-row>
-                <main-chart-example
-                  chartId="main-chart-01"
-                  class="chart-wrapper"
-                  style="height:300px;margin-top:40px;"
-                  height="300"
-                ></main-chart-example>
-                <div slot="footer">
-                  <b-row class="text-center">
-                    <b-col class="mb-sm-2 mb-0">
-                      <div class="text-muted">Field 1</div>
-                      <strong>201 (40%)</strong>
-                      <b-progress
-                        height="{}"
-                        class="progress-xs mt-2"
-                        :precision="1"
-                        variant="success"
-                        :value="40"
-                      ></b-progress>
-                    </b-col>
-                    <b-col class="mb-sm-2 mb-0 d-md-down-none">
-                      <div class="text-muted">Field 2</div>
-                      <strong>24 (20%)</strong>
-                      <b-progress
-                        height="{}"
-                        class="progress-xs mt-2"
-                        :precision="1"
-                        variant="info"
-                        :value="20"
-                      ></b-progress>
-                    </b-col>
-                    <b-col class="mb-sm-2 mb-0">
-                      <div class="text-muted">Field 3</div>
-                      <strong>70 (60%)</strong>
-                      <b-progress
-                        height="{}"
-                        class="progress-xs mt-2"
-                        :precision="1"
-                        variant="warning"
-                        :value="60"
-                      ></b-progress>
-                    </b-col>
-                    <b-col class="mb-sm-2 mb-0">
-                      <div class="text-muted">Field 4</div>
-                      <strong>22 (80%)</strong>
-                      <b-progress
-                        height="{}"
-                        class="progress-xs mt-2"
-                        :precision="1"
-                        variant="danger"
-                        :value="80"
-                      ></b-progress>
-                    </b-col>
-                  </b-row>
+        <b-card header="Last Dashboard Generated Summary">
+          <b-card-group>
+              <div class="card">
+                <div class="card-body">
+                  <!-- Report File Name -->
+                    <div style="padding-left: 20px">
+                      <span>
+                        Report Name:
+                        <span style="font-size: 20px;font-weight: 500;">
+                          {{CapitalizeFirstLetter(dashboardData.lastReportSummary.reportName)}}
+                          <!-- {{dashboardData.lastReportSummary}} -->
+                        </span>
+                      </span>
+                      <br>
+                      <span class="mb-5">
+                        Analytic Report Name:
+                        <span style="font-size: 20px;font-weight: 500;">
+                          {{CapitalizeFirstLetter(dashboardData.lastReportSummary.analyticsDataName)}}
+                        </span>
+                      </span>
+                    </div>
+                    <!-- <b-button
+                      variant="primary"
+                      style="position:fixed; bottom: 5%; right:62px;z-index: 10;"
+                      @click="createPDF"
+                    >
+                      <i class="fa fa-download"></i> Download Report PDF
+                    </b-button> -->
+                    <div class="card-body">
+                      <div ref="printReport" class="row">
+                        <div
+                          v-for="(singleGraph,index) in dashboardData.lastReportSummary.analyticsData"
+                          :key="index"
+                          class="col-4">
+                          <div v-if="singleGraph.typeOfGraph ==='BarGraph'">
+                            <b-card
+                              :header="CapitalizeFirstLetter(singleGraph.columnName)"
+                              style="font-weight:500"
+                            >
+                              <div class="chart-wrapper">
+                                <BarCharts
+                                  :datasetBar="returnFrequency(singleGraph.data)"
+                                  chartId="chart-bar-01"
+                                />
+                              </div>
+                            </b-card>
+                          </div>
+                          <div v-if="singleGraph.typeOfGraph ==='PieGraph'">
+                            <b-card
+                              :header="CapitalizeFirstLetter(singleGraph.columnName)"
+                              style="font-weight:500"
+                            >
+                              <div class="chart-wrapper">
+                                <PieCharts
+                                  :datasetPie="returnFrequency(singleGraph.data)"
+                                  chartId="chart-pie-01"
+                                />
+                              </div>
+                            </b-card>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                 </div>
-              </b-card>
-            </b-col>
-            <b-col sm="12" lg="6">
-              <b-row>
-                <b-col sm="12" lg="6">
-                  <b-row>
-                    <b-col sm="6">
-                      <Callout variant="info">
-                        <small class="text-muted">New Clients</small>
-                        <br>
-                        <strong class="h4">9,123</strong>
-                        <div class="chart-wrapper" :style="{ top: '-10px'}">
-                          <!--<callout-chart-example :data="[35, 23, 56, 22, 97, 23, 64]" variant="#20a8d8" width="80" height="30" />-->
-                          <callout-chart-example
-                            chartId="callout-chart-01"
-                            :data="[35, 23, 56, 22, 97, 23, 64]"
-                            variant="info"
-                            width="80"
-                            height="30"
-                          />
-                        </div>
-                      </Callout>
-                    </b-col>
-                    <b-col sm="6">
-                      <Callout variant="danger">
-                        <small class="text-muted">Clients</small>
-                        <br>
-                        <strong class="h4">223</strong>
-                        <div class="chart-wrapper" :style="{ top: '-10px'}">
-                          <callout-chart-example
-                            chartId="callout-chart-02"
-                            :data="[65, 59, 84, 84, 51, 55, 40]"
-                            variant="danger"
-                            width="80"
-                            height="30"
-                          />
-                        </div>
-                      </Callout>
-                    </b-col>
-                  </b-row>
-                  <hr class="mt-0">
-                  <div class="progress-group mb-4">
-                    <div class="progress-group-prepend">
-                      <span class="progress-group-text">Monday</span>
-                    </div>
-                    <div class="progress-group-bars">
-                      <b-progress class="progress-xs" variant="info" :value="34" height="{}"/>
-                      <b-progress class="progress-xs" variant="danger" :value="78" height="{}"/>
-                    </div>
-                  </div>
-                  <div class="progress-group mb-4">
-                    <div class="progress-group-prepend">
-                      <span class="progress-group-text">Tuesday</span>
-                    </div>
-                    <div class="progress-group-bars">
-                      <b-progress height="{}" class="progress-xs" :value="56" variant="info"></b-progress>
-                      <b-progress height="{}" class="progress-xs" :value="94" variant="danger"></b-progress>
-                    </div>
-                  </div>
-                  <div class="progress-group mb-4">
-                    <div class="progress-group-prepend">
-                      <span class="progress-group-text">Wednesday</span>
-                    </div>
-                    <div class="progress-group-bars">
-                      <b-progress height="{}" class="progress-xs" :value="12" variant="info"></b-progress>
-                      <b-progress height="{}" class="progress-xs" :value="67" variant="danger"></b-progress>
-                    </div>
-                  </div>
-                  <div class="progress-group mb-4">
-                    <div class="progress-group-prepend">
-                      <span class="progress-group-text">Thursday</span>
-                    </div>
-                    <div class="progress-group-bars">
-                      <b-progress height="{}" class="progress-xs" :value="43" variant="info"></b-progress>
-                      <b-progress height="{}" class="progress-xs" :value="91" variant="danger"></b-progress>
-                    </div>
-                  </div>
-                  <div class="progress-group mb-4">
-                    <div class="progress-group-prepend">
-                      <span class="progress-group-text">Friday</span>
-                    </div>
-                    <div class="progress-group-bars">
-                      <b-progress height="{}" class="progress-xs" :value="22" variant="info"></b-progress>
-                      <b-progress height="{}" class="progress-xs" :value="73" variant="danger"></b-progress>
-                    </div>
-                  </div>
-                  <div class="progress-group mb-4">
-                    <div class="progress-group-prepend">
-                      <span class="progress-group-text">Saturday</span>
-                    </div>
-                    <div class="progress-group-bars">
-                      <b-progress height="{}" class="progress-xs" :value="53" variant="info"></b-progress>
-                      <b-progress height="{}" class="progress-xs" :value="82" variant="danger"></b-progress>
-                    </div>
-                  </div>
-                  <div class="progress-group mb-4">
-                    <div class="progress-group-prepend">
-                      <span class="progress-group-text">Sunday</span>
-                    </div>
-                    <div class="progress-group-bars">
-                      <b-progress height="{}" class="progress-xs" :value="9" variant="info"></b-progress>
-                      <b-progress height="{}" class="progress-xs" :value="69" variant="danger"></b-progress>
-                    </div>
-                  </div>
-                  <div class="legend text-center">
-                    <small>
-                      <sup>
-                        <b-badge pill variant="info">&nbsp;</b-badge>
-                      </sup>
-                      New clients
-                      &nbsp;&nbsp;
-                      <sup>
-                        <b-badge pill variant="danger">&nbsp;</b-badge>
-                      </sup>
-                      Recurring clients
-                    </small>
-                  </div>
-                </b-col>
-                <b-col sm="12" lg="6">
-                  <b-row>
-                    <b-col sm="6">
-                      <Callout variant="warning">
-                        <small class="text-muted">Pageviews</small>
-                        <br>
-                        <strong class="h4">78,623</strong>
-                        <div class="chart-wrapper" :style="{ top: '-10px'}">
-                          <callout-chart-example
-                            chartId="callout-chart-03"
-                            :data="[35, 23, 56, 22, 97, 23, 64]"
-                            variant="#f8cb00"
-                            width="80"
-                            height="30"
-                          />
-                        </div>
-                      </Callout>
-                    </b-col>
-                    <b-col sm="6">
-                      <Callout variant="success">
-                        <small class="text-muted">Organic</small>
-                        <br>
-                        <strong class="h4">49,123</strong>
-                        <div class="chart-wrapper" :style="{ top: '-10px'}">
-                          <callout-chart-example
-                            chartId="callout-chart-04"
-                            :data="[65, 59, 84, 84, 51, 55, 40]"
-                            variant="#4dbd74"
-                            width="80"
-                            height="30"
-                          />
-                        </div>
-                      </Callout>
-                    </b-col>
-                  </b-row>
-                  <hr class="mt-0">
-                  <ul class="horizontal-bars type-2">
-                    <div class="progress-group">
-                      <div class="progress-group-header">
-                        <i class="icon-user progress-group-icon"></i>
-                        <span class="title">Male</span>
-                        <span class="ml-auto font-weight-bold">43%</span>
-                      </div>
-                      <div class="progress-group-bars">
-                        <b-progress height="{}" class="progress-xs" :value="43" variant="warning"></b-progress>
-                      </div>
-                    </div>
-                    <div class="progress-group mb-5">
-                      <div class="progress-group-header">
-                        <i class="icon-user-female progress-group-icon"></i>
-                        <span class="title">Female</span>
-                        <span class="ml-auto font-weight-bold">37%</span>
-                      </div>
-                      <div class="progress-group-bars">
-                        <b-progress height="{}" class="progress-xs" :value="37" variant="warning"></b-progress>
-                      </div>
-                    </div>
-                    <div class="progress-group">
-                      <div class="progress-group-header">
-                        <i class="icon-globe progress-group-icon"></i>
-                        <span class="title">Organic Search</span>
-                        <span class="ml-auto font-weight-bold">
-                          191,235
-                          <span class="text-muted small">(56%)</span>
-                        </span>
-                      </div>
-                      <div class="progress-group-bars">
-                        <b-progress height="{}" class="progress-xs" :value="56" variant="success"></b-progress>
-                      </div>
-                    </div>
-                    <div class="progress-group">
-                      <div class="progress-group-header">
-                        <i class="icon-social-facebook progress-group-icon"></i>
-                        <span class="title">Facebook</span>
-                        <span class="ml-auto font-weight-bold">
-                          51,223
-                          <span class="text-muted small">(15%)</span>
-                        </span>
-                      </div>
-                      <div class="progress-group-bars">
-                        <b-progress height="{}" class="progress-xs" :value="15" variant="success"></b-progress>
-                      </div>
-                    </div>
-                    <div class="progress-group">
-                      <div class="progress-group-header">
-                        <i class="icon-social-twitter progress-group-icon"></i>
-                        <span class="title">Twitter</span>
-                        <span class="ml-auto font-weight-bold">
-                          37,564
-                          <span class="text-muted small">(11%)</span>
-                        </span>
-                      </div>
-                      <div class="progress-group-bars">
-                        <b-progress height="{}" class="progress-xs" :value="11" variant="success"></b-progress>
-                      </div>
-                    </div>
-                    <div class="progress-group">
-                      <div class="progress-group-header">
-                        <i class="icon-social-linkedin progress-group-icon"></i>
-                        <span class="title">LinkedIn</span>
-                        <span class="ml-auto font-weight-bold">
-                          27,319
-                          <span class="text-muted small">&nbsp;(8%)</span>
-                        </span>
-                      </div>
-                      <div class="progress-group-bars">
-                        <b-progress height="{}" class="progress-xs" :value="8" variant="success"></b-progress>
-                      </div>
-                    </div>
-                    <div class="divider text-center">
-                      <b-button variant="link" size="sm" class="text-muted">
-                        <i class="icon-options"></i>
-                      </b-button>
-                    </div>
-                  </ul>
-                </b-col>
-              </b-row>
-            </b-col>
-          </b-row>
+              </div>
+            
+          </b-card-group>
         </b-card>
       </b-col>
     </b-row>
+    <!--  -->
+    <b-modal ref="showReportQuickView" hide-footer title="Quick View of Your Report">
+      <b-card-group >
+        <div class="card">
+          <div class="card-body">
+            <span>
+              Report Name:
+              <span
+                style="font-size: 20px;font-weight: 500;"
+              >{{CapitalizeFirstLetter(nameOfReport)}}</span>
+            </span>
+            <!-- Iterate columns  -->
+          
+              <div v-for="(value, key) in JSONObject" :value="{key:value}" :key="key">
+                <div class="row">
+                  <div class="col-10">
+                    <div class="card">
+                      <div class="card-header">
+                        <h5 class="mb-0">
+                          <span style="font-size: 12px;">Column Name:</span>
+                          {{ CapitalizeFirstLetter(key)}}
+                        </h5>
+                      </div>
+
+                      <div class="collapse show">
+                        <div class="card-body">
+                          <div class="row">
+                            <!-- Bar Chart Display -->
+                            <div class="col-6">
+                              
+                              <b-card header="Bar Chart">
+                                <div class="chart-wrapper">
+                                  <BarCharts
+                                    :datasetBar="returnFrequency(value)"
+                                    chartId="chart-bar-01"
+                                  />
+                                </div>
+                              </b-card>
+                            </div>
+
+                            <!-- Pie Chart Display -->
+                            <div class="col-6">
+                              
+                              <b-card header="Pie Chart">
+                                <div class="chart-wrapper">
+                                  <PieCharts
+                                    :datasetPie="returnFrequency(value)"
+                                    chartId="chart-pie-01"
+                                  />
+                                </div>
+                              </b-card>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            
+              
+          </div>
+        </div>
+      </b-card-group>
+    </b-modal>
+    <!--  -->
 
     <!-- User statistics module  -->
     <!-- <b-table
@@ -605,6 +431,9 @@ import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { Circle4 } from "vue-loading-spinner";
 
+import BarCharts from "@/views/pages/ChartComponent/BarCharts";
+import PieCharts from "@/views/pages/ChartComponent/PieCharts";
+
 export default {
   name: "dashboard",
   components: {
@@ -617,7 +446,9 @@ export default {
     SocialBoxChartExample,
     CalloutChartExample,
     vueDropzone: vue2Dropzone,
-    Circle4
+    Circle4,
+    BarCharts,
+    PieCharts
   },
   data: function() {
     return {
@@ -626,7 +457,7 @@ export default {
       displayDropZone: true,
       showLoader: false,
       nameOfReport: "",
-      uploadInputLabel: "Choose Report File (.sav, .xls, .xlsx)",
+      uploadInputLabel: "Select File (.sav, .xls, .xlsx, .csv)",
       fileObject: null,
       userProfileData: {
         username: "",
@@ -640,60 +471,73 @@ export default {
         announcementsArray: null,
         lastReportSummary: null
       },
-      dropzoneOptions: {
-        url: "https://httpbin.org/post",
-        acceptedFiles: ".sav,.pdf,.csv,.xlxs,.xls",
-        dictDefaultMessage:
-          "<i class='fa fa-cloud-upload'></i> Upload Files (.sav,.pdf,.csv,.xlsx,.xls)",
-        thumbnailWidth: 150,
-        maxFilesize: 10,
-        headers: { "My-Awesome-Header": "header value" }
-      }
+      // dropzoneOptions: {
+      //   url: "https://httpbin.org/post",
+      //   acceptedFiles: ".sav,.pdf,.csv,.xlxs,.xls",
+      //   dictDefaultMessage:
+      //     "<i class='fa fa-cloud-upload'></i> Upload Files (.sav,.pdf,.csv,.xlsx,.xls)",
+      //   thumbnailWidth: 150,
+      //   maxFilesize: 10,
+      //   headers: { "My-Awesome-Header": "header value" }
+      // },
+      latestDashboard:[],
+      JSONObject:[]
     };
   },
   methods: {
+    generateQuickAnalysis(){
+      let formData = new FormData();
+      formData.append("reportname", this.nameOfReport);
+      formData.append("file", this.fileObject);
+      axios
+        .post("/o/uploadfiles", formData, {
+          headers: {
+            username: this.userProfileData.username,
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        })
+        .then(response => {
+          //console.log(response);
+          //this.fileName = response.data.fileName;
+          //this.fileType = response.data.fileType;
+          this.JSONObject = response.data.dataValues;
+
+          // this.firstStepDisplayForm = false;
+          // this.secondStepShowLoader = false;
+          // this.thirdStepDisplayAnalysis = true;
+
+          return true;
+        })
+        // On file reading error
+        .catch(function(error) {
+          console.log(error);
+          return false;
+          // this.secondStepShowLoader = false;
+        });
+      
+      this.$refs.showReportQuickView.show();
+    },
     handleFileUpload() {
       this.fileObject = this.$refs.file.files[0];
       this.uploadInputLabel = this.$refs.file.files[0].name;
     },
-    startLoader() {
-      this.displayDropZone = false;
-    },
-    validateFile(file, xhr, formData) {
-      let acceptedfilelist = this.dropzoneOptions.acceptedFiles;
-      let allow = false;
-
-      acceptedfilelist.split(",").forEach(function(fileExtension) {
-        if (file.name.includes(fileExtension)) {
-          console.log(file);
-          allow = true;
-        }
-      });
-
-      if (!allow) {
-        this.$refs.myVueDropzone.removeFile(file);
-        alert("This operation is not allowed");
-      }
-    },
-    variant(value) {
-      let $variant;
-      if (value <= 25) {
-        $variant = "info";
-      } else if (value > 25 && value <= 50) {
-        $variant = "success";
-      } else if (value > 50 && value <= 75) {
-        $variant = "warning";
-      } else if (value > 75 && value <= 100) {
-        $variant = "danger";
-      }
-      return $variant;
-    },
-    flag(value) {
-      return "flag-icon flag-icon-" + value;
+   CapitalizeFirstLetter(string) {
+     if (string!== undefined)
+        return string.charAt(0).toUpperCase() + string.slice(1);
+      return ""
     },
     reDirectTo(mentionPath) {
       this.$router.push({ path: mentionPath });
-    }
+    },
+    returnFrequency(arrayObject) {
+      let counts = {};
+      for (let i = 0; i < arrayObject.length; i++) {
+        let num = arrayObject[i];
+        counts[num] = counts[num] ? counts[num] + 1 : 1;
+      }
+      return counts;
+    },
+    
   },
   mounted() {
     /** Check User Logged In */
@@ -726,9 +570,27 @@ export default {
           })
           .catch(errors => {
             this.showLoader = false;
-            this.$toaster.error("Session Expired. Please Login Again.");
-            router.push("/login");
+            this.$toaster.error("Unable to fetch details");
+            //router.push("/login");
           });
+          
+          // 
+          axios
+          .post("/o/reporthistory", {
+            username: this.userProfileData.username,
+            limit:5
+          })  
+          .then(response => {
+            console.log(response.data)
+            this.latestDashboard = response.data.reports
+            this.dashboardData.lastReportSummary = this.latestDashboard[0]
+          })
+          .catch(errors => {
+            this.showLoader = false;
+            this.$toaster.error("Unable to fetch details");
+          });
+
+
       })
       .catch(errors => {
         this.showLoader = false;

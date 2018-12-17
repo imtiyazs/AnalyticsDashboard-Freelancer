@@ -12,6 +12,7 @@
                     subtitle="Visualize Report Analysis In 3 Steps"
                     finishButtonText="Generate Report Visualization"
                     nextButtonText="Generate Report Analysis"
+                    startIndex=0
                   >
                     <tab-content
                       title="Upload Report File"
@@ -168,7 +169,7 @@
 
       <br>
       <!-- MODAL -->
-      <b-button hidden @click="showModal">Open Modal</b-button>
+      <!-- <b-button hidden @click="showModal">Open Modal</b-button> -->
       <b-modal ref="myModalRef" hide-footer title="Your report is almost ready...!">
         <label
           class="text-muted"

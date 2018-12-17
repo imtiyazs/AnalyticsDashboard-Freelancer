@@ -139,7 +139,7 @@ exports.StartApplicationServer = () => {
 
     /** User API to check user is logged */
     app.post(constants.UserRoute, middleware.authMiddleware, (req, res) => {
-        logger.info(constants.UserRoute)
+        // logger.info(constants.UserRoute)
         database.FindByObjectID(req.session.passport.user, constants.UsersCollection, (data) => {
             if (data == null) {
                 return res.status(417).send('Session Expired')

@@ -62,13 +62,49 @@
     <b-row>
       <b-col md="6" style="height:100%">
         <b-card header="Quick Report Analysis">
-          <vue-dropzone
-            ref="myVueDropzone"
-            id="dropzone"
-            :options="dropzoneOptions"
-            v-on:vdropzone-complete="startLoader"
-            v-on:vdropzone-file-added="validateFile"
-          ></vue-dropzone>
+          <div class="row">
+            <div class="animated fadeIn col-12">
+              <b-card-group>
+                <div class="card">
+                  <div class="card-body">
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">Report Name</span>
+                      </div>
+                      <input
+                        type="text"
+                        class="form-control"
+                        aria-label="Default"
+                        label-for="nameOfReport"
+                        aria-describedby="inputGroup-sizing-default"
+                        v-model="nameOfReport"
+                      >
+                    </div>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">Report Upload</span>
+                      </div>
+                      <div class="custom-file">
+                        <input
+                          type="file"
+                          id="file"
+                          ref="file"
+                          accept=".sav, .xls, .xlsx"
+                          class="custom-file-input"
+                          v-on:change="handleFileUpload"
+                          :plain="true"
+                        >
+                        <label class="custom-file-label">{{uploadInputLabel}}</label>
+                      </div>
+                    </div>
+                    <b-button type="button" variant="primary" class="float-right">
+                      <i class="icon-pie-chart"></i> Generate Report Analysis
+                    </b-button>
+                  </div>
+                </div>
+              </b-card-group>
+            </div>
+          </div>
         </b-card>
       </b-col>
       <b-col md="6" style="height:100%">
@@ -588,6 +624,9 @@ export default {
       userLogged: false,
       displayDropZone: true,
       showLoader: false,
+      nameOfReport: "",
+      uploadInputLabel: "Choose Report File (.sav, .xls, .xlsx)",
+      fileObject: null,
       userProfileData: {
         username: "",
         email: "",
@@ -612,6 +651,10 @@ export default {
     };
   },
   methods: {
+    handleFileUpload() {
+      this.fileObject = this.$refs.file.files[0];
+      this.uploadInputLabel = this.$refs.file.files[0].name;
+    },
     startLoader() {
       this.displayDropZone = false;
     },

@@ -4,7 +4,11 @@
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  mounted() {
+    this.$store.dispatch('setUserData', {name: 'kunal'})
+    // console.log('app:', this.$store)
+  }
 }
 </script>
 

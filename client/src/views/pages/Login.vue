@@ -6,6 +6,9 @@
           <b-card-group>
             <b-card no-body class="p-4">
               <b-card-body>
+                <div class="loader">
+                  <circle4 v-if="showLoader"></circle4>
+                </div>
                 <b-form v-on:submit="login">
                   <h1 class="text-center">Login</h1>
                   <p class="text-muted text-center">Sign In to your account</p>
@@ -41,7 +44,7 @@
                   </b-input-group>
                   <b-row>
                     <b-col cols="12">
-                      <b-button type="submit" variant="primary" class="px-4" block>Login</b-button>
+                      <b-button type="submit" :disabled="showLoader" variant="primary" class="px-4" block>Login</b-button>
                     </b-col>
                   </b-row>
                   <b-row class="mt-2">
@@ -53,7 +56,7 @@
                         style="font-size: 12px;"
                       >Create New Account</b-button>
                     </b-col>
-                     <b-col cols="6">
+                    <b-col cols="6">
                       <b-button
                         variant="link"
                         class="px-0"
@@ -62,18 +65,6 @@
                     </b-col>
                   </b-row>
                 </b-form>
-                <!-- <b-row>
-                  <b-col cols="6">
-                    <b-button block class="btn btn-facebook" disabled>
-                      <span>facebook</span>
-                    </b-button>
-                  </b-col>
-                  <b-col cols="6">
-                    <b-button block class="btn btn-twitter" type="button" disabled>
-                      <span>twitter</span>
-                    </b-button>
-                  </b-col>
-                </b-row>-->
               </b-card-body>
             </b-card>
           </b-card-group>
@@ -86,11 +77,16 @@
 <script>
 import router from "../../router";
 import axios from "axios";
+import { Circle4 } from "vue-loading-spinner";
 
 export default {
   name: "Login",
+  components: {
+    Circle4
+  },
   data() {
     return {
+      showLoader: false,
       username: null,
       password: null
     };
@@ -98,6 +94,7 @@ export default {
   methods: {
     login: function(e) {
       e.preventDefault();
+      this.showLoader = true;
       axios
         .post("/o/login", {
           username: this.username,
@@ -105,8 +102,10 @@ export default {
         })
         .then(response => {
           router.push("/dashboard");
+          this.showLoader = false;
         })
         .catch(errors => {
+          this.showLoader = false;
           this.$toaster.error("Incorrect Username/Password. Try Again.");
         });
     },
@@ -142,5 +141,14 @@ export default {
   background-image: url("../../../public/img/bg-01.jpg");
   background-size: cover;
   font-family: Poppins-Regular, sans-serif;
+}
+
+.loader {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 45%;
+  left: 45%;
+  z-index: 10;
 }
 </style>

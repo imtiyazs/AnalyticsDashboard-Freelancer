@@ -11,11 +11,12 @@ import router from './router'
 import axios from 'axios'
 import Toaster from 'v-toaster'
 import 'v-toaster/dist/v-toaster.css'
+import Vuex from 'vuex'
+import store from './store/index.js'
 
-// todo
-// cssVars()
 axios.defaults.baseURL = 'http://localhost:8080/server/'
 
+Vue.use(Vuex)
 Vue.use(BootstrapVue)
 Vue.use(Toaster, {
   timeout: 3000
@@ -25,6 +26,7 @@ Vue.use(Toaster, {
 new Vue({
   el: '#app',
   router,
+    store,
   template: '<App/>',
   components: {
     App

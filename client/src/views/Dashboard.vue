@@ -1,5 +1,8 @@
 <template>
   <div v-if="userLogged" class="animated fadeIn">
+    <div class="loader">
+      <circle4 v-if="showLoader" style="height:80px;width:80px;"></circle4>
+    </div>
     <b-row>
       <b-col sm="6" lg="3">
         <b-card no-body class="bg-warning">
@@ -564,7 +567,7 @@ import axios from "axios";
 import router from "../router";
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
-import { RotateSquare5 } from "vue-loading-spinner";
+import { Circle4 } from "vue-loading-spinner";
 
 export default {
   name: "dashboard",
@@ -578,12 +581,13 @@ export default {
     SocialBoxChartExample,
     CalloutChartExample,
     vueDropzone: vue2Dropzone,
-    RotateSquare5
+    Circle4
   },
   data: function() {
     return {
       userLogged: false,
       displayDropZone: true,
+      showLoader: false,
       userProfileData: {
         username: "",
         email: "",
@@ -643,13 +647,14 @@ export default {
     flag(value) {
       return "flag-icon flag-icon-" + value;
     },
-    reDirectTo(mentionPath){
-      this.$router.push({path: mentionPath})
+    reDirectTo(mentionPath) {
+      this.$router.push({ path: mentionPath });
     }
   },
   mounted() {
     /** Check User Logged In */
     let self = this;
+    this.showLoader = true;
     axios
       .post("/o/user")
       .then(response => {
@@ -665,6 +670,7 @@ export default {
             username: this.userProfileData.username
           })
           .then(response => {
+            this.showLoader = false;
             this.dashboardData.totalFilesUploaded =
               response.data.totalFileUploads;
             this.dashboardData.totalReportsGenerated =
@@ -674,14 +680,27 @@ export default {
               response.data.lastReportSummary;
           })
           .catch(errors => {
+            this.showLoader = false;
             this.$toaster.error("Session Expired. Please Login Again.");
             router.push("/login");
           });
       })
       .catch(errors => {
+        this.showLoader = false;
         this.$toaster.error("Session Expired. Please Login Again.");
         router.push("/login");
       });
   }
 };
 </script>
+<style>
+.loader {
+  width: 80px;
+  height: 80px;
+  height: 8;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 10;
+}
+</style>

@@ -339,7 +339,6 @@ export default {
   },
   methods: {
     createPDF() {
-      console.log(this.$refs.canvas);
       let pdfName =
         this.nameOfReport + "_" + this.analyticsDashboardName + ".pdf";
       var doc = new jsPDF();

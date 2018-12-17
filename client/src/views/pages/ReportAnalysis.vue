@@ -431,7 +431,6 @@ export default {
       this.$refs.myModalRef.hide();
     },
     generateDashboard() {
-      console.log("In generateDashboard ");
 
       //axios to record dashboard into mongo
       let dashboardDetails = {
@@ -440,11 +439,9 @@ export default {
         userName: this.userProfileData.username,
         analyticsDataName: this.analyticsDashboardName,
         reportData: this.JSONObject,
-        analyticsData: this.dashboardData
+        analyticsData: this.dashboardData,
+        creationDate: new Date().toISOString()
       };
-
-      console.log("dashboardDetails :: ");
-      console.log(dashboardDetails);
 
       this.thirdStepDisplayAnalysis = false;
       this.fourthStepShowLoader = true;
@@ -453,7 +450,6 @@ export default {
         .post("/o/uploadreport", dashboardDetails)
         // On receiving file data in JSON
         .then(response => {
-          console.log(response.data);
           this.dashboardGeneratedData.fileName = "toBeChanges.asap";
           this.dashboardGeneratedData.reportName = this.nameOfReport;
           this.dashboardGeneratedData.dashboardData = this.dashboardData;
@@ -463,7 +459,7 @@ export default {
           this.fifthStepDisplayDashboard = true;
         })
         .catch(function(error) {
-          console.log(error);
+          this.$toaster.error(error.response.data)
         });
     }
   },

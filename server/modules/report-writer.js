@@ -10,7 +10,8 @@ exports.CheckAndWriteReports = (requestBody) => {
             reportname = requestBody.reportName,
             reportData = requestBody.reportData,
             analyticsDataName = requestBody.analyticsDataName,
-            analyticsData = requestBody.analyticsData
+            analyticsData = requestBody.analyticsData,
+            creationDate = requestBody.creationDate
 
         database.FindOneInCollection({
             username: username
@@ -25,7 +26,8 @@ exports.CheckAndWriteReports = (requestBody) => {
                         reportName: reportname,
                         reportData: reportData,
                         analyticsDataName: analyticsDataName,
-                        analyticsData: analyticsData
+                        analyticsData: analyticsData,
+                        creationDate: creationDate
                     }]
                 }
 
@@ -43,7 +45,8 @@ exports.CheckAndWriteReports = (requestBody) => {
                             reportName: reportname,
                             reportData: reportData,
                             analyticsDataName: analyticsDataName,
-                            analyticsData: analyticsData
+                            analyticsData: analyticsData,
+                            creationDate: creationDate
                         }
                     }
                 }, constants.ReportsCollection, () => {

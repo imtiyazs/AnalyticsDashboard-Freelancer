@@ -108,7 +108,25 @@ export default {
   data() {
     return {
       user: {},
-      fields: ["fileName", "reportName", "analyticsDataName","creationDate"],
+      //fields: ["fileName", "reportName", "analyticsDataName","creationDate"],
+      fields: {
+        "fileName": {
+          "label": "File Name",
+          "sortable": true
+        },
+        "reportName": {
+          "label": "Report Name",
+          "sortable": true
+        },
+        "analyticsDataName": {
+          "label": "Dashboard Name",
+          "sortable": true
+        },
+        "creationDate": {
+          "label": "Creation",
+          "sortable": true
+        }
+},
       dashboardDisplay: {
         name: "",
         data: null

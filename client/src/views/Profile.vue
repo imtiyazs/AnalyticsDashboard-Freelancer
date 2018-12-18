@@ -225,7 +225,7 @@
                 >
               </div>
             </div>
-            <button type="submit" class="btn btn-primary float-left mt-3">Change Password</button>
+            <b-button type="submit" class="btn btn-primary float-left mt-3" variant="primary">Change Password</b-button>
           </form>
         </div>
         <div class="card-body" v-if="section3" id="section3">

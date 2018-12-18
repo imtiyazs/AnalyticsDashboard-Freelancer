@@ -19,7 +19,7 @@
                         placeholder="Search User"
                       >
 
-                      <b-list-group v-for="user in filteredUsers" v-bind:key="user">
+                      <b-list-group v-for="(user,index) in filteredUsers" v-bind:key="index">
                         <b-list-group-item
                           class="mb-2"
                           href="#"
@@ -156,6 +156,7 @@ export default {
   },
   data() {
     return {
+      user:"",
       showLoader: false,
       userListArray: [],
       isUserLoaded: false,
@@ -268,7 +269,8 @@ export default {
     axios
       .post("/o/user")
       .then(response => {
-        this.$set(this, "user", response.data.username);
+        //this.$set(this, "user", response.data.username);
+        this.user = response.data.username
         this.userLogged = true;
         this.auth = response.data.role;
         axios

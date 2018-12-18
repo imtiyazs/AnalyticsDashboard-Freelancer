@@ -257,7 +257,7 @@ export default {
             self.usersHistory = response.data;
             self.totalRows = response.data.reports.length;
             self.currentPage = 0;
-            console.log(response.data);
+            //console.log(response.data);
           })
           .catch(errors => {
             this.$toaster.error("Cannot Fetch Report History");

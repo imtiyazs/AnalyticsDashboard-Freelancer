@@ -15,7 +15,7 @@
               <!-- <b-dropdown-item @click="reDirectTo('/downloadreports')">Download Report</b-dropdown-item> -->
             </b-dropdown>
             <h4 class="mb-0">{{this.dashboardData.totalFilesUploaded}}</h4>
-            <p>Files Uploaded</p>
+            <p>Total Files Uploaded</p>
           </b-card-body>
           <card-line3-chart-example
             chartId="card-chart-03"
@@ -59,47 +59,60 @@
       </b-col>
     </b-row>
 
-    <b-row>
+    <b-row class="mb-3">
       <b-col md="6" style="height:100%">
         <b-card header="Quick Report Analysis">
           <div class="row">
             <div class="animated fadeIn col-12">
               <b-card-group>
-                <div class="card">
+                <div class="card" style="height: 300px;">
                   <div class="card-body">
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text">Report Name</span>
-                      </div>
-                      <input
-                        type="text"
-                        class="form-control"
-                        aria-label="Default"
-                        label-for="nameOfReport"
-                        aria-describedby="inputGroup-sizing-default"
-                        v-model="nameOfReport"
-                      >
+                    <div class="row">
+                      <h5 class="card-title ml-3">Generate Quick Report</h5>
                     </div>
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text">Report Upload</span>
-                      </div>
-                      <div class="custom-file">
-                        <input
-                          type="file"
-                          id="file"
-                          ref="file"
-                          accept=".sav, .xls, .xlsx"
-                          class="custom-file-input"
-                          v-on:change="handleFileUpload"
-                          :plain="true"
+                    <div class="row">
+                      <div class="col-12 mt-3">
+                        <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">Report Name</span>
+                          </div>
+                          <input
+                            type="text"
+                            class="form-control"
+                            aria-label="Default"
+                            label-for="nameOfReport"
+                            aria-describedby="inputGroup-sizing-default"
+                            v-model="nameOfReport"
+                          >
+                        </div>
+                        <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">Report Upload</span>
+                          </div>
+                          <div class="custom-file">
+                            <input
+                              type="file"
+                              id="file"
+                              ref="file"
+                              accept=".sav, .xls, .xlsx"
+                              class="custom-file-input"
+                              v-on:change="handleFileUpload"
+                              :plain="true"
+                            >
+                            <label class="custom-file-label">{{uploadInputLabel}}</label>
+                          </div>
+                        </div>
+
+                        <b-button
+                          type="button"
+                          variant="primary"
+                          class="float-right mt-4"
+                          @click="generateQuickAnalysis"
                         >
-                        <label class="custom-file-label">{{uploadInputLabel}}</label>
+                          <i class="icon-pie-chart"></i> Generate Report Analysis
+                        </b-button>
                       </div>
                     </div>
-                    <b-button type="button" variant="primary" class="float-right" @click="generateQuickAnalysis">
-                      <i class="icon-pie-chart"></i> Generate Report Analysis
-                    </b-button>
                   </div>
                 </div>
               </b-card-group>
@@ -108,81 +121,168 @@
         </b-card>
       </b-col>
       <b-col md="6" style="height:100%">
-        <b-card header="Latest Generated Report">
-          <b-container >
-            <b-row>
-              <b-col cols="2"><b>#</b></b-col>
-              <b-col><b>Report Name</b></b-col>
-              <b-col><b>Dashboard Name</b></b-col>
-            </b-row>
-            <b-row v-for="(singleDashboard, index) in latestDashboard" :key="index" class="p-10">
-              <b-col cols="2">{{index+1}}</b-col>
-              <b-col>{{singleDashboard.reportName}}</b-col>
-              <b-col>{{singleDashboard.analyticsDataName}}</b-col>
-            </b-row>
-        </b-container>
-        </b-card>
+        <div class="row">
+          <div class="animated fadeIn col-12">
+            <b-card-group>
+              <b-card header="Latest Generated Reports">
+                <div class="card">
+                  <div class="card-body">
+                    <b-row class="mb-4">
+                      <b-col cols="2" class="text-center">
+                        <b>#</b>
+                      </b-col>
+                      <b-col>
+                        <b>Report Name</b>
+                      </b-col>
+                      <b-col>
+                        <b>Analytics Name</b>
+                      </b-col>
+                    </b-row>
+                    <b-list-group style="height: 190px;overflow-x: hidden;overflow-y: scroll;">
+                      <b-list-group-item
+                        v-for="(singleDashboard, index) in latestDashboard"
+                        :key="index"
+                      >
+                        <div class="row">
+                          <b-col cols="2">{{index+1}}</b-col>
+                          <b-col>{{ CapitalizeFirstLetter(singleDashboard.reportName)}}</b-col>
+                          <b-col>{{CapitalizeFirstLetter(singleDashboard.analyticsDataName)}}</b-col>
+                        </div>
+                      </b-list-group-item>
+                    </b-list-group>
+                    <!-- <b-row
+                       
+                        class="p-10"
+                      >
+                       
+                    </b-row>-->
+                  </div>
+                </div>
+              </b-card>
+            </b-card-group>
+          </div>
+        </div>
       </b-col>
     </b-row>
 
     <b-row>
-      <b-col md="12" v-if="dashboardData.lastReportSummary.analyticsData!==undefined">
-        <b-card header="Last Dashboard Generated Summary">
+      <b-col md="12" v-if="dashboardData.lastReportSummary !== null">
+        <b-card header="Last Report Generated">
           <b-card-group>
-              <div class="card">
-                <div class="card-body">
-                  <!-- Report File Name -->
-                    <div style="padding-left: 20px">
-                      <span>
-                        Report Name:
-                        <span style="font-size: 20px;font-weight: 500;">
-                          {{CapitalizeFirstLetter(dashboardData.lastReportSummary.reportName)}}
-                          <!-- {{dashboardData.lastReportSummary}} -->
-                        </span>
-                      </span>
-                      <br>
-                      <span class="mb-5">
-                        Analytic Report Name:
-                        <span style="font-size: 20px;font-weight: 500;">
-                          {{CapitalizeFirstLetter(dashboardData.lastReportSummary.analyticsDataName)}}
-                        </span>
-                      </span>
-                    </div>
-                    <!-- <b-button
+            <div class="card">
+              <div class="card-body">
+                <!-- Report File Name -->
+                <div style="padding-left: 20px">
+                  <span>
+                    Report Name:
+                    <span style="font-size: 20px;font-weight: 500;">
+                      {{CapitalizeFirstLetter(dashboardData.lastReportSummary.reportName)}}
+                      <!-- {{dashboardData.lastReportSummary}} -->
+                    </span>
+                  </span>
+                  <br>
+                  <span class="mb-5">
+                    Analytic Report Name:
+                    <span
+                      style="font-size: 20px;font-weight: 500;"
+                    >{{CapitalizeFirstLetter(dashboardData.lastReportSummary.analyticsDataName)}}</span>
+                  </span>
+                </div>
+                <!-- <b-button
                       variant="primary"
                       style="position:fixed; bottom: 5%; right:62px;z-index: 10;"
                       @click="createPDF"
                     >
                       <i class="fa fa-download"></i> Download Report PDF
-                    </b-button> -->
-                    <div class="card-body">
-                      <div ref="printReport" class="row">
-                        <div v-if="dashboardData.lastReportSummary.analyticsData!==undefined"
-                          v-for="(singleGraph,index) in dashboardData.lastReportSummary.analyticsData"
-                          :key="index"
-                          class="col-4">
-                          <div v-if="singleGraph.typeOfGraph ==='BarGraph'">
-                            <b-card
-                              :header="CapitalizeFirstLetter(singleGraph.columnName)"
-                              style="font-weight:500"
-                            >
+                </b-button>-->
+                <div class="card-body">
+                  <div ref="printReport" class="row">
+                    <div
+                      v-if="dashboardData.lastReportSummary !== null"
+                      v-for="(singleGraph,index) in dashboardData.lastReportSummary.analyticsData"
+                      :key="index"
+                      class="col-4"
+                    >
+                      <div v-if="singleGraph.typeOfGraph ==='BarGraph'">
+                        <b-card
+                          :header="CapitalizeFirstLetter(singleGraph.columnName)"
+                          style="font-weight:500"
+                        >
+                          <div class="chart-wrapper">
+                            <BarCharts
+                              :datasetBar="returnFrequency(singleGraph.data)"
+                              :columnName="CapitalizeFirstLetter(singleGraph.columnName)"
+                              chartId="chart-bar-01"
+                            />
+                          </div>
+                        </b-card>
+                      </div>
+                      <div v-if="singleGraph.typeOfGraph ==='PieGraph'">
+                        <b-card
+                          :header="CapitalizeFirstLetter(singleGraph.columnName)"
+                          style="font-weight:500"
+                        >
+                          <div class="chart-wrapper">
+                            <PieCharts
+                              :datasetPie="returnFrequency(singleGraph.data)"
+                              chartId="chart-pie-01"
+                            />
+                          </div>
+                        </b-card>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </b-card-group>
+        </b-card>
+      </b-col>
+    </b-row>
+    <!--  -->
+    <b-modal ref="showReportQuickView" size="lg" hide-footer title="Quick Report Analysis">
+      <b-card-group>
+        <div class="card">
+          <div class="card-body" style="overflow-y: scroll;overflow-x: hidden; height: 480px;">
+            <div class="mb-3">
+              Report Name:
+              <span
+                style="font-size: 20px;font-weight: 500;"
+              >{{CapitalizeFirstLetter(nameOfReport)}}</span>
+            </div>
+            <!-- Iterate columns  -->
+            <div v-for="(value, key) in JSONObject" :value="{key:value}" :key="key">
+              <div class="row">
+                <div class="col-12">
+                  <div class="card">
+                    <div class="card-header">
+                      <h6 class="mb-0">
+                        <span style="font-size: 12px;">Column Name:</span>
+                        {{ CapitalizeFirstLetter(key)}}
+                      </h6>
+                    </div>
+
+                    <div class="collapse show">
+                      <div class="card-body">
+                        <div class="row">
+                          <!-- Bar Chart Display -->
+                          <div class="col-6">
+                            <b-card header="Bar Chart">
                               <div class="chart-wrapper">
                                 <BarCharts
-                                  :datasetBar="returnFrequency(singleGraph.data)"
-                                  :columnName="CapitalizeFirstLetter(singleGraph.columnName)"
+                                  :datasetBar="returnFrequency(value)"
                                   chartId="chart-bar-01"
                                 />
                               </div>
                             </b-card>
                           </div>
-                          <div v-if="singleGraph.typeOfGraph ==='PieGraph'">
-                            <b-card
-                              :header="CapitalizeFirstLetter(singleGraph.columnName)"
-                              style="font-weight:500"
-                            >
+
+                          <!-- Pie Chart Display -->
+                          <div class="col-6">
+                            <b-card header="Pie Chart">
                               <div class="chart-wrapper">
                                 <PieCharts
-                                  :datasetPie="returnFrequency(singleGraph.data)"
+                                  :datasetPie="returnFrequency(value)"
                                   chartId="chart-pie-01"
                                 />
                               </div>
@@ -191,80 +291,15 @@
                         </div>
                       </div>
                     </div>
-                </div>
-              </div>
-            
-          </b-card-group>
-        </b-card>
-      </b-col>
-    </b-row>
-    <!--  -->
-    <b-modal ref="showReportQuickView" hide-footer title="Quick View of Your Report">
-      <b-card-group >
-        <div class="card">
-          <div class="card-body">
-            <span>
-              Report Name:
-              <span
-                style="font-size: 20px;font-weight: 500;"
-              >{{CapitalizeFirstLetter(nameOfReport)}}</span>
-            </span>
-            <!-- Iterate columns  -->
-          
-              <div v-for="(value, key) in JSONObject" :value="{key:value}" :key="key">
-                <div class="row">
-                  <div class="col-10">
-                    <div class="card">
-                      <div class="card-header">
-                        <h5 class="mb-0">
-                          <span style="font-size: 12px;">Column Name:</span>
-                          {{ CapitalizeFirstLetter(key)}}
-                        </h5>
-                      </div>
-
-                      <div class="collapse show">
-                        <div class="card-body">
-                          <div class="row">
-                            <!-- Bar Chart Display -->
-                            <div class="col-6">
-                              
-                              <b-card header="Bar Chart">
-                                <div class="chart-wrapper">
-                                  <BarCharts
-                                    :datasetBar="returnFrequency(value)"
-                                    chartId="chart-bar-01"
-                                  />
-                                </div>
-                              </b-card>
-                            </div>
-
-                            <!-- Pie Chart Display -->
-                            <div class="col-6">
-                              
-                              <b-card header="Pie Chart">
-                                <div class="chart-wrapper">
-                                  <PieCharts
-                                    :datasetPie="returnFrequency(value)"
-                                    chartId="chart-pie-01"
-                                  />
-                                </div>
-                              </b-card>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
-            
-              
+            </div>
           </div>
         </div>
       </b-card-group>
     </b-modal>
     <!--  -->
-
     <!-- User statistics module  -->
     <!-- <b-table
             class="mb-0 table-outline"
@@ -453,7 +488,7 @@ export default {
   },
   data: function() {
     return {
-      user:{},
+      user: {},
       userLogged: false,
       displayDropZone: true,
       showLoader: false,
@@ -481,12 +516,15 @@ export default {
       //   maxFilesize: 10,
       //   headers: { "My-Awesome-Header": "header value" }
       // },
-      latestDashboard:[],
-      JSONObject:[]
+      latestDashboard: [],
+      JSONObject: []
     };
   },
   methods: {
-    generateQuickAnalysis(){
+    CapitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    },
+    generateQuickAnalysis() {
       let formData = new FormData();
       formData.append("reportname", this.nameOfReport);
       formData.append("file", this.fileObject);
@@ -515,17 +553,17 @@ export default {
           return false;
           // this.secondStepShowLoader = false;
         });
-      
+
       this.$refs.showReportQuickView.show();
     },
     handleFileUpload() {
       this.fileObject = this.$refs.file.files[0];
       this.uploadInputLabel = this.$refs.file.files[0].name;
     },
-   CapitalizeFirstLetter(string) {
-     if (string!== undefined)
+    CapitalizeFirstLetter(string) {
+      if (string !== undefined)
         return string.charAt(0).toUpperCase() + string.slice(1);
-      return ""
+      return "";
     },
     reDirectTo(mentionPath) {
       this.$router.push({ path: mentionPath });
@@ -537,8 +575,7 @@ export default {
         counts[num] = counts[num] ? counts[num] + 1 : 1;
       }
       return counts;
-    },
-    
+    }
   },
   mounted() {
     /** Check User Logged In */
@@ -571,27 +608,24 @@ export default {
           })
           .catch(errors => {
             this.showLoader = false;
-            this.$toaster.error("Unable to fetch details");
+            this.$toaster.error(errors.response.data);
             //router.push("/login");
           });
-          
-          // 
-          axios
+
+        //
+        axios
           .post("/o/reporthistory", {
             username: this.userProfileData.username,
-            limit:5
-          })  
+            limit: 5
+          })
           .then(response => {
-            console.log(response.data)
-            this.latestDashboard = response.data.reports
-            this.dashboardData.lastReportSummary = this.latestDashboard[0]
+            this.latestDashboard = response.data.reports;
+            this.dashboardData.lastReportSummary = this.latestDashboard[0];
           })
           .catch(errors => {
             this.showLoader = false;
-            this.$toaster.error("Unable to fetch details");
+            this.$toaster.error(errors.repsonse.data);
           });
-
-
       })
       .catch(errors => {
         this.showLoader = false;
@@ -602,6 +636,19 @@ export default {
 };
 </script>
 <style>
+*::-webkit-scrollbar {
+  width: 3px;
+}
+
+*::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+
 .loader {
   width: 80px;
   height: 80px;

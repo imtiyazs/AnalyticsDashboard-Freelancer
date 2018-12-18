@@ -28,7 +28,11 @@ exports.FetchUserReports = (requestBody) => {
 
                 try {
 
-                    let dataArr = data.reports.slice(Math.max(data.reports.length - limit, 1))
+                    let dataArr = data.reports
+
+                    if (dataArr.length >= 5) {
+                        dataArr = data.reports.slice(Math.max(data.reports.length - limit, 1))
+                    }
 
                     let dataObj = {
                         username: data.username,

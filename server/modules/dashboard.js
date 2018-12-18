@@ -32,7 +32,7 @@ exports.GetDashboardStatistics = (req) => {
                     username: username
                 }, constants.UploadsCollection, (data) => {
                     try {
-                        resolve(data.uploads.sav.length + data.uploads.xls.length)
+                        resolve(data.uploads.sav.length + data.uploads.xls.length + data.uploads.csv.length)
                     } catch (err) {
                         logger.error('GetFileUploads: ' + err)
                         resolve(0)

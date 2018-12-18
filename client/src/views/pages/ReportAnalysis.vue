@@ -260,6 +260,7 @@
                             <div class="chart-wrapper">
                               <BarCharts
                                 :datasetBar="returnFrequency(singleGraph.data)"
+                                :columnName="CapitalizeFirstLetter(singleGraph.columnName)"
                                 chartId="chart-bar-01"
                               />
                             </div>
@@ -393,7 +394,7 @@ export default {
           }
         })
         .then(response => {
-          console.log(response);
+          // console.log(response);
           this.fileName = response.data.fileName;
           this.fileType = response.data.fileType;
           this.JSONObject = response.data.dataValues;

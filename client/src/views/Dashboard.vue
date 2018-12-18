@@ -126,7 +126,7 @@
     </b-row>
 
     <b-row>
-      <b-col md="12">
+      <b-col md="12" v-if="dashboardData.lastReportSummary.analyticsData!==undefined">
         <b-card header="Last Dashboard Generated Summary">
           <b-card-group>
               <div class="card">
@@ -157,7 +157,7 @@
                     </b-button> -->
                     <div class="card-body">
                       <div ref="printReport" class="row">
-                        <div
+                        <div v-if="dashboardData.lastReportSummary.analyticsData!==undefined"
                           v-for="(singleGraph,index) in dashboardData.lastReportSummary.analyticsData"
                           :key="index"
                           class="col-4">
@@ -169,6 +169,7 @@
                               <div class="chart-wrapper">
                                 <BarCharts
                                   :datasetBar="returnFrequency(singleGraph.data)"
+                                  :columnName="CapitalizeFirstLetter(singleGraph.columnName)"
                                   chartId="chart-bar-01"
                                 />
                               </div>

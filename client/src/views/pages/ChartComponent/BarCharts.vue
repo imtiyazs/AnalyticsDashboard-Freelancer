@@ -8,12 +8,12 @@ export default {
   data(){
     return{
       theLabels : [],
-      theData : []
+      theData : [],
     }
   },
   mounted () {
     if(this.columnName===undefined){
-      this.columnName = 'Value'
+      //this.theLabels[] = 'Value'
     }
 
    let jsonObject = this.datasetBar
@@ -33,7 +33,7 @@ export default {
         labels: this.theLabels,
         datasets: [
           {
-            label: this.columnName,
+            label: this.columnName !==undefined ? this.columnName : 'values',
             backgroundColor: '#f87979',
             data: this.theData
           }

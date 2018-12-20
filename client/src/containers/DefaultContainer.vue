@@ -63,10 +63,6 @@
           <router-view></router-view>
         </div>
       </main>
-      <AppAside fixed>
-        <!--aside-->
-        <DefaultAside/>
-      </AppAside>
     </div>
     <TheFooter>
       <!--footer-->
@@ -99,7 +95,6 @@ import {
   Footer as TheFooter,
   Breadcrumb
 } from "@coreui/vue";
-import DefaultAside from "./DefaultAside";
 import DefaultHeaderDropdownAccnt from "./DefaultHeaderDropdownAccnt";
 import axios from "axios";
 import router from "../router";
@@ -113,7 +108,6 @@ export default {
     AppAside,
     TheFooter,
     Breadcrumb,
-    DefaultAside,
     DefaultHeaderDropdownAccnt,
     SidebarForm,
     SidebarFooter,

@@ -98,7 +98,7 @@
                                 type="file"
                                 id="file"
                                 ref="file"
-                                accept=".sav, .xls, .xlsx"
+                                accept=".sav, .xls, .xlsx, .csv"
                                 class="custom-file-input"
                                 v-on:change="handleFileUpload"
                                 :plain="true"

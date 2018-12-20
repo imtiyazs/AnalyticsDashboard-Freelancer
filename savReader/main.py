@@ -42,11 +42,6 @@ if fileExtension == '.xlsx' or fileExtension == '.xls':
             data[singleColumn] = df[singleColumn].values.tolist()
         i = i+1
 
-
-
-
-
-
     # Save to destination
     json.dump(data, codecs.open(destinationFile, 'w',
                                     encoding='utf-8'), sort_keys=True, indent=4)
@@ -72,6 +67,13 @@ if fileExtension == '.sav':
 
     #Set names of columns
     df.columns = dfColumns
+
+    #drop missing values
+    df.dropna(axis=0, inplace=True)
+
+    #drop duplicate values
+    df.drop_duplicates(keep='last',inplace=True)
+
 
     dtypeList = df.dtypes
     i=0

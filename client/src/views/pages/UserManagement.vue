@@ -156,7 +156,8 @@ export default {
   },
   data() {
     return {
-      user:"",
+      user: "",
+      userRole: "",
       showLoader: false,
       userListArray: [],
       isUserLoaded: false,
@@ -243,6 +244,11 @@ export default {
     },
 
     LoadUserDetailsInPane(userData) {
+      if (this.user === userData.username) {
+        this.$toaster.error("Cannot load self account controls");
+        return;
+      }
+
       this.isUserLoaded = true;
       this.userData.username = userData.username;
       this.userData.role = userData.role;
@@ -270,9 +276,10 @@ export default {
       .post("/o/user")
       .then(response => {
         //this.$set(this, "user", response.data.username);
-        this.user = response.data.username
+        this.user = response.data.username;
         this.userLogged = true;
         this.auth = response.data.role;
+        this.userRole = response.data.role;
         axios
           .post("/o/getusers", {
             auth: response.data.role

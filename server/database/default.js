@@ -37,6 +37,7 @@ exports.GenerateDefaultDBSchema = () => {
     }, constants.AnnouncementCollection, (data) => {
         if (data == null || data.length == 0) {
             database.InsertManyDocuments([{
+                creationDate: new Date().toISOString(),
                 message: constants.WelcomeMessage
             }], constants.AnnouncementCollection, () => {
 

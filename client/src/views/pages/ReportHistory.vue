@@ -1,6 +1,7 @@
 <template>
   <div class="wrapper">
     <div class="animated fadeIn">
+      <b-alert v-if="noReports" show variant="warning">No Report History Found</b-alert>
       <b-row v-if="usersHistory.reports !== undefined">
         <b-col cols="12">
           <div class="card">
@@ -41,7 +42,7 @@
           </div>
         </b-col>
       </b-row>
-      <div class="loader" v-else>
+      <div class="loader" v-else-if="!noReports">
         <circle4 style="height:80px;width:80px;"></circle4>
       </div>
       <div>
@@ -172,7 +173,8 @@ export default {
       usersHistory: {},
       totalRows: 0,
       currentPage: 0,
-      showLoader: false
+      showLoader: false,
+      noReports: false
     };
   },
   methods: {
@@ -247,7 +249,7 @@ export default {
       .post("/o/user")
       .then(response => {
         self.user = response.data;
-        this.userLogged = true;
+        self.userLogged = true;
 
         axios
           .post("/o/reporthistory", {
@@ -257,10 +259,10 @@ export default {
             self.usersHistory = response.data;
             self.totalRows = response.data.reports.length;
             self.currentPage = 0;
-            console.log(response.data);
           })
           .catch(errors => {
-            this.$toaster.error("Cannot Fetch Report History");
+            self.$toaster.error(errors.response.data);
+            self.noReports = true;
           });
       })
       .catch(errors => {

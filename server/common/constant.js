@@ -54,5 +54,6 @@ module.exports = constants = {
     ReportUploadRoute: '/o/uploadreport',
     ReportHistoryRoute: '/o/reporthistory',
     GetUsersRoute: '/o/getusers',
-    UserMgmtRoute: '/o/user-mgmt'
+    UserMgmtRoute: '/o/user-mgmt',
+    AnnounceRoute: '/o/announce'
 }

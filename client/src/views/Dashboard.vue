@@ -40,28 +40,30 @@
         </b-card>
       </b-col>
       <b-col sm="6" lg="6">
-        <b-card header="Announcements" no-body class="bg-primary" style="height: 85%;">
-          <b-card-body style="overflow-y: auto;z-index: 110;">
-            <ul id="announcements-ul">
-              <li
-                v-for="(announcement,index) in this.dashboardData.announcementsArray"
-                v-bind:key="index"
-              >{{ announcement.message }}</li>
-            </ul>
+        <b-card header="Announcements" no-body class="bg-primary">
+          <b-card-body style="height: 105px; overflow-x: hidden;overflow-y: auto;">
+            <p v-if="this.dashboardData.announcementsArray.length === 0">No New Announcements</p>
+            <div v-for="(announcement, key) in this.dashboardData.announcementsArray" :key="key">
+              <div>
+                <p
+                  style="font-size: 12px;position: relative;z-index: 2;"
+                >{{ new Date(announcement.creationDate).toDateString() }} : {{ announcement.message }}</p>
+              </div>
+            </div>
+            <card-line1-chart-example
+              chartId="card-chart-01"
+              class="chart-wrapper px-3"
+              :height="70"
+              style="position: absolute;top: 80px;right: 0px;"
+            />
           </b-card-body>
-          <card-line1-chart-example
-            chartId="card-chart-01"
-            class="chart-wrapper px-3"
-            style=" height: 70px; position: absolute; top: 70px;opacity:0.8"
-            :height="70"
-          />
         </b-card>
       </b-col>
     </b-row>
 
     <b-row class="mb-3">
       <b-col md="6" style="height:100%">
-        <b-card header="Quick Report Analysis">
+        <b-card border-variant="info" header="Quick Report Analysis">
           <div class="row">
             <div class="animated fadeIn col-12">
               <b-card-group>
@@ -72,45 +74,44 @@
                     </div>
                     <div class="row">
                       <div class="col-12 mt-3">
-                        <div class="input-group mb-3">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text">Report Name</span>
-                          </div>
-                          <input
-                            type="text"
-                            class="form-control"
-                            aria-label="Default"
-                            label-for="nameOfReport"
-                            aria-describedby="inputGroup-sizing-default"
-                            v-model="nameOfReport"
-                          >
-                        </div>
-                        <div class="input-group mb-3">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text">Report Upload</span>
-                          </div>
-                          <div class="custom-file">
+                        <form v-on:submit="generateQuickAnalysis">
+                          <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">Report Name</span>
+                            </div>
                             <input
-                              type="file"
-                              id="file"
-                              ref="file"
-                              accept=".sav, .xls, .xlsx"
-                              class="custom-file-input"
-                              v-on:change="handleFileUpload"
-                              :plain="true"
+                              type="text"
+                              class="form-control"
+                              aria-label="Default"
+                              label-for="nameOfReport"
+                              aria-describedby="inputGroup-sizing-default"
+                              v-model="nameOfReport"
+                              required
                             >
-                            <label class="custom-file-label">{{uploadInputLabel}}</label>
                           </div>
-                        </div>
+                          <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">Report Upload</span>
+                            </div>
+                            <div class="custom-file">
+                              <input
+                                type="file"
+                                id="file"
+                                ref="file"
+                                accept=".sav, .xls, .xlsx"
+                                class="custom-file-input"
+                                v-on:change="handleFileUpload"
+                                :plain="true"
+                                required
+                              >
+                              <label class="custom-file-label">{{uploadInputLabel}}</label>
+                            </div>
+                          </div>
 
-                        <b-button
-                          type="button"
-                          variant="primary"
-                          class="float-right mt-4"
-                          @click="generateQuickAnalysis"
-                        >
-                          <i class="icon-pie-chart"></i> Generate Report Analysis
-                        </b-button>
+                          <b-button type="submit" variant="primary" class="float-right mt-4">
+                            <i class="icon-pie-chart"></i> Generate Report Analysis
+                          </b-button>
+                        </form>
                       </div>
                     </div>
                   </div>
@@ -124,7 +125,7 @@
         <div class="row">
           <div class="animated fadeIn col-12">
             <b-card-group>
-              <b-card header="Latest Generated Reports">
+              <b-card border-variant="info" header="Latest Generated Reports">
                 <div class="card">
                   <div class="card-body">
                     <b-row class="mb-4">
@@ -139,6 +140,10 @@
                       </b-col>
                     </b-row>
                     <b-list-group style="height: 190px;overflow-x: hidden;overflow-y: scroll;">
+                      <p
+                        v-if="latestDashboard.length === 0"
+                        class="text-center mt-5"
+                      >No Reports Found</p>
                       <b-list-group-item
                         v-for="(singleDashboard, index) in latestDashboard"
                         :key="index"
@@ -167,7 +172,7 @@
 
     <b-row>
       <b-col md="12" v-if="dashboardData.lastReportSummary !== null">
-        <b-card header="Last Report Generated">
+        <b-card border-variant="info" header="Last Report Generated">
           <b-card-group>
             <div class="card">
               <div class="card-body">
@@ -241,6 +246,9 @@
     </b-row>
     <!--  -->
     <b-modal ref="showReportQuickView" size="lg" hide-footer title="Quick Report Analysis">
+      <div class="loader" style="top: 40%;left: 45%;">
+        <circle4 v-if="showLoader" style="height:80px;width:80px;"></circle4>
+      </div>
       <b-card-group>
         <div class="card">
           <div class="card-body" style="overflow-y: scroll;overflow-x: hidden; height: 480px;">
@@ -255,14 +263,16 @@
               <div class="row">
                 <div class="col-12">
                   <div class="card">
-                    <div class="card-header">
-                      <h6 class="mb-0">
-                        <span style="font-size: 12px;">Column Name:</span>
-                        {{ CapitalizeFirstLetter(key)}}
-                      </h6>
-                    </div>
+                    <b-card-header header-tag="header" class="p-1" role="tab">
+                      <b-btn block href="#" v-b-toggle="key" variant="light">
+                        <h5 class="text-left mb-0">
+                          <span style="font-size: 12px;">Column Name:</span>
+                          {{ CapitalizeFirstLetter(key)}}
+                        </h5>
+                      </b-btn>
+                    </b-card-header>
 
-                    <div class="collapse show">
+                    <b-collapse :id="key">
                       <div class="card-body">
                         <div class="row">
                           <!-- Bar Chart Display -->
@@ -290,7 +300,7 @@
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </b-collapse>
                   </div>
                 </div>
               </div>
@@ -299,156 +309,6 @@
         </div>
       </b-card-group>
     </b-modal>
-    <!--  -->
-    <!-- User statistics module  -->
-    <!-- <b-table
-            class="mb-0 table-outline"
-            responsive="sm"
-            hover
-            :items="tableItems"
-            :fields="tableFields"
-            head-variant="light"
-          >
-            <div slot="avatar" class="avatar" slot-scope="item">
-              <img :src="item.value.url" class="img-avatar" alt>
-              <span
-                class="avatar-status"
-                v-bind:class="{ 'bg-success': item.value.status == 'success',  'bg-warning': item.value.status == 'warning', 'bg-danger': item.value.status == 'danger', 'bg-secondary': item.value.status == '' }"
-              ></span>
-            </div>
-            <div slot="user" slot-scope="item">
-              <div>{{item.value.name}}</div>
-              <div class="small text-muted">
-                <span>
-                  <template v-if="item.value.new">New</template>
-                  <template v-else>Recurring</template>
-                </span>
-                | Registered: {{item.value.registered}}
-              </div>
-            </div>
-            <i
-              slot="country"
-              class="h4 mb-0"
-              :class="flag(item.value.flag)"
-              slot-scope="item"
-              :title="item.value.flag"
-              :id="item.value.flag"
-            ></i>
-            <i class="flag-icon flag-icon-pw h1" title="pw" id="pw"></i>
-            <div slot="usage" slot-scope="item">
-              <div class="clearfix">
-                <div class="float-left">
-                  <strong>{{item.value.value}}%</strong>
-                </div>
-                <div class="float-right">
-                  <small class="text-muted">{{item.value.period}}</small>
-                </div>
-              </div>
-              <b-progress
-                height="{}"
-                class="progress-xs"
-                v-model="item.value.value"
-                :variant="variant(item.value.value)"
-              ></b-progress>
-            </div>
-            <i slot="payment" slot-scope="item" :class="item.value.icon" style="font-size:24px"></i>
-            <div slot="activity" slot-scope="item">
-              <div class="small text-muted">Last login</div>
-              <strong>{{item.value}}</strong>
-            </div>
-    </b-table>-->
-    <!-- Social site statistics -->
-    <!-- <b-row>
-      <b-col sm="6" lg="3">
-        <div class="brand-card">
-          <div class="brand-card-header bg-facebook">
-            <i class="fa fa-facebook"></i>
-            <div class="chart-wrapper">
-              <social-box-chart-example
-                chartId="box-chart-01"
-                :data="[65, 59, 84, 84, 51, 55, 40]"
-              />
-            </div>
-          </div>
-          <div class="brand-card-body">
-            <div>
-              <div class="text-value">89k</div>
-              <div class="text-uppercase text-muted small">friends</div>
-            </div>
-            <div>
-              <div class="text-value">459</div>
-              <div class="text-uppercase text-muted small">feeds</div>
-            </div>
-          </div>
-        </div>
-      </b-col>
-      <b-col sm="6" lg="3">
-        <div class="brand-card">
-          <div class="brand-card-header bg-twitter">
-            <i class="fa fa-twitter"></i>
-            <div class="chart-wrapper">
-              <social-box-chart-example chartId="box-chart-02" :data="[1, 13, 9, 17, 34, 41, 38]"/>
-            </div>
-          </div>
-          <div class="brand-card-body">
-            <div>
-              <div class="text-value">973k</div>
-              <div class="text-uppercase text-muted small">followers</div>
-            </div>
-            <div>
-              <div class="text-value">1.792</div>
-              <div class="text-uppercase text-muted small">tweets</div>
-            </div>
-          </div>
-        </div>
-      </b-col>
-      <b-col sm="6" lg="3">
-        <div class="brand-card">
-          <div class="brand-card-header bg-linkedin">
-            <i class="fa fa-linkedin"></i>
-            <div class="chart-wrapper">
-              <social-box-chart-example
-                chartId="box-chart-03"
-                :data="[78, 81, 80, 45, 34, 12, 40]"
-              />
-            </div>
-          </div>
-          <div class="brand-card-body">
-            <div>
-              <div class="text-value">500+</div>
-              <div class="text-uppercase text-muted small">contacts</div>
-            </div>
-            <div>
-              <div class="text-value">292</div>
-              <div class="text-uppercase text-muted small">feeds</div>
-            </div>
-          </div>
-        </div>
-      </b-col>
-      <b-col sm="6" lg="3">
-        <div class="brand-card">
-          <div class="brand-card-header bg-google-plus">
-            <i class="fa fa-google-plus"></i>
-            <div class="chart-wrapper">
-              <social-box-chart-example
-                chartId="box-chart-04"
-                :data="[35, 23, 56, 22, 97, 23, 64]"
-              />
-            </div>
-          </div>
-          <div class="brand-card-body">
-            <div>
-              <div class="text-value">894</div>
-              <div class="text-uppercase text-muted small">followers</div>
-            </div>
-            <div>
-              <div class="text-value">92</div>
-              <div class="text-uppercase text-muted small">circles</div>
-            </div>
-          </div>
-        </div>
-      </b-col>
-    </b-row>-->
   </div>
 </template>
 
@@ -524,7 +384,9 @@ export default {
     CapitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     },
-    generateQuickAnalysis() {
+    generateQuickAnalysis: function(e) {
+      e.preventDefault();
+      this.showLoader = true;
       let formData = new FormData();
       formData.append("reportname", this.nameOfReport);
       formData.append("file", this.fileObject);
@@ -536,22 +398,14 @@ export default {
           }
         })
         .then(response => {
-          //console.log(response);
-          //this.fileName = response.data.fileName;
-          //this.fileType = response.data.fileType;
           this.JSONObject = response.data.dataValues;
-
-          // this.firstStepDisplayForm = false;
-          // this.secondStepShowLoader = false;
-          // this.thirdStepDisplayAnalysis = true;
-
+          this.showLoader = false;
           return true;
         })
-        // On file reading error
         .catch(function(error) {
-          console.log(error);
+          this.$toaster.error(error.response.data)
+          this.showLoader = false;
           return false;
-          // this.secondStepShowLoader = false;
         });
 
       this.$refs.showReportQuickView.show();

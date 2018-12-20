@@ -12,7 +12,7 @@ exports.FetchUserReports = (requestBody) => {
                 username: username
             }, constants.ReportsCollection, (data) => {
                 if (data == null || data.length == 0) {
-                    return reject(false)
+                    return reject('No Report History Found')
                 }
 
                 resolve(data)
@@ -23,7 +23,7 @@ exports.FetchUserReports = (requestBody) => {
                 username: username
             }, constants.ReportsCollection, (data) => {
                 if (data == null || data.length == 0) {
-                    return reject(false)
+                    return reject('No Report History Found')
                 }
 
                 try {
@@ -42,7 +42,7 @@ exports.FetchUserReports = (requestBody) => {
                     resolve(dataObj)
                 } catch (err) {
                     logger.error('Error fetching last elements from DB: ' + err)
-                    return reject(false)
+                    return reject('No Report History Found')
                 }
             })
 

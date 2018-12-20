@@ -4,57 +4,52 @@
       <div class="row">
         <div class="animated fadeIn col-12">
           <b-card-group>
-            <b-card header="Upload Report File">
-              <div class="card">
-                <div class="card-body">
-                  <form-wizard
-                    title="Generate Report Analysis"
-                    subtitle="Visualize Report Analysis In 3 Steps"
-                    finishButtonText="Generate Report Visualization"
-                    nextButtonText="Generate Report Analysis"
-                    startIndex=0
-                  >
-                    <tab-content
-                      title="Upload Report File"
-                      :before-change="UploadDataFilesToServer"
-                    >
-                      <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text">Report Name</span>
-                        </div>
+            <div class="card">
+              <div class="card-body">
+                <form-wizard
+                  title="Generate Report Analysis"
+                  subtitle="Visualize Report Analysis In 3 Steps"
+                  finishButtonText="Generate Report Visualization"
+                  nextButtonText="Generate Report Analysis"
+                  class="mt-3"
+                >
+                  <tab-content title="Upload Report File" :before-change="UploadDataFilesToServer">
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">Report Name</span>
+                      </div>
+                      <input
+                        type="text"
+                        class="form-control"
+                        aria-label="Default"
+                        label-for="nameOfReport"
+                        aria-describedby="inputGroup-sizing-default"
+                        v-model="nameOfReport"
+                      >
+                    </div>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">Report Upload</span>
+                      </div>
+                      <div class="custom-file">
                         <input
-                          type="text"
-                          class="form-control"
-                          aria-label="Default"
-                          label-for="nameOfReport"
-                          aria-describedby="inputGroup-sizing-default"
-                          v-model="nameOfReport"
+                          type="file"
+                          id="file"
+                          ref="file"
+                          accept=".sav, .xls, .xlsx, .csv"
+                          class="custom-file-input"
+                          v-on:change="handleFileUpload"
+                          :plain="true"
                         >
+                        <label class="custom-file-label">{{uploadInputLabel}}</label>
                       </div>
-                      <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text">Report Upload</span>
-                        </div>
-                        <div class="custom-file">
-                          <input
-                            type="file"
-                            id="file"
-                            ref="file"
-                            accept=".sav, .xls, .xlsx, .csv"
-                            class="custom-file-input"
-                            v-on:change="handleFileUpload"
-                            :plain="true"
-                          >
-                          <label class="custom-file-label">{{uploadInputLabel}}</label>
-                        </div>
-                      </div>
-                    </tab-content>
-                    <tab-content title="Select Data Columns"></tab-content>
-                    <tab-content title="Generate Visual Report"></tab-content>
-                  </form-wizard>
-                </div>
+                    </div>
+                  </tab-content>
+                  <tab-content title="Select Data Graphs"></tab-content>
+                  <tab-content title="Generate Visual Report"></tab-content>
+                </form-wizard>
               </div>
-            </b-card>
+            </div>
           </b-card-group>
         </div>
       </div>
@@ -71,7 +66,6 @@
     </center>
     <div v-if="thirdStepDisplayAnalysis">
       <b-card-group>
-        <b-card header="Upload Report File">
           <div class="card">
             <div class="card-body">
               <form-wizard
@@ -79,10 +73,10 @@
                 subtitle="Visualize Report Analysis In 3 Steps"
                 finishButtonText="Generate Report Visualization"
                 nextButtonText="Generate Report Analysis"
-                startIndex=1
+                :startIndex=1
               >
                 <tab-content title="Upload Report File"></tab-content>
-                <tab-content title="Select Data Columns">
+                <tab-content title="Select Data Graphs">
                   <!-- Report File Name -->
                   <span>
                     Report Name:
@@ -90,7 +84,7 @@
                       style="font-size: 20px;font-weight: 500;"
                     >{{CapitalizeFirstLetter(nameOfReport)}}</span>
                   </span>
-                  <p class="card-text">Select Columns To Include In Visual Analysis Report:</p>
+                  <p class="card-text mt-3">Select the columns and choose the required graphs:</p>
 
                   <!-- Iterate columns  -->
                   <b-form-checkbox-group
@@ -102,26 +96,27 @@
                   >
                     <div v-for="(value, key) in JSONObject" :value="{key:value}" :key="key">
                       <div class="row">
-                        <div class="col-10">
+                        <div class="col-12">
                           <div class="card">
-                            <div class="card-header">
-                              <h5 class="mb-0">
+                              <b-card-header header-tag="header" class="p-1" role="tab">
+                                <b-btn block href="#" v-b-toggle="key" variant="light">
+                                  <h5 class="text-left mb-0">
                                 <span style="font-size: 12px;">Column Name:</span>
                                 {{ CapitalizeFirstLetter(key)}}
-                              </h5>
-                            </div>
-
-                            <div class="collapse show">
+                              </h5></b-btn>
+                              </b-card-header>
+                            <b-collapse :id="key">
                               <div class="card-body">
                                 <div class="row">
                                   <!-- Bar Chart Display -->
                                   <div class="col-6">
+
                                     <b-form-checkbox
                                       type="checkbox"
                                       :value="{data:value, 'typeOfGraph':'BarGraph' , 'columnName':key}"
                                       class="bar-chart-check"
                                     ></b-form-checkbox>
-                                    <b-card header="Bar Chart">
+                                    <b-card :header="'Bar Graph: ' + CapitalizeFirstLetter(key)" >
                                       <div class="chart-wrapper">
                                         <BarCharts
                                           :datasetBar="returnFrequency(value)"
@@ -138,7 +133,7 @@
                                       :value="{data:value, 'typeOfGraph':'PieGraph', 'columnName':key}"
                                       class="bar-chart-check"
                                     ></b-form-checkbox>
-                                    <b-card header="Pie Chart">
+                                    <b-card :header="'Pie Graph: ' + CapitalizeFirstLetter(key)" >
                                       <div class="chart-wrapper">
                                         <PieCharts
                                           :datasetPie="returnFrequency(value)"
@@ -149,7 +144,7 @@
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                            </b-collapse>
                           </div>
                         </div>
                       </div>
@@ -164,7 +159,6 @@
               </form-wizard>
             </div>
           </div>
-        </b-card>
       </b-card-group>
 
       <br>
@@ -217,10 +211,10 @@
                 subtitle="Visualize Report Analysis In 3 Steps"
                 finishButtonText="Generate Report Visualization"
                 nextButtonText="Generate Report Analysis"
-                startIndex=2
+                :startIndex=2
               >
                 <tab-content title="Upload Report File"></tab-content>
-                <tab-content title="Select Data Columns"></tab-content>
+                <tab-content title="Select Data Graphs"></tab-content>
                 <tab-content title="Generate Visual Report">
                   <!-- Report File Name -->
                   <div style="padding-left: 20px">
@@ -345,15 +339,23 @@ export default {
 
       html2canvas(this.$refs.printReport).then(function(canvas) {
         let pdfName =
-            self.CapitalizeFirstLetter(self.nameOfReport) + "_" + self.CapitalizeFirstLetter(self.analyticsDashboardName) + ".pdf",
+            self.CapitalizeFirstLetter(self.nameOfReport) +
+            "_" +
+            self.CapitalizeFirstLetter(self.analyticsDashboardName) +
+            ".pdf",
           pdfDate = new Date().toISOString();
 
         var doc = new jsPDF("p", "mm", "a4");
 
         doc.setFontSize(12);
-        doc.text("Report Name: " + self.CapitalizeFirstLetter(self.nameOfReport), 10, 20);
         doc.text(
-          "Analytics Report Name: " + self.CapitalizeFirstLetter(self.analyticsDashboardName),
+          "Report Name: " + self.CapitalizeFirstLetter(self.nameOfReport),
+          10,
+          20
+        );
+        doc.text(
+          "Analytics Report Name: " +
+            self.CapitalizeFirstLetter(self.analyticsDashboardName),
           10,
           30
         );
@@ -431,7 +433,6 @@ export default {
       this.$refs.myModalRef.hide();
     },
     generateDashboard() {
-
       //axios to record dashboard into mongo
       let dashboardDetails = {
         reportName: this.nameOfReport,
@@ -459,7 +460,7 @@ export default {
           this.fifthStepDisplayDashboard = true;
         })
         .catch(function(error) {
-          this.$toaster.error(error.response.data)
+          this.$toaster.error(error.response.data);
         });
     }
   },
@@ -489,8 +490,9 @@ export default {
 </script>
 <style>
 .bar-chart-check {
-  position: absolute;
-  z-index: 1;
-  right: 30px;
+    position: absolute;
+    z-index: 1;
+    right: 10px;
+    top: 12px;
 }
 </style>

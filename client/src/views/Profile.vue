@@ -6,7 +6,10 @@
           <img class="card-img-top" style="height:200px" src="img/avatars/1.jpg">
           <div class="card-body">
             <h5 class="card-title">{{ CapitalizeFirstLetter(userProfileData.username) }}</h5>
-            <p class="card-text" style="font-size: 11px;">Last Login: {{userProfileData.lastlogin}}</p>
+            <p
+              class="card-text"
+              style="font-size: 11px;"
+            >Last Login: {{ new Date(userProfileData.lastlogin).toDateString()}}</p>
           </div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item">

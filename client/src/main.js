@@ -14,7 +14,7 @@ import 'v-toaster/dist/v-toaster.css'
 import Vuex from 'vuex'
 import store from './store/index.js'
 
-axios.defaults.baseURL = 'http://localhost:8080/server/'
+axios.defaults.baseURL = '/server/'
 
 Vue.use(Vuex)
 Vue.use(BootstrapVue)
@@ -26,7 +26,7 @@ Vue.use(Toaster, {
 new Vue({
   el: '#app',
   router,
-    store,
+  store,
   template: '<App/>',
   components: {
     App

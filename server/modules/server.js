@@ -13,6 +13,7 @@ const express = require('express'),
     dashboard = require('./dashboard'),
     multer = require('multer'),
     userMgmt = require('./user-management'),
+    announce = require('./announce'),
     reports = require('./report-writer'),
     reportReader = require('./report-reader'),
     upload = multer({
@@ -82,6 +83,18 @@ exports.StartApplicationServer = () => {
             })
     })
 
+    /** Announcement API */
+    app.post(constants.AnnounceRoute, (req, res) => {
+        logger.info(constants.AnnounceRoute)
+        announce.Announcements(req.body)
+            .then((data) => {
+                res.status(200).send(data)
+            })
+            .catch(err => {
+                res.status(417).send(err)
+            })
+    })
+
     /** Logout API */
     app.get(constants.LogoutRoute, function (req, res) {
         logger.info(constants.LogoutRoute)
@@ -96,8 +109,8 @@ exports.StartApplicationServer = () => {
             .then((report) => {
                 return res.status(200).send(report)
             })
-            .catch(() => {
-                return res.status(417).send(false)
+            .catch((err) => {
+                return res.status(417).send(err)
             })
     })
 

@@ -42,8 +42,8 @@
       <b-col sm="6" lg="6">
         <b-card header="Announcements" no-body class="bg-primary">
           <b-card-body style="height: 105px; overflow-x: hidden;overflow-y: auto;">
-            <p v-if="this.dashboardData.announcementsArray.length === 0">No New Announcements</p>
-            <div v-for="(announcement, key) in this.dashboardData.announcementsArray" :key="key">
+            <p v-if="dashboardData.announcementsArray.length === 0">No New Announcements</p>
+            <div v-for="(announcement, key) in dashboardData.announcementsArray" :key="key">
               <div>
                 <p
                   style="font-size: 12px;position: relative;z-index: 2;"
@@ -362,20 +362,11 @@ export default {
         role: ""
       },
       dashboardData: {
-        totalFilesUploaded: null,
-        totalReportsGenerated: null,
-        announcementsArray: null,
+        totalFilesUploaded: 0,
+        totalReportsGenerated: 0,
+        announcementsArray: [],
         lastReportSummary: null
       },
-      // dropzoneOptions: {
-      //   url: "https://httpbin.org/post",
-      //   acceptedFiles: ".sav,.pdf,.csv,.xlxs,.xls",
-      //   dictDefaultMessage:
-      //     "<i class='fa fa-cloud-upload'></i> Upload Files (.sav,.pdf,.csv,.xlsx,.xls)",
-      //   thumbnailWidth: 150,
-      //   maxFilesize: 10,
-      //   headers: { "My-Awesome-Header": "header value" }
-      // },
       latestDashboard: [],
       JSONObject: []
     };

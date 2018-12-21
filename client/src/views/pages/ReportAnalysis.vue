@@ -66,99 +66,101 @@
     </center>
     <div v-if="thirdStepDisplayAnalysis">
       <b-card-group>
-          <div class="card">
-            <div class="card-body">
-              <form-wizard
-                title="Generate Report Analysis"
-                subtitle="Visualize Report Analysis In 3 Steps"
-                finishButtonText="Generate Report Visualization"
-                nextButtonText="Generate Report Analysis"
-                :startIndex=1
-              >
-                <tab-content title="Upload Report File"></tab-content>
-                <tab-content title="Select Data Graphs">
-                  <!-- Report File Name -->
-                  <span>
-                    Report Name:
-                    <span
-                      style="font-size: 20px;font-weight: 500;"
-                    >{{CapitalizeFirstLetter(nameOfReport)}}</span>
-                  </span>
-                  <p class="card-text mt-3">Select the columns and choose the required graphs:</p>
+        <div class="card">
+          <div class="card-body">
+            <form-wizard
+              title="Generate Report Analysis"
+              subtitle="Visualize Report Analysis In 3 Steps"
+              finishButtonText="Generate Report Visualization"
+              nextButtonText="Generate Report Analysis"
+              :startIndex="1"
+            >
+              <tab-content title="Upload Report File"></tab-content>
+              <tab-content title="Select Data Graphs">
+                <!-- Report File Name -->
+                <span>
+                  Report Name:
+                  <span
+                    style="font-size: 20px;font-weight: 500;"
+                  >{{CapitalizeFirstLetter(nameOfReport)}}</span>
+                </span>
+                <p class="card-text mt-3">Select the columns and choose the required graphs:</p>
 
-                  <!-- Iterate columns  -->
-                  <b-form-checkbox-group
-                    stacked
-                    id="dashboardData"
-                    v-model="dashboardData"
-                    name="dashboardData"
-                    :checked="[2,3]"
-                  >
-                    <div v-for="(value, key) in JSONObject" :value="{key:value}" :key="key">
-                      <div class="row">
-                        <div class="col-12">
-                          <div class="card">
-                              <b-card-header header-tag="header" class="p-1" role="tab">
-                                <b-btn block href="#" v-b-toggle="key" variant="light">
-                                  <h5 class="text-left mb-0">
-                                <span style="font-size: 12px;">Column Name:</span>
-                                {{ CapitalizeFirstLetter(key)}}
-                              </h5></b-btn>
-                              </b-card-header>
-                            <b-collapse :id="key">
-                              <div class="card-body">
-                                <div class="row">
-                                  <!-- Bar Chart Display -->
-                                  <div class="col-6">
+                <div v-for="(value, key) in JSONObject" :value="{key:value}" :key="key">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="card">
+                        <b-card-header header-tag="header" class="p-1" role="tab">
+                          <b-btn block href="#" v-b-toggle="key" variant="light">
+                            <h5 class="text-left mb-0">
+                              <span style="font-size: 12px;">Column Name:</span>
+                              {{ CapitalizeFirstLetter(key)}}
+                            </h5>
+                          </b-btn>
+                        </b-card-header>
 
-                                    <b-form-checkbox
-                                      type="checkbox"
-                                      :value="{data:value, 'typeOfGraph':'BarGraph' , 'columnName':key}"
-                                      class="bar-chart-check"
-                                    ></b-form-checkbox>
-                                    <b-card :header="'Bar Graph: ' + CapitalizeFirstLetter(key)" >
-                                      <div class="chart-wrapper">
-                                        <BarCharts
-                                          :datasetBar="returnFrequency(value)"
-                                          chartId="chart-bar-01"
-                                        />
-                                      </div>
-                                    </b-card>
-                                  </div>
+                        <b-collapse :id="key">
+                          <!-- Iterate columns  -->
+                          <b-form-checkbox-group
+                            stacked
+                            :id="key"
+                            v-model="dashboardData"
+                            :checked="[2,3]"
+                          >
+                            <!-- <div class="collapse show" :id="key" > -->
+                            <div class="card-body">
+                              <div class="row">
+                                <!-- Bar Chart Display -->
+                                <div class="col-6">
+                                  <b-form-checkbox
+                                    type="checkbox"
+                                    :value="{data:value, 'typeOfGraph':'BarGraph' , 'columnName':key}"
+                                    class="bar-chart-check"
+                                  ></b-form-checkbox>
+                                  <b-card :header="'Bar Graph: ' + CapitalizeFirstLetter(key)">
+                                    <div class="chart-wrapper">
+                                      <BarCharts
+                                        :datasetBar="returnFrequency(value)"
+                                        chartId="chart-bar-01"
+                                      />
+                                    </div>
+                                  </b-card>
+                                </div>
 
-                                  <!-- Pie Chart Display -->
-                                  <div class="col-6">
-                                    <b-form-checkbox
-                                      type="checkbox"
-                                      :value="{data:value, 'typeOfGraph':'PieGraph', 'columnName':key}"
-                                      class="bar-chart-check"
-                                    ></b-form-checkbox>
-                                    <b-card :header="'Pie Graph: ' + CapitalizeFirstLetter(key)" >
-                                      <div class="chart-wrapper">
-                                        <PieCharts
-                                          :datasetPie="returnFrequency(value)"
-                                          chartId="chart-pie-01"
-                                        />
-                                      </div>
-                                    </b-card>
-                                  </div>
+                                <!-- Pie Chart Display -->
+                                <div class="col-6">
+                                  <b-form-checkbox
+                                    type="checkbox"
+                                    :value="{data:value, 'typeOfGraph':'PieGraph', 'columnName':key}"
+                                    class="bar-chart-check"
+                                  ></b-form-checkbox>
+                                  <b-card :header="'Pie Graph: ' + CapitalizeFirstLetter(key)">
+                                    <div class="chart-wrapper">
+                                      <PieCharts
+                                        :datasetPie="returnFrequency(value)"
+                                        chartId="chart-pie-01"
+                                      />
+                                    </div>
+                                  </b-card>
                                 </div>
                               </div>
-                            </b-collapse>
-                          </div>
-                        </div>
+                            </div>
+                            <!-- </div> -->
+                          </b-form-checkbox-group>
+                        </b-collapse>
                       </div>
                     </div>
-                  </b-form-checkbox-group>
-                </tab-content>
-                <tab-content title="Generate Visual Report"></tab-content>
-                <template slot="footer" slot-scope="props">
-                  <div class="wizard-footer-left"></div>
-                  <div class="wizard-footer-right"></div>
-                </template>
-              </form-wizard>
-            </div>
+                  </div>
+                </div>
+              </tab-content>
+              <tab-content title="Generate Visual Report"></tab-content>
+              <template slot="footer" slot-scope="props">
+                <div class="wizard-footer-left"></div>
+                <div class="wizard-footer-right"></div>
+              </template>
+            </form-wizard>
           </div>
+        </div>
       </b-card-group>
 
       <br>
@@ -211,7 +213,7 @@
                 subtitle="Visualize Report Analysis In 3 Steps"
                 finishButtonText="Generate Report Visualization"
                 nextButtonText="Generate Report Analysis"
-                :startIndex=2
+                :startIndex="2"
               >
                 <tab-content title="Upload Report File"></tab-content>
                 <tab-content title="Select Data Graphs"></tab-content>
@@ -400,7 +402,6 @@ export default {
           this.fileName = response.data.fileName;
           this.fileType = response.data.fileType;
           this.JSONObject = response.data.dataValues;
-
           this.firstStepDisplayForm = false;
           this.secondStepShowLoader = false;
           this.thirdStepDisplayAnalysis = true;
@@ -490,9 +491,9 @@ export default {
 </script>
 <style>
 .bar-chart-check {
-    position: absolute;
-    z-index: 1;
-    right: 10px;
-    top: 12px;
+  position: absolute;
+  z-index: 1;
+  right: 25px;
+  top: 0;
 }
 </style>

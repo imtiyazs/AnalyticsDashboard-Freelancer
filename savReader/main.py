@@ -35,12 +35,12 @@ if fileExtension == '.xlsx' or fileExtension == '.xls':
     i=0
     for singleColumn in df.columns:
         #Sent all column data
-        #data[singleColumn] = df[singleColumn].values.tolist()
+        data[singleColumn] = df[singleColumn].values.tolist()
         
         #Sent int & float columns only
-        if dtypeList[i]!='object' :
-            data[singleColumn] = df[singleColumn].values.tolist()
-        i = i+1
+        #if dtypeList[i]!='object' :
+        #    data[singleColumn] = df[singleColumn].values.tolist()
+        #i = i+1
 
     # Save to destination
     json.dump(data, codecs.open(destinationFile, 'w',
@@ -79,12 +79,12 @@ if fileExtension == '.sav':
     i=0
     for singleColumn in df.columns:
         #Sent all column data
-        #data[singleColumn] = df[singleColumn].values.tolist()
+        data[singleColumn] = df[singleColumn].values.tolist()
         
         #Sent int & float columns only
-        if dtypeList[i]!='object' :
-            data[singleColumn] = df[singleColumn].values.tolist()
-        i = i+1
+        #if dtypeList[i]!='object' :
+        #    data[singleColumn] = df[singleColumn].values.tolist()
+        #i = i+1
 
     # Save to destination
     json.dump(data, codecs.open(destinationFile, 'w',
@@ -106,12 +106,12 @@ if fileExtension == '.csv':
     i=0
     for singleColumn in df.columns:
         #Sent all column data
-        #data[singleColumn] = df[singleColumn].values.tolist()
+        data[singleColumn] = df[singleColumn].values.tolist()
         
         #Sent int & float columns only
-        if dtypeList[i]!='object' :
-            data[singleColumn] = df[singleColumn].values.tolist()
-        i = i+1
+        #if dtypeList[i]!='object' :
+        #    data[singleColumn] = df[singleColumn].values.tolist()
+        #i = i+1
 
     # Save to destination
     json.dump(data, codecs.open(destinationFile, 'w',

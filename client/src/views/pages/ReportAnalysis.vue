@@ -45,6 +45,7 @@
                       </div>
                     </div>
                   </tab-content>
+                  <tab-content title="Data Verification"></tab-content>
                   <tab-content title="Select Data Graphs"></tab-content>
                   <tab-content title="Generate Visual Report"></tab-content>
                 </form-wizard>
@@ -53,6 +54,66 @@
           </b-card-group>
         </div>
       </div>
+    </div>
+    <div v-if="showDataVerification">
+      <b-card-group>
+        <div class="card">
+          <div class="card-body">
+            <form-wizard
+              title="Generate Report Analysis"
+              subtitle="Visualize Report Analysis In 3 Steps"
+              finishButtonText="Generate Report Visualization"
+              nextButtonText="Generate Report Analysis"
+              :startIndex="1"
+            >
+              <tab-content title="Upload Report File"></tab-content>
+              <tab-content title="Data Verification" :before-change="GoToDataGraphsSection">
+                <!-- Report File Name -->
+                <span>
+                  Report Name:
+                  <span
+                    style="font-size: 20px;font-weight: 500;"
+                  >{{CapitalizeFirstLetter(nameOfReport)}}</span>
+                </span>
+                <p
+                  class="card-text mt-3"
+                >Verify the data and select the columns for graph generation:</p>
+                <div v-for="(value, key) in JSONObject" :key="key">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="card">
+                        <b-card-header header-tag="header" class="p-1" role="tab">
+                          <b-btn block href="#" v-b-toggle="key" variant="light">
+                            <h5 class="text-left mb-0">
+                              <span style="font-size: 12px;">Column Name:</span>
+                              {{ CapitalizeFirstLetter(key)}}
+                            </h5>
+                          </b-btn>
+                          <b-form-checkbox
+                            type="checkbox"
+                            class="bar-chart-check"
+                            @change="verifyDataColumns(key, value)"
+                            style="top:10px"
+                          ></b-form-checkbox>
+                        </b-card-header>
+
+                        <b-collapse :id="key">
+                          <div class="card-body">
+                            <p class="text-muted">Raw Data:</p>
+                            {{value}}
+                          </div>
+                        </b-collapse>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </tab-content>
+              <tab-content title="Select Data Graphs"></tab-content>
+              <tab-content title="Generate Visual Report"></tab-content>
+            </form-wizard>
+          </div>
+        </div>
+      </b-card-group>
     </div>
     <center>
       <div v-if="secondStepShowLoader" class="animated fadeIn col-4">
@@ -73,9 +134,10 @@
               subtitle="Visualize Report Analysis In 3 Steps"
               finishButtonText="Generate Report Visualization"
               nextButtonText="Generate Report Analysis"
-              :startIndex="1"
+              :startIndex="2"
             >
               <tab-content title="Upload Report File"></tab-content>
+              <tab-content title="Data Verification"></tab-content>
               <tab-content title="Select Data Graphs">
                 <!-- Report File Name -->
                 <span>
@@ -86,7 +148,7 @@
                 </span>
                 <p class="card-text mt-3">Select the columns and choose the required graphs:</p>
 
-                <div v-for="(value, key) in JSONObject" :value="{key:value}" :key="key">
+                <div v-for="(value, key) in verifiedColumns" :value="{key:value}" :key="key">
                   <div class="row">
                     <div class="col-12">
                       <div class="card">
@@ -116,6 +178,7 @@
                                     type="checkbox"
                                     :value="{data:value, 'typeOfGraph':'BarGraph' , 'columnName':key}"
                                     class="bar-chart-check"
+                                    style="top:0"
                                   ></b-form-checkbox>
                                   <b-card :header="'Bar Graph: ' + CapitalizeFirstLetter(key)">
                                     <div class="chart-wrapper">
@@ -213,9 +276,10 @@
                 subtitle="Visualize Report Analysis In 3 Steps"
                 finishButtonText="Generate Report Visualization"
                 nextButtonText="Generate Report Analysis"
-                :startIndex="2"
+                :startIndex="3"
               >
                 <tab-content title="Upload Report File"></tab-content>
+                <tab-content title="Data Verification"></tab-content>
                 <tab-content title="Select Data Graphs"></tab-content>
                 <tab-content title="Generate Visual Report">
                   <!-- Report File Name -->
@@ -325,8 +389,10 @@ export default {
       secondStepShowLoader: false,
       thirdStepDisplayAnalysis: false,
       fourthStepShowLoader: false,
+      showDataVerification: false,
       fifthStepDisplayDashboard: false,
       self: this,
+      verifiedColumns: {},
       dashboardData: [],
       analyticsDashboardName: "",
       dashboardGeneratedData: {},
@@ -368,6 +434,14 @@ export default {
         doc.save(pdfName);
       });
     },
+    GoToDataGraphsSection() {
+      this.secondStepShowLoader = true;
+      this.showDataVerification = false;
+      setTimeout(() => {
+        this.secondStepShowLoader = false;
+        this.thirdStepDisplayAnalysis = true;
+      }, 2000);
+    },
     CapitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     },
@@ -404,7 +478,8 @@ export default {
           this.JSONObject = response.data.dataValues;
           this.firstStepDisplayForm = false;
           this.secondStepShowLoader = false;
-          this.thirdStepDisplayAnalysis = true;
+          this.showDataVerification = true;
+          // this.thirdStepDisplayAnalysis = true;
 
           return true;
         })
@@ -433,6 +508,14 @@ export default {
     hideModal() {
       this.$refs.myModalRef.hide();
     },
+    verifyDataColumns(columnName, columnData) {
+      var index = Object.keys(this.verifiedColumns).indexOf(columnName);
+      if (index > -1) {
+        delete this.verifiedColumns[columnName];
+        return;
+      }
+      this.verifiedColumns[columnName] = columnData;
+    },
     generateDashboard() {
       //axios to record dashboard into mongo
       let dashboardDetails = {
@@ -440,7 +523,7 @@ export default {
         fileName: this.fileName,
         userName: this.userProfileData.username,
         analyticsDataName: this.analyticsDashboardName,
-        reportData: this.JSONObject,
+        reportData: this.verifiedColumns,
         analyticsData: this.dashboardData,
         creationDate: new Date().toISOString()
       };

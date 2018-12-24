@@ -1,7 +1,7 @@
 <template>
   <AppHeaderDropdown right no-caret>
     <template slot="header">
-      <img src="img/avatars/6.jpg" class="img-avatar" alt="admin@bootstrapmaster.com">
+      <img src="img/avatars/1.jpg" class="img-avatar" style="width: 35px;">
     </template>\
     <template slot="dropdown">
       <b-dropdown-header tag="div" class="text-center">

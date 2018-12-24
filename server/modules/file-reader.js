@@ -183,7 +183,7 @@ function ReadFileWithPythonScript(username, fileName, sourceFilePath) {
             let DestFilePath = path.join(DestinationFilePath, JSONFileName)
 
             /** Execute python program of reading SAV files and generate JSON file on above destination path */
-            require('child_process').exec(constants.SAVFileReaderFile + ' ' + sourceFilePath + ' ' + DestFilePath, (err) => {
+            require('child_process').exec(constants.SAVFileReaderFile + ' "' + sourceFilePath + '" "' + DestFilePath + '"', (err) => {
                 if (err) {
                     logger.error('ReadFileWithPythonScript: ' + err)
                     return reject('ReadFileWithPythonScript: ' + err)

@@ -16,37 +16,8 @@ sourceFile = sys.argv[1]
 destinationFile = sys.argv[2]
 _, fileExtension = os.path.splitext(sourceFile)
 
-data = {}
-
-if fileExtension == '.csv':
-    #data = {}
-    # Load spreadsheet
-    df = pd.read_csv(sourceFile)
-
-    #drop missing values
-    df.dropna(axis=0, inplace=True)
-
-    #drop duplicate values
-    df.drop_duplicates(keep='last',inplace=True)
-
-    #fetch data type of columns
-    dtypeList = df.dtypes
-    i=0
-    for singleColumn in df.columns:
-        #Sent all column data
-        data[singleColumn] = df[singleColumn].values.tolist()
-        
-        #Sent int & float columns only
-        #if dtypeList[i]!='object' :
-        #    data[singleColumn] = df[singleColumn].values.tolist()
-        #i = i+1
-
-    # Save to destination
-    #json.dump(data, codecs.open(destinationFile, 'w', encoding='utf-8'), sort_keys=True, indent=4)
-
-
 if fileExtension == '.xlsx' or fileExtension == '.xls':
-    #data = {}
+    data = {}
     # Load spreadsheet
     df = pd.read_excel(sourceFile)
     # For each in headers
@@ -72,7 +43,8 @@ if fileExtension == '.xlsx' or fileExtension == '.xls':
         #i = i+1
 
     # Save to destination
-    #json.dump(data, codecs.open(destinationFile, 'w', encoding='utf-8'), sort_keys=True, indent=4)
+    json.dump(data, codecs.open(destinationFile, 'w',
+                                    encoding='utf-8'), sort_keys=True, indent=4)
 
 #  READ SAV OR SPSS FILES
 if fileExtension == '.sav':
@@ -83,7 +55,7 @@ if fileExtension == '.sav':
     headerInBytes = list(rawFileData)[0]
 
     # Blank json object
-    #data = {}
+    data = {}
 
     # For each in headers
     #for i, each in enumerate(headerInBytes):
@@ -115,9 +87,32 @@ if fileExtension == '.sav':
         #i = i+1
 
     # Save to destination
-    #json.dump(data, codecs.open(destinationFile, 'w', encoding='utf-8'), sort_keys=True, indent=4)
+    json.dump(data, codecs.open(destinationFile, 'w',
+                                encoding='utf-8'), sort_keys=True, indent=4)
 
+if fileExtension == '.csv':
+    data = {}
+    # Load spreadsheet
+    df = pd.read_csv(sourceFile)
 
+    #drop missing values
+    df.dropna(axis=0, inplace=True)
 
-# Save to destination
-json.dump(data, codecs.open(destinationFile, 'w', encoding='utf-8'), sort_keys=True, indent=4)
+    #drop duplicate values
+    df.drop_duplicates(keep='last',inplace=True)
+
+    #fetch data type of columns
+    dtypeList = df.dtypes
+    i=0
+    for singleColumn in df.columns:
+        #Sent all column data
+        data[singleColumn] = df[singleColumn].values.tolist()
+        
+        #Sent int & float columns only
+        #if dtypeList[i]!='object' :
+        #    data[singleColumn] = df[singleColumn].values.tolist()
+        #i = i+1
+
+    # Save to destination
+    json.dump(data, codecs.open(destinationFile, 'w',
+                                    encoding='utf-8'), sort_keys=True, indent=4)

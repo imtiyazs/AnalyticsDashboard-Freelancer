@@ -2,7 +2,10 @@
   <div class="app flex-row align-items-center body">
     <div class="container">
       <b-row class="justify-content-center">
-        <b-col md="6" sm="8">
+        <b-col md="12">
+          <div id="loginbody" style="margin-left: -15%;width: 125%;height: 100vh;"></div>
+        </b-col>
+        <b-col md="6" sm="8" style="position: absolute;top: 20%;width: 540px;">
           <b-card no-body class="mx-4">
             <b-card-body class="p-4">
               <div class="loader">
@@ -93,6 +96,7 @@
 import axios from "axios";
 import router from "../../router";
 import { Circle4 } from "vue-loading-spinner";
+import "particles.js";
 
 export default {
   name: "Register",
@@ -105,10 +109,118 @@ export default {
       username: "",
       email: "",
       password: "",
-      repeatPassword: ""
+      repeatPassword: "",
+      isParticle: false
     };
   },
   methods: {
+    initParticles() {
+      window.particlesJS("loginbody", {
+        particles: {
+          number: {
+            value: 80,
+            density: {
+              enable: true,
+              value_area: 800
+            }
+          },
+          color: {
+            value: "#ffffff"
+          },
+          shape: {
+            type: "circle",
+            stroke: {
+              width: 0,
+              color: "#000000"
+            },
+            polygon: {
+              nb_sides: 6
+            }
+          },
+          opacity: {
+            value: 0.5,
+            random: false,
+            anim: {
+              enable: false,
+              speed: 1,
+              opacity_min: 0.1,
+              sync: false
+            }
+          },
+          size: {
+            value: 5,
+            random: true,
+            anim: {
+              enable: false,
+              speed: 50,
+              size_min: 0.1,
+              sync: false
+            }
+          },
+          line_linked: {
+            enable: true,
+            distance: 300,
+            color: "#ffffff",
+            opacity: 0.4,
+            width: 2
+          },
+          move: {
+            enable: true,
+            speed: 9,
+            direction: "none",
+            random: false,
+            straight: false,
+            out_mode: "out",
+            bounce: false,
+            attract: {
+              enable: false,
+              rotateX: 600,
+              rotateY: 1200
+            }
+          }
+        },
+        interactivity: {
+          detect_on: "canvas",
+          events: {
+            onhover: {
+              enable: false,
+              mode: "repulse"
+            },
+            onclick: {
+              enable: true,
+              mode: "repulse"
+            },
+            resize: true
+          },
+          modes: {
+            grab: {
+              distance: 800,
+              line_linked: {
+                opacity: 1
+              }
+            },
+            bubble: {
+              distance: 800,
+              size: 80,
+              duration: 2,
+              opacity: 8,
+              speed: 3
+            },
+            repulse: {
+              distance: 400,
+              duration: 0.4
+            },
+            push: {
+              particles_nb: 4
+            },
+            remove: {
+              particles_nb: 2
+            }
+          }
+        },
+        retina_detect: true
+      });
+    },
     BackToLogin() {
       router.push("/login");
     },
@@ -142,6 +254,12 @@ export default {
         this.$toaster.error("Passwords do not match! Try Again.");
         this.showLoader = false;
       }
+    }
+  },
+  mounted() {
+    if (!this.isParticle) {
+      this.initParticles();
+      this.isParticle = true;
     }
   }
 };

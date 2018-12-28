@@ -5,38 +5,37 @@
     </div>
     <b-row>
       <b-col sm="6" lg="3">
-        <b-card no-body class="bg-warning">
+        <b-card
+          @click="reDirectTo('/reporthistory')"
+          no-body
+          style="height: 150px;cursor:pointer;background-color: #00BCD4;color: white;"
+        >
           <b-card-body class="pb-0">
-            <b-dropdown class="float-right" variant="transparent p-0" right>
-              <template slot="button-content">
-                <i class="icon-settings"></i>
-              </template>
-              <b-dropdown-item @click="reDirectTo('/reportanalysis')">Generate New Report</b-dropdown-item>
-              <!-- <b-dropdown-item @click="reDirectTo('/downloadreports')">Download Report</b-dropdown-item> -->
-            </b-dropdown>
-            <h4 class="mb-0">{{this.dashboardData.totalFilesUploaded}}</h4>
-            <p>Total Files Uploaded</p>
+            <h1 class="mb-0">{{this.dashboardData.totalFilesUploaded}}</h1>
+            <p class="card-text">TOTAL FILES UPLOADED</p>
+            <img class="card-icons" src="img/bars.png">
           </b-card-body>
-          <card-line3-chart-example
+          <!-- <card-line3-chart-example
             chartId="card-chart-03"
             class="chart-wrapper"
             style="height:70px;"
             height="70"
-          />
+          />-->
         </b-card>
       </b-col>
       <b-col sm="6" lg="3">
-        <b-card no-body class="bg-danger">
+        <b-card no-body class="bg-danger" style="height: 150px;">
           <b-card-body class="pb-0">
-            <h4 class="mb-0">{{this.dashboardData.totalReportsGenerated}}</h4>
-            <p>Reports Generated</p>
+            <h1 class="mb-0">{{this.dashboardData.totalReportsGenerated}}</h1>
+            <p class="card-text">REPORTS GENERATED</p>
+            <img class="card-icons" src="img/report.png" style="top: 42px;right: 25px;">
           </b-card-body>
-          <card-bar-chart-example
+          <!-- <card-bar-chart-example
             chartId="card-chart-04"
             class="chart-wrapper px-3"
             style="height:70px;"
             height="70"
-          />
+          />-->
         </b-card>
       </b-col>
       <b-col sm="6" lg="6">
@@ -394,7 +393,7 @@ export default {
           return true;
         })
         .catch(function(error) {
-          this.$toaster.error(error.response.data)
+          this.$toaster.error(error.response.data);
           this.showLoader = false;
           return false;
         });
@@ -502,5 +501,19 @@ export default {
   top: 50%;
   left: 50%;
   z-index: 10;
+}
+
+.card-text {
+  width: 100px;
+  margin: 20px 0 0 0;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.card-icons {
+  position: absolute;
+  width: 80px;
+  top: 50px;
+  right: 30px;
 }
 </style>

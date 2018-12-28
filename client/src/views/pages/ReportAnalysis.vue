@@ -75,38 +75,88 @@
                     style="font-size: 20px;font-weight: 500;"
                   >{{CapitalizeFirstLetter(nameOfReport)}}</span>
                 </span>
-                <p
-                  class="card-text mt-3"
-                >Verify the data and select the columns for graph generation:</p>
-                <div v-for="(value, key) in JSONObject" :key="key">
-                  <div class="row">
-                    <div class="col-12">
-                      <div class="card">
-                        <b-card-header header-tag="header" class="p-1" role="tab">
-                          <b-btn block href="#" v-b-toggle="key" variant="light">
+                <p class="card-text mt-3">Verify the raw data and filtered data from columns below:</p>
+
+                <div class="row">
+                  <div v-for="(value, key) in JSONObject" :key="key">
+                    <b-card-group deck class="mb-3">
+                      <div class="col-12">
+                        <b-button
+                          @click="showRawFilteredDataModal(key, value)"
+                          class="card-btns text-left"
+                          variant="primary"
+                        >{{CapitalizeFirstLetter(key)}}</b-button>
+
+                        <b-form-checkbox
+                          type="checkbox"
+                          class="bar-chart-check"
+                          @change="verifyDataColumns(key, FilteredJSONObject[key])"
+                          style="top:25px"
+                        ></b-form-checkbox>
+                      </div>
+                    </b-card-group>
+                  </div>
+                </div>
+                <b-modal
+                  ref="dataModal"
+                  size="lg"
+                  hide-footer
+                  :title="'Column name: '+ CapitalizeFirstLetter(RawVerificationData.columnName)"
+                >
+                  <!-- <b-card-header header-tag="header" class="p-1" role="tab">
+                          <b-btn block href="#" v-b-toggle="1" variant="light">
                             <h5 class="text-left mb-0">
                               <span style="font-size: 12px;">Column Name:</span>
-                              {{ CapitalizeFirstLetter(key)}}
+                              
                             </h5>
-                          </b-btn>
-                          <b-form-checkbox
-                            type="checkbox"
-                            class="bar-chart-check"
-                            @change="verifyDataColumns(key, value)"
-                            style="top:10px"
-                          ></b-form-checkbox>
-                        </b-card-header>
-
-                        <b-collapse :id="key">
-                          <div class="card-body">
-                            <p class="text-muted">Raw Data:</p>
-                            {{value}}
+                  </b-btn>-->
+                  <!-- </b-card-header> -->
+                  <div class="card-body" style="height: 520px;overflow: hidden;">
+                    <div class="row">
+                      <div class="col-6">
+                        <b-card
+                          no-body
+                          :header="'Raw Data Count: '+ RawVerificationData.RawData.length"
+                        >
+                          <div style="height: 440px;overflow: overlay;">
+                            <b-list-group>
+                              <div
+                                v-for="(item, index) in RawVerificationData.RawData"
+                                :key="index"
+                              >
+                                <b-list-group-item
+                                  v-if="item.length != 0"
+                                  style="height: 40px;"
+                                >{{item}}</b-list-group-item>
+                                <b-list-group-item
+                                  v-else
+                                  style="height: 40px;background-color: red;opacity: 0.2;"
+                                >{{item}}</b-list-group-item>
+                              </div>
+                            </b-list-group>
                           </div>
-                        </b-collapse>
+                        </b-card>
+                      </div>
+                      <div class="col-6">
+                        <b-card
+                          no-body
+                          :header="'Clean Data Count: ' + RawVerificationData.FilterData.length"
+                        >
+                          <div style="height: 440px;overflow: overlay;">
+                            <b-list-group>
+                              <div
+                                v-for="(item, index) in RawVerificationData.FilterData"
+                                :key="index"
+                              >
+                                <b-list-group-item style="height: 40px;">{{item}}</b-list-group-item>
+                              </div>
+                            </b-list-group>
+                          </div>
+                        </b-card>
                       </div>
                     </div>
                   </div>
-                </div>
+                </b-modal>
               </tab-content>
               <tab-content title="Select Data Graphs"></tab-content>
               <tab-content title="Generate Visual Report"></tab-content>
@@ -163,6 +213,11 @@
 
                         <b-collapse :id="key">
                           <!-- Iterate columns  -->
+                          <p
+                            class="text-muted"
+                            style="margin: 20px 20px 0 20px;"
+                            v-if="value.length > 50"
+                          >Note: The data legend will be hidden due to huge dataset. You can still hover the data graph to get Value & Count Ex: { 53.2:10 }</p>
                           <b-form-checkbox-group
                             stacked
                             :id="key"
@@ -183,6 +238,13 @@
                                   <b-card :header="'Bar Graph: ' + CapitalizeFirstLetter(key)">
                                     <div class="chart-wrapper">
                                       <BarCharts
+                                        v-if="value.length > 50"
+                                        :datasetBar="returnFrequency(value)"
+                                        chartId="chart-bar-01"
+                                        style="zoom: 80%;"
+                                      />
+                                      <BarCharts
+                                        v-else
                                         :datasetBar="returnFrequency(value)"
                                         chartId="chart-bar-01"
                                       />
@@ -245,6 +307,7 @@
           style="right:0in"
           class="mt-3"
           variant="outline-primary"
+          :disabled="analyticsDashboardName === '' || analyticsDashboardName === undefined"
           @click="generateDashboard"
         >Generate Data Report</b-btn>
       </b-modal>
@@ -310,15 +373,23 @@
                       <div
                         v-for="(singleGraph,index) in dashboardGeneratedData.dashboardData"
                         :key="index"
-                        class="col-4"
+                        class="col-6"
                       >
                         <div v-if="singleGraph.typeOfGraph ==='BarGraph'">
                           <b-card
-                            :header="CapitalizeFirstLetter(singleGraph.columnName)"
+                            :header="CapitalizeFirstLetter(singleGraph.columnName) + ' Bar Graph'"
                             style="font-weight:500"
                           >
                             <div class="chart-wrapper">
                               <BarCharts
+                                v-if="singleGraph.data.length > 50"
+                                :datasetBar="returnFrequency(singleGraph.data)"
+                                :columnName="CapitalizeFirstLetter(singleGraph.columnName)"
+                                chartId="chart-bar-01"
+                                style="zoom: 80%"
+                              />
+                              <BarCharts
+                                v-else
                                 :datasetBar="returnFrequency(singleGraph.data)"
                                 :columnName="CapitalizeFirstLetter(singleGraph.columnName)"
                                 chartId="chart-bar-01"
@@ -328,7 +399,7 @@
                         </div>
                         <div v-if="singleGraph.typeOfGraph ==='PieGraph'">
                           <b-card
-                            :header="CapitalizeFirstLetter(singleGraph.columnName)"
+                            :header="CapitalizeFirstLetter(singleGraph.columnName)  + ' Doughnut Graph'"
                             style="font-weight:500"
                           >
                             <div class="chart-wrapper">
@@ -397,11 +468,23 @@ export default {
       analyticsDashboardName: "",
       dashboardGeneratedData: {},
       JSONObject: {},
+      FilteredJSONObject: {},
       userProfileData: {},
-      output: null
+      output: null,
+      RawVerificationData: {
+        columnName: "",
+        RawData: [],
+        FilterData: []
+      }
     };
   },
   methods: {
+    showRawFilteredDataModal(key, value) {
+      this.RawVerificationData.columnName = key;
+      this.RawVerificationData.RawData = value;
+      this.RawVerificationData.FilterData = this.FilteredJSONObject[key];
+      this.$refs.dataModal.show();
+    },
     createPDF() {
       let self = this;
 
@@ -476,11 +559,23 @@ export default {
           this.fileName = response.data.fileName;
           this.fileType = response.data.fileType;
           this.JSONObject = response.data.dataValues;
+
+          Object.keys(this.JSONObject).forEach((key, index) => {
+            let tempArray = [];
+            this.FilteredJSONObject[key] = null;
+            this.JSONObject[key].forEach(value => {
+              if (value !== null && value !== "" && value !== undefined) {
+                tempArray.push(value);
+              }
+            });
+            this.FilteredJSONObject[key] = tempArray;
+            tempArray = [];
+          });
+
           this.firstStepDisplayForm = false;
           this.secondStepShowLoader = false;
           this.showDataVerification = true;
           // this.thirdStepDisplayAnalysis = true;
-
           return true;
         })
         // On file reading error
@@ -573,10 +668,28 @@ export default {
 };
 </script>
 <style>
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
 .bar-chart-check {
   position: absolute;
   z-index: 1;
   right: 25px;
   top: 0;
+}
+
+.card-btns {
+  width: 230px;
+  height: 50px;
+  margin: 10px;
 }
 </style>

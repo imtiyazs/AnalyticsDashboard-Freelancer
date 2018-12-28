@@ -20,8 +20,10 @@ export default {
     for (var key in jsonObject) {
       if (jsonObject.hasOwnProperty(key)) {
         var val = jsonObject[key];
-        this.theLabels.push(key);
-        this.theData.push(val);
+        if(val !== "" || val !== null || val !== undefined) {
+          this.theLabels.push(key);
+          this.theData.push(val);
+        }
       }
     }
     this.renderMyChart();
@@ -46,7 +48,8 @@ export default {
                 display: true,
                 scaleLabel: {
                   display: true,
-                  labelString: this.columnName !== undefined ? this.columnName : "Values"
+                  labelString:
+                    this.columnName !== undefined ? this.columnName : "Values"
                 }
               }
             ],
@@ -59,6 +62,9 @@ export default {
                 }
               }
             ]
+          },
+          legend: {
+            display: false
           },
           responsive: true,
           maintainAspectRatio: true,

@@ -1,8 +1,8 @@
 <script>
-import { Pie } from "vue-chartjs";
+import { Doughnut } from "vue-chartjs";
 
 export default {
-  extends: Pie,
+  extends: Doughnut,
   props: ["datasetPie"],
   data() {
     return {
@@ -11,70 +11,64 @@ export default {
     };
   },
   mounted() {
-    //let jsonObject = { "45.0": 1, "44.0": 1, "36.0": 3, "41.0": 1, "43.0": 1, "39.0": 1, "32.0": 4, "40.0": 3, "46.0": 1, "23.0": 1, "35.0": 2, "30.0": 2, "34.0": 3, "38.0": 2, "37.0": 1, "25.0": 3 }
-    let jsonObject = this.datasetPie;
-    for (var key in jsonObject) {
-      if (jsonObject.hasOwnProperty(key)) {
-        var val = jsonObject[key];
-        //console.log("Key :: ",key);
-        this.theLabels.push(key);
-        //console.log("Value :: ",val);
-        this.theData.push(val);
+    for (var key in this.datasetPie) {
+      if (this.datasetPie.hasOwnProperty(key)) {
+        var val = this.datasetPie[key];
+        if (val !== "" || val !== null || val !== undefined) {
+          this.theLabels.push(key);
+          this.theData.push(val);
+        }
       }
     }
-    //console.log(this.theLabels)
-    //console.log(this.theData)
+
     this.renderMyChart();
   },
   methods: {
     renderMyChart() {
-      this.renderChart(
-        {
-          labels: this.theLabels,
-          datasets: [
-            {
-              backgroundColor: [
-                "#41B883",
-                "#E46651",
-                "#00D8FF",
-                "#DD1B16",
-                "#BF462D",
-                "#BF7F2D",
-                "#BF2D7A",
-                "#2D4ABF",
-                "#2DBFBD",
-                "#7373B5",
-                "#325C46",
-                "#AA1E62",
-                "#583445",
-                "#ADD2A4",
-                "#41B883",
-                "#E46651",
-                "#00D8FF",
-                "#DD1B16",
-                "#BF462D",
-                "#BF7F2D",
-                "#BF2D7A",
-                "#2D4ABF",
-                "#2DBFBD",
-                "#7373B5",
-                "#325C46",
-                "#AA1E62",
-                "#583445",
-                "#ADD2A4"
-              ],
-              data: this.theData
-            }
-          ]
-        },
-        {
+      /** Generate dynamic colors according to data size */
+      let coloR = [],
+        pieChartOptions = {
+          legend: {
+            fullWidth: false,
+            position: "bottom",
+            display: false
+          },
           responsive: true,
           maintainAspectRatio: true,
           pieceLabel: {
             mode: "percentage",
             precision: 1
           }
-        }
+        };
+
+      if(this.theLabels.length < 50) {
+        pieChartOptions.legend.display = true
+      }
+
+      let dynamicColors = function() {
+        let r = Math.floor(Math.random() * 255);
+        let g = Math.floor(Math.random() * 255);
+        let b = Math.floor(Math.random() * 255);
+        return "rgb(" + r + "," + g + "," + b + ")";
+      };
+
+      for (let i in this.theData) {
+        coloR.push(dynamicColors());
+      }
+
+      this.renderChart(
+        {
+          labels: this.theLabels,
+          datasets: [
+            {
+              backgroundColor: coloR,
+              borderColor: "rgba(200, 200, 200, 0.75)",
+              hoverBorderColor: "rgba(200, 200, 200, 1)",
+              data: this.theData
+            }
+          ]
+        },
+        pieChartOptions
       );
     }
   }

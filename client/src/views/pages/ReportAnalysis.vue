@@ -75,7 +75,7 @@
                     style="font-size: 20px;font-weight: 500;"
                   >{{CapitalizeFirstLetter(nameOfReport)}}</span>
                 </span>
-                <p class="card-text mt-3">Verify the raw data and filtered data from columns below:</p>
+                <p class="card-text mt-9">Verify the raw data and filtered data from columns below:</p>
 
                 <div class="row">
                   <div v-for="(value, key) in JSONObject" :key="key">

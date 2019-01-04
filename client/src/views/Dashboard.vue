@@ -38,208 +38,50 @@
           />-->
         </b-card>
       </b-col>
-      <b-col sm="6" lg="6">
-        <b-card header="Announcements" no-body class="bg-primary">
-          <b-card-body style="height: 105px; overflow-x: hidden;overflow-y: auto;">
-            <p v-if="dashboardData.announcementsArray.length === 0">No New Announcements</p>
-            <div v-for="(announcement, key) in dashboardData.announcementsArray" :key="key">
-              <div>
-                <p
-                  style="font-size: 12px;position: relative;z-index: 2;"
-                >{{ new Date(announcement.creationDate).toDateString() }} : {{ announcement.message }}</p>
-              </div>
-            </div>
-            <card-line1-chart-example
-              chartId="card-chart-01"
-              class="chart-wrapper px-3"
-              :height="70"
-              style="position: absolute;top: 80px;right: 0px;"
-            />
-          </b-card-body>
-        </b-card>
-      </b-col>
-    </b-row>
-
-    <b-row class="mb-3">
       <b-col md="6" style="height:100%">
         <b-card border-variant="info" header="Quick Report Analysis">
           <div class="row">
-            <div class="animated fadeIn col-12">
-              <b-card-group>
-                <div class="card" style="height: 300px;">
-                  <div class="card-body">
-                    <div class="row">
-                      <h5 class="card-title ml-3">Generate Quick Report</h5>
-                    </div>
-                    <div class="row">
-                      <div class="col-12 mt-3">
-                        <form v-on:submit="generateQuickAnalysis">
-                          <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text">Report Name</span>
-                            </div>
-                            <input
-                              type="text"
-                              class="form-control"
-                              aria-label="Default"
-                              label-for="nameOfReport"
-                              aria-describedby="inputGroup-sizing-default"
-                              v-model="nameOfReport"
-                              required
-                            >
-                          </div>
-                          <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text">Report Upload</span>
-                            </div>
-                            <div class="custom-file">
-                              <input
-                                type="file"
-                                id="file"
-                                ref="file"
-                                accept=".sav, .xls, .xlsx, .csv"
-                                class="custom-file-input"
-                                v-on:change="handleFileUpload"
-                                :plain="true"
-                                required
-                              >
-                              <label class="custom-file-label">{{uploadInputLabel}}</label>
-                            </div>
-                          </div>
-
-                          <b-button type="submit" variant="primary" class="float-right mt-4">
-                            <i class="icon-pie-chart"></i> Generate Report Analysis
-                          </b-button>
-                        </form>
-                      </div>
-                    </div>
+            <div class="col-12 mt-3">
+              <form v-on:submit="generateQuickAnalysis">
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Report Name</span>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    aria-label="Default"
+                    label-for="nameOfReport"
+                    aria-describedby="inputGroup-sizing-default"
+                    v-model="nameOfReport"
+                    required
+                  >
+                </div>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Report Upload</span>
+                  </div>
+                  <div class="custom-file">
+                    <input
+                      type="file"
+                      id="file"
+                      ref="file"
+                      accept=".sav, .xls, .xlsx, .csv"
+                      class="custom-file-input"
+                      v-on:change="handleFileUpload"
+                      :plain="true"
+                      required
+                    >
+                    <label class="custom-file-label">{{uploadInputLabel}}</label>
                   </div>
                 </div>
-              </b-card-group>
+
+                <b-button type="submit" variant="primary" class="float-right mt-4">
+                  <i class="icon-pie-chart"></i> Generate Report Analysis
+                </b-button>
+              </form>
             </div>
           </div>
-        </b-card>
-      </b-col>
-      <b-col md="6" style="height:100%">
-        <div class="row">
-          <div class="animated fadeIn col-12">
-            <b-card-group>
-              <b-card border-variant="info" header="Latest Generated Reports">
-                <div class="card">
-                  <div class="card-body">
-                    <b-row class="mb-4">
-                      <b-col cols="2" class="text-center">
-                        <b>#</b>
-                      </b-col>
-                      <b-col>
-                        <b>Report Name</b>
-                      </b-col>
-                      <b-col>
-                        <b>Analytics Name</b>
-                      </b-col>
-                    </b-row>
-                    <b-list-group style="height: 190px;overflow-x: hidden;overflow-y: scroll;">
-                      <p
-                        v-if="latestDashboard.length === 0"
-                        class="text-center mt-5"
-                      >No Reports Found</p>
-                      <b-list-group-item
-                        v-for="(singleDashboard, index) in latestDashboard"
-                        :key="index"
-                      >
-                        <div class="row">
-                          <b-col cols="2">{{index+1}}</b-col>
-                          <b-col>{{ CapitalizeFirstLetter(singleDashboard.reportName)}}</b-col>
-                          <b-col>{{CapitalizeFirstLetter(singleDashboard.analyticsDataName)}}</b-col>
-                        </div>
-                      </b-list-group-item>
-                    </b-list-group>
-                    <!-- <b-row
-                       
-                        class="p-10"
-                      >
-                       
-                    </b-row>-->
-                  </div>
-                </div>
-              </b-card>
-            </b-card-group>
-          </div>
-        </div>
-      </b-col>
-    </b-row>
-
-    <b-row>
-      <b-col md="12" v-if="dashboardData.lastReportSummary !== null">
-        <b-card border-variant="info" header="Last Report Generated">
-          <b-card-group>
-            <div class="card">
-              <div class="card-body">
-                <!-- Report File Name -->
-                <div style="padding-left: 20px">
-                  <span>
-                    Report Name:
-                    <span style="font-size: 20px;font-weight: 500;">
-                      {{CapitalizeFirstLetter(dashboardData.lastReportSummary.reportName)}}
-                      <!-- {{dashboardData.lastReportSummary}} -->
-                    </span>
-                  </span>
-                  <br>
-                  <span class="mb-5">
-                    Analytic Report Name:
-                    <span
-                      style="font-size: 20px;font-weight: 500;"
-                    >{{CapitalizeFirstLetter(dashboardData.lastReportSummary.analyticsDataName)}}</span>
-                  </span>
-                </div>
-                <!-- <b-button
-                      variant="primary"
-                      style="position:fixed; bottom: 5%; right:62px;z-index: 10;"
-                      @click="createPDF"
-                    >
-                      <i class="fa fa-download"></i> Download Report PDF
-                </b-button>-->
-                <div class="card-body">
-                  <div ref="printReport" class="row">
-                    <div
-                      v-if="dashboardData.lastReportSummary !== null"
-                      v-for="(singleGraph,index) in dashboardData.lastReportSummary.analyticsData"
-                      :key="index"
-                      class="col-4"
-                    >
-                      <div v-if="singleGraph.typeOfGraph ==='BarGraph'">
-                        <b-card
-                          :header="CapitalizeFirstLetter(singleGraph.columnName)"
-                          style="font-weight:500"
-                        >
-                          <div class="chart-wrapper">
-                            <BarCharts
-                              :datasetBar="returnFrequency(singleGraph.data)"
-                              :columnName="CapitalizeFirstLetter(singleGraph.columnName)"
-                              chartId="chart-bar-01"
-                            />
-                          </div>
-                        </b-card>
-                      </div>
-                      <div v-if="singleGraph.typeOfGraph ==='PieGraph'">
-                        <b-card
-                          :header="CapitalizeFirstLetter(singleGraph.columnName)"
-                          style="font-weight:500"
-                        >
-                          <div class="chart-wrapper">
-                            <PieCharts
-                              :datasetPie="returnFrequency(singleGraph.data)"
-                              chartId="chart-pie-01"
-                            />
-                          </div>
-                        </b-card>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </b-card-group>
         </b-card>
       </b-col>
     </b-row>
@@ -363,7 +205,6 @@ export default {
       dashboardData: {
         totalFilesUploaded: 0,
         totalReportsGenerated: 0,
-        announcementsArray: [],
         lastReportSummary: null
       },
       latestDashboard: [],
@@ -428,7 +269,6 @@ export default {
     axios
       .post("/o/user")
       .then(response => {
-        //self.$set(this, "user", response.data);
         this.user = response.data;
         this.userLogged = true;
         this.userProfileData.username = response.data.username;
@@ -446,29 +286,12 @@ export default {
               response.data.totalFileUploads;
             this.dashboardData.totalReportsGenerated =
               response.data.totalReportUploads;
-            this.dashboardData.announcementsArray = response.data.announcements;
             this.dashboardData.lastReportSummary =
               response.data.lastReportSummary;
           })
           .catch(errors => {
             this.showLoader = false;
             this.$toaster.error(errors.response.data);
-            //router.push("/login");
-          });
-
-        //
-        axios
-          .post("/o/reporthistory", {
-            username: this.userProfileData.username,
-            limit: 5
-          })
-          .then(response => {
-            this.latestDashboard = response.data.reports;
-            this.dashboardData.lastReportSummary = this.latestDashboard[0];
-          })
-          .catch(errors => {
-            this.showLoader = false;
-            this.$toaster.error(errors.repsonse.data);
           });
       })
       .catch(errors => {

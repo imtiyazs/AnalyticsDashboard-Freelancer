@@ -8,15 +8,15 @@
               <div class="card-body">
                 <form-wizard
                   title="Generate Report Analysis"
-                  subtitle="Visualize Report Analysis In 3 Steps"
+                  subtitle
                   finishButtonText="Generate Report Visualization"
-                  nextButtonText="Generate Report Analysis"
+                  nextButtonText="Clear Your Data"
                   class="mt-3"
                 >
-                  <tab-content title="Upload Report File" :before-change="UploadDataFilesToServer">
+                  <tab-content title="Upload Data" :before-change="UploadDataFilesToServer">
                     <div class="input-group mb-3">
                       <div class="input-group-prepend">
-                        <span class="input-group-text">Report Name</span>
+                        <span class="input-group-text">Raw Data Name</span>
                       </div>
                       <input
                         type="text"
@@ -29,7 +29,7 @@
                     </div>
                     <div class="input-group mb-3">
                       <div class="input-group-prepend">
-                        <span class="input-group-text">Report Upload</span>
+                        <span class="input-group-text">Upload File</span>
                       </div>
                       <div class="custom-file">
                         <input
@@ -45,9 +45,9 @@
                       </div>
                     </div>
                   </tab-content>
-                  <tab-content title="Data Verification"></tab-content>
-                  <tab-content title="Select Data Graphs"></tab-content>
-                  <tab-content title="Generate Visual Report"></tab-content>
+                  <tab-content title="Data Cleaning"></tab-content>
+                  <tab-content title="Visualize"></tab-content>
+                  <tab-content title="Generate Report"></tab-content>
                 </form-wizard>
               </div>
             </div>
@@ -61,21 +61,35 @@
           <div class="card-body">
             <form-wizard
               title="Generate Report Analysis"
-              subtitle="Visualize Report Analysis In 3 Steps"
+              subtitle
               finishButtonText="Generate Report Visualization"
               nextButtonText="Generate Report Analysis"
               :startIndex="1"
             >
-              <tab-content title="Upload Report File"></tab-content>
-              <tab-content title="Data Verification" :before-change="GoToDataGraphsSection">
+              <tab-content title="Upload Data"></tab-content>
+              <tab-content title="Data Cleaning" :before-change="GoToDataGraphsSection">
                 <!-- Report File Name -->
                 <span>
-                  Report Name:
+                  Raw Data Name:
                   <span
                     style="font-size: 20px;font-weight: 500;"
                   >{{CapitalizeFirstLetter(nameOfReport)}}</span>
                 </span>
-                <p class="card-text mt-9">Verify the raw data and filtered data from columns below:</p>
+                <div class="row">
+                  <div class="col-8">
+                    <p
+                      class="card-text mt-9"
+                      style="width: 100%;"
+                    >Verify the raw data and filtered data from columns below:</p>
+                  </div>
+                  <div class="col-4">
+                    <b-button
+                      @click="DownloadCleanDataFile(nameOfReport)"
+                      variant="success"
+                      style="float: right;margin-right: 50px;"
+                    >Download Clean Data</b-button>
+                  </div>
+                </div>
 
                 <div class="row">
                   <div v-for="(value, key) in JSONObject" :key="key">
@@ -158,8 +172,8 @@
                   </div>
                 </b-modal>
               </tab-content>
-              <tab-content title="Select Data Graphs"></tab-content>
-              <tab-content title="Generate Visual Report"></tab-content>
+              <tab-content title="Visualize"></tab-content>
+              <tab-content title="Generate Report"></tab-content>
             </form-wizard>
           </div>
         </div>
@@ -181,22 +195,25 @@
           <div class="card-body">
             <form-wizard
               title="Generate Report Analysis"
-              subtitle="Visualize Report Analysis In 3 Steps"
+              subtitle
               finishButtonText="Generate Report Visualization"
               nextButtonText="Generate Report Analysis"
               :startIndex="2"
             >
-              <tab-content title="Upload Report File"></tab-content>
-              <tab-content title="Data Verification"></tab-content>
-              <tab-content title="Select Data Graphs">
+              <tab-content title="Upload Data"></tab-content>
+              <tab-content title="Data Cleaning"></tab-content>
+              <tab-content title="Visualize">
                 <!-- Report File Name -->
                 <span>
-                  Report Name:
+                  Raw Data Name:
                   <span
                     style="font-size: 20px;font-weight: 500;"
                   >{{CapitalizeFirstLetter(nameOfReport)}}</span>
                 </span>
-                <p class="card-text mt-3">Select the columns and choose the required graphs:</p>
+                <p
+                  class="card-text mt-3 mb-3"
+                  style="width: 100%;"
+                >Select the columns and choose the required graphs:</p>
 
                 <div v-for="(value, key) in verifiedColumns" :value="{key:value}" :key="key">
                   <div class="row">
@@ -278,8 +295,8 @@
                   </div>
                 </div>
               </tab-content>
-              <tab-content title="Generate Visual Report"></tab-content>
-              <template slot="footer" slot-scope="props">
+              <tab-content title="Generate Report"></tab-content>
+              <template slot="footer">
                 <div class="wizard-footer-left"></div>
                 <div class="wizard-footer-right"></div>
               </template>
@@ -318,7 +335,7 @@
         @click="showModal"
         :disabled="dashboardData===undefined || (dashboardData.length)<=0"
       >
-        <i class="fa fa-bar-chart-o"></i> Generate Visual Report
+        <i class="fa fa-bar-chart-o"></i> Generate Report
       </b-button>
     </div>
     <div v-if="fourthStepShowLoader" class="animated fadeIn col-4">
@@ -331,24 +348,24 @@
     </div>
     <div v-if="fifthStepDisplayDashboard">
       <b-card-group>
-        <b-card header="Upload Report File">
+        <b-card header="Upload Data">
           <div class="card">
             <div class="card-body">
               <form-wizard
                 title="Generate Report Analysis"
-                subtitle="Visualize Report Analysis In 3 Steps"
+                subtitle
                 finishButtonText="Generate Report Visualization"
                 nextButtonText="Generate Report Analysis"
                 :startIndex="3"
               >
-                <tab-content title="Upload Report File"></tab-content>
-                <tab-content title="Data Verification"></tab-content>
-                <tab-content title="Select Data Graphs"></tab-content>
-                <tab-content title="Generate Visual Report">
+                <tab-content title="Upload Data"></tab-content>
+                <tab-content title="Data Cleaning"></tab-content>
+                <tab-content title="Visualize"></tab-content>
+                <tab-content title="Generate Report">
                   <!-- Report File Name -->
                   <div style="padding-left: 20px">
                     <span>
-                      Report Name:
+                      Raw Data Name:
                       <span
                         style="font-size: 20px;font-weight: 500;"
                       >{{CapitalizeFirstLetter(nameOfReport)}}</span>
@@ -414,7 +431,7 @@
                     </div>
                   </div>
                 </tab-content>
-                <template slot="footer" slot-scope="props">
+                <template slot="footer">
                   <div class="wizard-footer-left"></div>
                   <div class="wizard-footer-right"></div>
                 </template>
@@ -438,6 +455,7 @@ import { FormWizard, TabContent } from "vue-form-wizard";
 import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { Parser } from "json2csv";
 
 export default {
   name: "ReportAnalysis",
@@ -470,6 +488,7 @@ export default {
       JSONObject: {},
       FilteredJSONObject: {},
       userProfileData: {},
+      cleanJSONData: [],
       output: null,
       RawVerificationData: {
         columnName: "",
@@ -500,7 +519,7 @@ export default {
 
         doc.setFontSize(12);
         doc.text(
-          "Report Name: " + self.CapitalizeFirstLetter(self.nameOfReport),
+          "Raw Data Name: " + self.CapitalizeFirstLetter(self.nameOfReport),
           10,
           20
         );
@@ -528,15 +547,29 @@ export default {
     CapitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     },
+    DownloadCleanDataFile(nameOfReport) {
+      let fields = Object.keys(this.JSONObject);
+      const json2csvParser = new Parser({ fields, quote: "" }),
+        csv = json2csvParser.parse(this.cleanJSONData);
+
+      let csvContent = "data:text/csv;charset=utf-8,",
+        encodedUri = encodeURI(csvContent + csv),
+        link = document.createElement("a");
+
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", nameOfReport + ".csv");
+      document.body.appendChild(link); // Required for FF
+      link.click();
+    },
     /** Upload File to server for data extraction */
     UploadDataFilesToServer: function() {
       if (this.nameOfReport == "") {
-        this.$toaster.error("Please Enter Report Name");
+        this.$toaster.error("Please Enter Raw Data Name");
         return;
       }
 
       if (this.fileObject == {} || this.fileObject == null) {
-        this.$toaster.error("Please Upload A Report File");
+        this.$toaster.error("Please Upload A Data File");
         return;
       }
 
@@ -575,7 +608,16 @@ export default {
           this.firstStepDisplayForm = false;
           this.secondStepShowLoader = false;
           this.showDataVerification = true;
-          // this.thirdStepDisplayAnalysis = true;
+
+          let fields = Object.keys(this.JSONObject);
+          this.JSONObject[fields[0]].forEach((dataObj, i) => {
+            let jsonObj = {};
+            fields.forEach(field => {
+              jsonObj[field] = this.JSONObject[field][i];
+            });
+            this.cleanJSONData.push(jsonObj);
+          });
+
           return true;
         })
         // On file reading error

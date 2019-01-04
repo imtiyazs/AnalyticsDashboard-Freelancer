@@ -6,7 +6,7 @@ switch (process.platform) {
         SAVFileReaderFile = '..\\savReader\\main.py'
         break
     default:
-        SAVFileReaderFile = 'python3 ../savReader/main.py'
+        SAVFileReaderFile = 'python2 ../savReader/main.py'
 }
 
 module.exports = constants = {

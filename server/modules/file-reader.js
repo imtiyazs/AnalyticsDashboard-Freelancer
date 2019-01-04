@@ -106,7 +106,8 @@ exports.UploadAndReadFile = (req, res) => {
                             break
 
                         case '.csv':
-                            ReadCSVFiles(filePath)
+                        
+                            ReadFileWithPythonScript(username, filename, filePath)
                                 .then(JSONData => {
 
                                     let DBDataObject = {
@@ -124,9 +125,10 @@ exports.UploadAndReadFile = (req, res) => {
                                     return resolve(DBDataObject)
                                 })
                                 .catch(error => {
-                                    logger.error('ReadCSVFiles: ' + error)
+                                    logger.error('ReadFileWithPythonScript: ' + error)
                                     return reject(error)
                                 })
+
                             break
                     }
                 })

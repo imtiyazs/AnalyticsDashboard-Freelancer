@@ -6,7 +6,6 @@
     <b-row>
       <b-col sm="6" lg="3">
         <b-card
-          @click="reDirectTo('/reporthistory')"
           no-body
           style="height: 150px;cursor:pointer;background-color: #00BCD4;color: white;"
         >
@@ -24,7 +23,12 @@
         </b-card>
       </b-col>
       <b-col sm="6" lg="3">
-        <b-card no-body class="bg-danger" style="height: 150px;">
+        <b-card
+          @click="reDirectTo('/reporthistory')"
+          no-body
+          class="bg-danger"
+          style="height: 150px;"
+        >
           <b-card-body class="pb-0">
             <h1 class="mb-0">{{this.dashboardData.totalReportsGenerated}}</h1>
             <p class="card-text">REPORTS GENERATED</p>

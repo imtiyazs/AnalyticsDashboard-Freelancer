@@ -216,9 +216,12 @@ export default {
     };
   },
   methods: {
+    // Capitalize the first letter
     CapitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     },
+
+    // Creating Quick Analysis Report
     generateQuickAnalysis: function(e) {
       e.preventDefault();
       this.showLoader = true;
@@ -245,18 +248,26 @@ export default {
 
       this.$refs.showReportQuickView.show();
     },
+
+    // Handled uploaded file object
     handleFileUpload() {
       this.fileObject = this.$refs.file.files[0];
       this.uploadInputLabel = this.$refs.file.files[0].name;
     },
+
+    // Capitalize the first letter
     CapitalizeFirstLetter(string) {
       if (string !== undefined)
         return string.charAt(0).toUpperCase() + string.slice(1);
       return "";
     },
+
+    // Redirect to anonther view
     reDirectTo(mentionPath) {
       this.$router.push({ path: mentionPath });
     },
+
+    // Returning frequencies to feed chart component sent thorough props
     returnFrequency(arrayObject) {
       let counts = {};
       for (let i = 0; i < arrayObject.length; i++) {
@@ -280,6 +291,7 @@ export default {
         this.userProfileData.role = response.data.role;
         this.userProfileData.lastlogin = response.data.lastlogin;
 
+        // If user is logged in send request to fetch dashboard stats
         axios
           .post("/o/getdashboardstats", {
             username: this.userProfileData.username

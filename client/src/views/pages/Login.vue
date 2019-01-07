@@ -103,6 +103,7 @@ export default {
     };
   },
   methods: {
+    // Login Function
     login: function(e) {
       e.preventDefault();
       this.showLoader = true;
@@ -112,6 +113,7 @@ export default {
           password: this.password
         })
         .then(response => {
+          // Redirect to Dashboard
           router.push("/dashboard");
           this.showLoader = false;
         })
@@ -120,6 +122,8 @@ export default {
           this.$toaster.error(errors.response.data);
         });
     },
+
+    // Redirect to Register Page
     register() {
       router.push("/register");
     },

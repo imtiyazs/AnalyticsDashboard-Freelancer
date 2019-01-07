@@ -1,4 +1,6 @@
 <script>
+// Get data from props & render as Bar Charts
+
 import { Bar } from "vue-chartjs";
 import { CustomTooltips } from "@coreui/coreui-plugin-chartjs-custom-tooltips";
 

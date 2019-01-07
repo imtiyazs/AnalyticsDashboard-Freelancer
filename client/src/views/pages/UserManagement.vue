@@ -172,9 +172,12 @@ export default {
     };
   },
   methods: {
+    //  Capitalize First Letter
     CapitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     },
+
+    // Change User Roles by Admin
     ChangeUserRole(username, role) {
       axios
         .post("/o/user-mgmt", {
@@ -191,7 +194,7 @@ export default {
           this.$toaster.error(error.response.data);
         });
     },
-
+    // Resetting Password
     ResetPassword(username) {
       axios
         .post("/o/user-mgmt", {
@@ -227,7 +230,7 @@ export default {
           this.$toaster.error(error.response.data);
         });
     },
-
+    // Deleting User by Admin
     DeleteUser(username) {
       axios
         .post("/o/user-mgmt", {

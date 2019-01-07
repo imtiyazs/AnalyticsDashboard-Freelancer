@@ -5,10 +5,7 @@
 <script>
 export default {
   name: 'app',
-  mounted() {
-    //this.$store.dispatch('setUserData', {name: 'kunal'})
-    // console.log('app:', this.$store)
-  }
+  mounted() {}
 }
 </script>
 

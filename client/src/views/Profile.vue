@@ -332,6 +332,7 @@ export default {
         });
     },
 
+    // Change Password Function
     ChangePassword: function(e) {
       e.preventDefault();
 
@@ -356,6 +357,7 @@ export default {
       }
     },
 
+    // Delete functionally
     DeleteAccount: function(e) {
       e.preventDefault();
       axios
@@ -381,10 +383,11 @@ export default {
           router.push("/login");
         });
     },
-
+    // Capitalize the first letter
     CapitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     },
+    
     ToggleSection(id) {
       switch (id) {
         case "section1":

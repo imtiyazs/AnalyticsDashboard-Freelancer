@@ -114,13 +114,6 @@ export default {
       .then(response => {
         this.$set(this, "user", response.data.username);
         this.userLogged = true;
-
-        // axios
-        //   .post("/o/server")
-        //   .then(response => {
-              
-        //   })
-        //   .catch(error => {});
       })
       .catch(error => {
         this.$toaster.error(error.response.data);

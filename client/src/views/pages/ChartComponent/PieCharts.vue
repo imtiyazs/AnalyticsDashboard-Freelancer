@@ -1,4 +1,6 @@
 <script>
+// Get data from props & render as Doughnut Charts
+
 import { Doughnut } from "vue-chartjs";
 
 export default {

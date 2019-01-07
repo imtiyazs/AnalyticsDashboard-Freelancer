@@ -8,7 +8,6 @@
             <div class="card-body">
               <b-container class="bv-example-row" fluid>
                 <b-row>
-                  <!-- {{usersHistory.reports}} -->
                   <b-table
                     hover
                     :items="usersHistory.reports"
@@ -178,6 +177,7 @@ export default {
     };
   },
   methods: {
+    // Create PDF to be downloaded
     createPDF() {
       let self = this;
       html2canvas(this.$refs.printReport).then(function(canvas) {
@@ -214,9 +214,13 @@ export default {
         doc.save(pdfName);
       });
     },
+
+    //  Capitalize First Letter
     CapitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     },
+
+    // Return frequency to feed chart component
     returnFrequency(arrayObject) {
       let counts = {};
       for (let i = 0; i < arrayObject.length; i++) {
@@ -225,11 +229,15 @@ export default {
       }
       return counts;
     },
+
+    // Set Dashboard Details & Show on Modal
     displayDashboard(DashboardName) {
       this.dashboardDisplay.name = DashboardName;
       this.$refs.displayMyDashboard.show();
       this.dashboardDisplay.data = this.getDashboardDetails(DashboardName);
     },
+
+    // Fetch Dashboard details
     getDashboardDetails(DashboardName) {
       let returnData = null;
       this.usersHistory.reports.forEach(element => {
@@ -251,6 +259,7 @@ export default {
         self.user = response.data;
         self.userLogged = true;
 
+        // If login successful fetch user details 
         axios
           .post("/o/reporthistory", {
             username: self.user.username

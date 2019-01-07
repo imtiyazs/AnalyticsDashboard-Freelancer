@@ -473,12 +473,22 @@ export default {
       fileObject: null,
       fileName: "",
       fileType: "",
-      /* Change to display form*/
+      // Display Upload file & Name of the report
       firstStepDisplayForm: true,
+
+      // Show Loader
       secondStepShowLoader: false,
+
+      // Display Analysis
       thirdStepDisplayAnalysis: false,
+
+      // Show Loader
       fourthStepShowLoader: false,
+
+      // Show Clean Data 
       showDataVerification: false,
+
+      // Display Final Dashboard
       fifthStepDisplayDashboard: false,
       self: this,
       verifiedColumns: {},
@@ -504,6 +514,8 @@ export default {
       this.RawVerificationData.FilterData = this.FilteredJSONObject[key];
       this.$refs.dataModal.show();
     },
+
+    // Creating PDF on Download Dashboard
     createPDF() {
       let self = this;
 
@@ -547,6 +559,8 @@ export default {
     CapitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     },
+
+    // Download Clean data in CSV
     DownloadCleanDataFile(nameOfReport) {
       let fields = Object.keys(this.JSONObject);
       const json2csvParser = new Parser({ fields, quote: "" }),
@@ -627,6 +641,8 @@ export default {
           // this.secondStepShowLoader = false;
         });
     },
+
+    // Returning Frequency to feed chart components
     returnFrequency(arrayObject) {
       let counts = {};
       for (let i = 0; i < arrayObject.length; i++) {
@@ -635,6 +651,8 @@ export default {
       }
       return counts;
     },
+
+    // Handle Uploaded file object
     handleFileUpload() {
       this.fileObject = this.$refs.file.files[0];
       this.uploadInputLabel = this.$refs.file.files[0].name;
@@ -645,6 +663,8 @@ export default {
     hideModal() {
       this.$refs.myModalRef.hide();
     },
+
+    // Displaying Clean Data
     verifyDataColumns(columnName, columnData) {
       var index = Object.keys(this.verifiedColumns).indexOf(columnName);
       if (index > -1) {
@@ -653,6 +673,8 @@ export default {
       }
       this.verifiedColumns[columnName] = columnData;
     },
+
+    // Generating the Dashboard
     generateDashboard() {
       //axios to record dashboard into mongo
       let dashboardDetails = {

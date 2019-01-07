@@ -221,9 +221,13 @@ export default {
         retina_detect: true
       });
     },
+
+    // Redirect to Login
     BackToLogin() {
       router.push("/login");
     },
+
+    // Function to register user
     Register: function(e) {
       e.preventDefault();
       if (this.password === this.repeatPassword) {

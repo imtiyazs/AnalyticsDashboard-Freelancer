@@ -3,8 +3,12 @@ const database = require('../database/database'),
     logger = require('../common/logger').logger,
     bcrypt = require('bcrypt')
 
+/**
+ * Register new user API
+ */
 exports.RegisterNewUser = (RequestBody) => {
     return new Promise((resolve, reject) => {
+        // Find user in collection if available
         database.FindInCollection({
             username: RequestBody.username
         }, constants.UsersCollection, (data) => {
@@ -14,8 +18,10 @@ exports.RegisterNewUser = (RequestBody) => {
 
             try {
                 if (data.length === 0) {
+                    // Salting the password to unreadable text to store
                     bcrypt.hash(RequestBody.password, constants.BcryptSaltRounds)
                         .then(hashedPassword => {
+                            // Insert user information in database
                             database.InsertManyDocuments([{
                                 username: RequestBody.username,
                                 password: hashedPassword,
@@ -49,6 +55,10 @@ exports.RegisterNewUser = (RequestBody) => {
     })
 }
 
+/**
+ * Login API. 
+ * Validation username and password 
+ */
 exports.UserLogin = (username, password) => {
     return new Promise((resolve, reject) => {
         database.FindInCollection({

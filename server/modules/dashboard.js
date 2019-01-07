@@ -2,6 +2,11 @@ const constants = require('../common/constant'),
     logger = require('../common/logger').logger,
     database = require('../database/database')
 
+/** 
+ * Fetch dashboard statistics on successful login by user
+ * Return reports data, total uploaded files and no of generated
+ * reports by the user
+ */
 exports.GetDashboardStatistics = (req) => {
     return new Promise((resolve) => {
 
@@ -50,7 +55,10 @@ exports.GetDashboardStatistics = (req) => {
             })
         }
 
-
+        /** 
+         * Execute all functions at once and return data on completion
+         * of all functions
+         */
         Promise.all([GetAnnouncements(), GetFileUploads(), GetReportsdata()])
             .then(results => {
                 ResponseData.announcements = results[0]

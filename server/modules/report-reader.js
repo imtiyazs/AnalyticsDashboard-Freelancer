@@ -2,6 +2,10 @@ const database = require('../database/database'),
     constants = require('../common/constant'),
     logger = require('../common/logger').logger
 
+/** 
+ * Fetch user generated reports 
+ * Reports History API
+ */
 exports.FetchUserReports = (requestBody) => {
     return new Promise((resolve, reject) => {
         let username = requestBody.username,

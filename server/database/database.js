@@ -1,18 +1,20 @@
-const MongoClient = require('mongodb').MongoClient,
+const MongoClient = require('mongodb').MongoClient, // Create mongo database client instance
     mongo = require('mongodb'),
     constants = require('../common/constant'),
     logger = require('../common/logger').logger,
     defaultSchema = require('./default')
 
-let DBInstance = null
+let DBInstance = null // Database object
 
 // Use connect method to connect to the server
 exports.ConnectDatabaseServer = () => {
     return new Promise((resolve, reject) => {
         try {
+            // Construct mongo database URL
             const url = 'mongodb://' + constants.DBServerAddress + ':' + constants.DBServerPort;
             const dbName = constants.DBName
 
+            // Connect server to mongo database
             MongoClient.connect(url, {
                 useNewUrlParser: true
             }, function (err, client) {
@@ -21,7 +23,9 @@ exports.ConnectDatabaseServer = () => {
                     return reject()
                 }
 
+                // Assign created connected to database object
                 DBInstance = client.db(dbName)
+                // Generate default database with super admin
                 defaultSchema.GenerateDefaultDBSchema()
                 return resolve()
             });
@@ -32,6 +36,9 @@ exports.ConnectDatabaseServer = () => {
     })
 }
 
+/**
+ * Find user using ObjectID in document.
+ */
 exports.FindByObjectID = (id, collectionName, callback) => {
     let collection = DBInstance.collection(collectionName),
         o_id = new mongo.ObjectID(id)

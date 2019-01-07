@@ -2,6 +2,12 @@ const constants = require('../common/constant'),
     database = require('./database'),
     bcrypt = require('bcrypt')
 
+/**
+ * Generate default database on fresh installation and start
+ * of server. Creates super admin account.
+ * User: admin
+ * Pass: admin
+ */
 exports.GenerateDefaultDBSchema = () => {
 
     /** Check and write default admin user to database */

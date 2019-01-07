@@ -2,6 +2,10 @@ const database = require('../database/database'),
     constants = require('../common/constant'),
     logger = require('../common/logger').logger
 
+/**
+ * Write new reports to the database after report generation 
+ * in report analysis tab
+ */
 exports.CheckAndWriteReports = (requestBody) => {
     return new Promise((resolve) => {
 

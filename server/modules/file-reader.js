@@ -106,7 +106,7 @@ exports.UploadAndReadFile = (req, res) => {
                             break
 
                         case '.csv':
-                        
+
                             ReadFileWithPythonScript(username, filename, filePath)
                                 .then(JSONData => {
 
@@ -244,6 +244,11 @@ function FileHandler(username, fileType) {
     })
 }
 
+/**
+ * 
+ * @param {A} userId  Username for which files to be logged in database
+ * @param {*} fileDataObj File details to be uploaded in database
+ */
 function LogUploadsToDatabase(userId, fileDataObj) {
     database.FindInCollection({
         username: userId

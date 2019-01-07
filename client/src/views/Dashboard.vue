@@ -7,7 +7,7 @@
       <b-col sm="6" lg="3">
         <b-card
           no-body
-          style="height: 150px;cursor:pointer;background-color: #00BCD4;color: white;"
+          style="height: 150px;background-color: #00BCD4;color: white;"
         >
           <b-card-body class="pb-0">
             <h1 class="mb-0">{{this.dashboardData.totalFilesUploaded}}</h1>
@@ -27,7 +27,7 @@
           @click="reDirectTo('/reporthistory')"
           no-body
           class="bg-danger"
-          style="height: 150px;"
+          style="height: 150px;cursor:pointer;"
         >
           <b-card-body class="pb-0">
             <h1 class="mb-0">{{this.dashboardData.totalReportsGenerated}}</h1>

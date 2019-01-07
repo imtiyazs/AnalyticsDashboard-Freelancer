@@ -200,6 +200,7 @@ function InitializeServerConfigurations() {
         extended: true
     }));
 
+    // Set JSON uploading limit to the server
     app.use(bodyParser.json({
         limit: '50mb',
         extended: true
@@ -211,17 +212,6 @@ function InitializeServerConfigurations() {
         keys: [constants.CookieKey],
         maxAge: constants.UserTTL
     }))
-
-    // app.use(session({
-    //     secret: constants.CookieKey,
-    //     saveUninitialized: true,
-    //     resave: true,
-    //     // using store session on MongoDB using express-session + connect
-    //     store: new MongoStore({
-    //         url: 'mongodb://' + constants.DBServerAddress + ':' + constants.DBServerPort,
-    //         collection: constants.SessionsCollection
-    //     })
-    // }))
 
     app.use(passport.initialize())
 
@@ -261,16 +251,19 @@ function InitializeServerConfigurations() {
         })
     )
 
+    // Serialize user session 
     passport.serializeUser((user, done) => {
         done(null, user._id)
     })
 
+    // Deserialize user session data from browser
     passport.deserializeUser((id, done) => {
         database.FindByObjectID(id, constants.UsersCollection, (validatedUserData) => {
             done(null, validatedUserData)
         })
     })
 
+    // Start server
     app.listen(constants.ServerPort, () => {
         logger.info("Analytics Server Started on port: " + constants.ServerPort)
     })
